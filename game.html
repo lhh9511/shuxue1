@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏加载中...</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-page">
+        <!-- 游戏顶栏 -->
+        <header class="game-header">
+            <button class="back-btn" onclick="goHome()">← 返回</button>
+            <div class="game-info">
+                <span class="game-title" id="gameTitle">加载中...</span>
+                <div class="game-stats">
+                    <span class="stat" id="scoreDisplay">⭐ 0</span>
+                    <span class="stat" id="timerDisplay">⏱️ 0:00</span>
+                </div>
+            </div>
+            <div class="game-controls">
+                <button class="icon-btn" id="pauseBtn" onclick="togglePause()" title="暂停">⏸️</button>
+                <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="音效">🔊</button>
+                <button class="icon-btn" id="restartBtn" onclick="restartGame()" title="重新开始">🔄</button>
+            </div>
+        </header>
+
+        <!-- 游戏区域 -->
+        <main class="game-area" id="gameArea">
+            <!-- 开始界面 -->
+            <div class="game-start-screen" id="startScreen">
+                <div class="start-content">
+                    <span class="start-emoji" id="startEmoji">🎮</span>
+                    <h2 id="startTitle">游戏名称</h2>
+                    <p class="start-desc" id="startDesc">游戏说明</p>
+                    <button class="btn btn-start" id="startBtn">开始游戏 🚀</button>
+                </div>
+            </div>
+
+            <!-- 游戏内容区 -->
+            <div class="game-content" id="gameContent" style="display:none"></div>
+
+            <!-- 暂停覆盖 -->
+            <div class="pause-overlay" id="pauseOverlay" style="display:none">
+                <div class="pause-content">
+                    <span>⏸️</span>
+                    <h2>游戏暂停</h2>
+                    <button class="btn" onclick="togglePause()">继续游戏</button>
+                </div>
+            </div>
+
+            <!-- 结束界面 -->
+            <div class="game-end-screen" id="endScreen" style="display:none">
+                <div class="end-content">
+                    <span class="end-emoji" id="endEmoji">🎉</span>
+                    <h2 id="endTitle">游戏结束</h2>
+                    <div class="end-score" id="endScore">0</div>
+                    <div class="end-stars" id="endStars">⭐⭐⭐</div>
+                    <div class="end-actions">
+                        <button class="btn" onclick="restartGame()">再来一次</button>
+                        <button class="btn btn-secondary" onclick="goHome()">返回大厅</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/audio.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/games.js"></script>
+    <!-- 静态加载所有模板（避免file://协议下动态加载失败） -->
+    <script src="js/templates/quiz.js"></script>
+    <script src="js/templates/matching.js"></script>
+    <script src="js/templates/memory.js"></script>
+    <script src="js/templates/sorting.js"></script>
+    <script src="js/templates/click.js"></script>
+    <script src="js/templates/math.js"></script>
+    <script src="js/templates/word.js"></script>
+    <script src="js/templates/music.js"></script>
+    <script src="js/templates/draw.js"></script>
+    <script src="js/templates/puzzle.js"></script>
+    <script>
+        var params = new URLSearchParams(window.location.search);
+        var gameId = params.get('id');
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function toggleSound() {
+            AudioManager.toggle();
+            document.getElementById('soundBtn').textContent = AudioManager.enabled ? '🔊' : '🔇';
+        }
+
+        function togglePause() {
+            if (window.currentGame) {
+                window.currentGame.togglePause();
+            }
+        }
+
+        function restartGame() {
+            if (window.currentGame) {
+                window.currentGame.restart();
+            }
+        }
+
+        function startGame() {
+            if (window.currentGame) {
+                window.currentGame.start();
+            }
+        }
+
+        // 绑定开始按钮
+        document.getElementById('startBtn').addEventListener('click', function() {
+            startGame();
+        });
+
+        // 初始化游戏
+        (function() {
+            if (!gameId || !GAMES[gameId]) {
+                goHome();
+                return;
+            }
+
+            var config = GAMES[gameId];
+            document.title = config.name + ' - 课前小游戏';
+            document.getElementById('gameTitle').textContent = config.name;
+            document.getElementById('startEmoji').textContent = config.icon;
+            document.getElementById('startTitle').textContent = config.name;
+            document.getElementById('startDesc').textContent = config.description;
+
+            var templateName = config.template;
+            var GameClass = window['Template_' + templateName];
+
+            if (GameClass) {
+                window.currentGame = new GameClass(config, document.getElementById('gameContent'));
+            } else {
+                document.getElementById('startTitle').textContent = '加载失败';
+                document.getElementById('startDesc').textContent = '找不到游戏模板：' + templateName;
+            }
+        })();
+    </script>
+</body>
+</html>

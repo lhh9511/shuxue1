@@ -1,0 +1,15 @@
+# Obsidian vault
+小红书资料/
+
+# Project docs
+*.md
+!README.md
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
