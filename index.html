@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课前小游戏 - 100款趣味小游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-inner">
+                <div class="logo" onclick="location.reload()">
+                    <span class="logo-icon">🎮</span>
+                    <h1>课前小游戏</h1>
+                    <span class="logo-badge">100款</span>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="soundToggle" title="音效开关">🔊</button>
+                    <button class="icon-btn" id="favToggle" title="我的收藏">⭐</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="搜索游戏..." autocomplete="off">
+            <button class="clear-btn" id="clearSearch" style="display:none">✕</button>
+        </div>
+
+        <!-- 分类标签 -->
+        <div class="category-bar" id="categoryBar">
+            <button class="cat-btn active" data-cat="all">全部</button>
+            <button class="cat-btn" data-cat="puzzle">🧩 益智</button>
+            <button class="cat-btn" data-cat="memory">🧠 记忆</button>
+            <button class="cat-btn" data-cat="reaction">⚡ 反应</button>
+            <button class="cat-btn" data-cat="math">🔢 数学</button>
+            <button class="cat-btn" data-cat="chinese">📝 语文</button>
+            <button class="cat-btn" data-cat="music">🎵 音乐</button>
+            <button class="cat-btn" data-cat="english">🅰️ 英语</button>
+            <button class="cat-btn" data-cat="fun">🎯 趣味</button>
+        </div>
+
+        <!-- 游戏网格 -->
+        <main class="game-grid" id="gameGrid">
+            <!-- 动态生成 -->
+        </main>
+
+        <!-- 空状态 -->
+        <div class="empty-state" id="emptyState" style="display:none">
+            <span class="empty-icon">😿</span>
+            <p>没有找到匹配的游戏</p>
+            <button class="btn" onclick="resetFilter()">查看全部游戏</button>
+        </div>
+
+        <!-- 最近游玩 -->
+        <section class="recent-section" id="recentSection" style="display:none">
+            <h2>🕐 最近游玩</h2>
+            <div class="recent-grid" id="recentGrid"></div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>课前小游戏 · 让每节课都充满欢笑</p>
+        </footer>
+    </div>
+
+    <script src="js/audio.js"></script>
+    <script src="js/games.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
