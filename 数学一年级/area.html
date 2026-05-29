@@ -163,102 +163,168 @@
       stroke-width: 3;
     }
     /* 面积比较 */
-    .compare-zones {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
+    .compare-stage {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      align-items: flex-start;
+      margin-bottom: 22px;
     }
-    @media (max-width: 480px) {
-      .compare-zones { gap: 10px; }
+    @media (max-width: 520px) {
+      .compare-stage { gap: 8px; }
     }
-    .zone-wrap { text-align: center; }
-    .zone-counter {
+    .compare-col {
+      flex: 1;
+      max-width: 280px;
+      text-align: center;
+    }
+    .compare-counter {
       font-family: var(--font-display);
-      font-size: 1.1rem;
-      margin-bottom: 8px;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      min-height: 28px;
+      gap: 8px;
+      min-height: 30px;
     }
-    .zone-counter .icon {
-      width: 22px;
-      height: 22px;
-      display: inline-block;
+    .compare-counter .mini-shape {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
     }
-    .drop-zone {
-      border: 3px solid #cfd8dc;
-      border-radius: 12px;
-      background: #fafafa;
-      min-height: 140px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .compare-counter .mini-shape.square { background: var(--orange); }
+    .compare-counter .mini-shape.circle {
+      background: var(--blue-shape);
+      border-radius: 50%;
     }
-    .drop-grid {
-      display: grid;
-      gap: 4px;
+    .compare-counter .mini-shape.triangle {
+      background: var(--purple);
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    }
+    .compare-board {
       width: 100%;
-      max-width: 200px;
-    }
-    .drop-grid.zone-a { grid-template-columns: repeat(5, 1fr); }
-    .drop-grid.zone-b { grid-template-columns: repeat(4, 1fr); }
-    .drop-cell {
-      aspect-ratio: 1;
-      border: 1px dashed #e0e0e0;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
+      height: 128px;
+      border: 3px solid #90a4ae;
+      border-radius: 8px;
       background: #fff;
-      transition: background 0.15s;
+      padding: 6px;
+      margin: 0 auto;
+      cursor: pointer;
+      transition: box-shadow 0.2s, border-color 0.2s;
     }
-    .drop-cell.filled { border-style: solid; border-color: transparent; }
-    .drop-cell svg { width: 85%; height: 85%; }
-    .zone-label {
-      width: 28px;
-      height: 28px;
+    .compare-board.drag-over {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.35);
+    }
+    .tile-grid {
+      width: 100%;
+      height: 100%;
+      display: grid;
+    }
+    .tile-grid.grid-a {
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 0;
+    }
+    .tile-grid.grid-b {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 5px 6px;
+    }
+    .tile-slot {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+    }
+    .tile-piece {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      animation: tilePop 0.2s ease;
+    }
+    @keyframes tilePop {
+      from { transform: scale(0.6); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .tile-piece.square {
+      background: var(--orange);
+      border-radius: 1px;
+    }
+    .tile-grid.grid-a .tile-piece.square { inset: 0; }
+    .tile-piece.circle {
+      background: var(--blue-shape);
+      border-radius: 50%;
+      inset: 6%;
+    }
+    .tile-piece.triangle {
+      background: var(--purple);
+      clip-path: polygon(50% 4%, 96% 96%, 4% 96%);
+      inset: 4%;
+    }
+    .compare-badge {
+      display: inline-flex;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       color: #fff;
       font-weight: 700;
-      font-size: 14px;
-      display: inline-flex;
+      font-size: 15px;
       align-items: center;
       justify-content: center;
-      margin-top: 10px;
+      margin-top: 12px;
     }
-    .zone-label.a { background: #ef5350; }
-    .zone-label.b { background: var(--blue-shape); }
+    .compare-badge.n1 { background: #ef5350; }
+    .compare-badge.n2 { background: var(--blue-shape); }
     .shape-palette {
       display: flex;
       justify-content: center;
-      gap: 24px;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 24px;
+      padding: 8px 0;
     }
-    .palette-item {
-      width: 56px;
-      height: 56px;
+    .palette-pick {
+      width: 64px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: grab;
       border: 3px solid transparent;
-      border-radius: 12px;
-      padding: 6px;
+      border-radius: 14px;
+      padding: 8px;
       touch-action: none;
       transition: border-color 0.2s, transform 0.15s;
     }
-    .palette-item.active {
+    .palette-pick.active {
       border-color: #2196f3;
-      background: #e3f2fd;
+      background: rgba(33, 150, 243, 0.08);
     }
-    .palette-item svg { width: 44px; height: 44px; }
-    .palette-item.dragging { opacity: 0.5; cursor: grabbing; }
+    .palette-pick.dragging { opacity: 0.45; cursor: grabbing; }
+    .palette-pick .pick-shape { pointer-events: none; }
+    .pick-shape {
+      width: 46px;
+      height: 46px;
+    }
+    .pick-shape.square { background: var(--orange); }
+    .pick-shape.circle {
+      background: var(--blue-shape);
+      border-radius: 50%;
+    }
+    .pick-shape.triangle {
+      background: var(--purple);
+      clip-path: polygon(50% 6%, 94% 94%, 6% 94%);
+    }
+    .compare-result {
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--teal-dark);
+      margin: -8px 0 14px;
+      min-height: 1.4em;
+    }
     .action-btns {
       display: flex;
       justify-content: center;
@@ -364,29 +430,40 @@
     <!-- 面积比较 -->
     <section class="panel" id="panel-compare">
       <p class="hint">拖动下方图形到框内进行填充，或点击「密铺」按钮自动铺满</p>
-      <div class="compare-zones">
-        <div class="zone-wrap">
-          <div class="zone-counter" id="counterA">
-            <span class="icon" id="iconA"></span>
-            <span id="textA">× 0</span>
+      <div class="compare-stage">
+        <div class="compare-col">
+          <div class="compare-counter" id="counterA">
+            <span class="mini-shape square" id="miniA"></span>
+            <span>× <strong id="countA">0</strong></span>
           </div>
-          <div class="drop-zone" data-zone="a">
-            <div class="drop-grid zone-a" id="gridA"></div>
+          <div class="compare-board" id="boardA" data-zone="a" tabindex="0" aria-label="图形1填充区">
+            <div class="tile-grid grid-a" id="gridA"></div>
           </div>
-          <span class="zone-label a">1</span>
+          <span class="compare-badge n1">1</span>
         </div>
-        <div class="zone-wrap">
-          <div class="zone-counter" id="counterB">
-            <span class="icon" id="iconB"></span>
-            <span id="textB">× 0</span>
+        <div class="compare-col">
+          <div class="compare-counter" id="counterB">
+            <span class="mini-shape circle" id="miniB"></span>
+            <span>× <strong id="countB">0</strong></span>
           </div>
-          <div class="drop-zone" data-zone="b">
-            <div class="drop-grid zone-b" id="gridB"></div>
+          <div class="compare-board" id="boardB" data-zone="b" tabindex="0" aria-label="图形2填充区">
+            <div class="tile-grid grid-b" id="gridB"></div>
           </div>
-          <span class="zone-label b">2</span>
+          <span class="compare-badge n2">2</span>
         </div>
       </div>
-      <div class="shape-palette" id="shapePalette"></div>
+      <p class="compare-result" id="compareResult"></p>
+      <div class="shape-palette" id="shapePalette">
+        <div class="palette-pick active" data-shape="square" draggable="true">
+          <div class="pick-shape square"></div>
+        </div>
+        <div class="palette-pick" data-shape="circle" draggable="true">
+          <div class="pick-shape circle"></div>
+        </div>
+        <div class="palette-pick" data-shape="triangle" draggable="true">
+          <div class="pick-shape triangle"></div>
+        </div>
+      </div>
       <div class="action-btns">
         <button type="button" class="action-btn" id="btnFill1">①号密铺</button>
         <button type="button" class="action-btn" id="btnFill2">②号密铺</button>
@@ -408,16 +485,17 @@
   <script>
 (function () {
   const LEARN_COLORS = ["#ef5350", "#66bb6a", "#42a5f5", "#ffee58", "#ec407a"];
-  const SHAPES = {
-    square: { color: "#ff7043", label: "正方形" },
-    circle: { color: "#42a5f5", label: "圆形" },
-    triangle: { color: "#ab47bc", label: "三角形" },
+  const ZONE_CFG = {
+    a: { total: 10, defaultShape: "square", gridClass: "grid-a" },
+    b: { total: 12, defaultShape: "circle", gridClass: "grid-b" },
   };
 
   let learnColor = LEARN_COLORS[3];
   let selectedShape = "square";
-  const zoneData = { a: [], b: [] };
-  const ZONE_SIZE = { a: { cols: 5, rows: 2, total: 10 }, b: { cols: 4, rows: 3, total: 12 } };
+  const slots = {
+    a: Array(ZONE_CFG.a.total).fill(null),
+    b: Array(ZONE_CFG.b.total).fill(null),
+  };
 
   const shapeFills = {
     triangle: "#ff7043",
@@ -434,24 +512,6 @@
     t.classList.add("show");
     clearTimeout(showToast._t);
     showToast._t = setTimeout(() => t.classList.remove("show"), 2000);
-  }
-
-  function shapeSvg(type, fill, size) {
-    const s = size || 44;
-    const stroke = "#81d4fa";
-    const maps = {
-      square: `<rect x="4" y="4" width="${s - 8}" height="${s - 8}" rx="2" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`,
-      circle: `<circle cx="${s / 2}" cy="${s / 2}" r="${s / 2 - 6}" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`,
-      triangle: `<polygon points="${s / 2},6 ${s - 6},${s - 6} 6,${s - 6}" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`,
-    };
-    return `<svg viewBox="0 0 ${s} ${s}" width="${s}" height="${s}">${maps[type]}</svg>`;
-  }
-
-  function counterIcon(type) {
-    const c = SHAPES[type].color;
-    if (type === "square") return `<svg viewBox="0 0 22 22"><rect x="2" y="2" width="18" height="18" fill="${c}"/></svg>`;
-    if (type === "circle") return `<svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="${c}"/></svg>`;
-    return `<svg viewBox="0 0 22 22"><polygon points="11,3 19,19 3,19" fill="${c}"/></svg>`;
   }
 
   /* ---------- 认识面积 ---------- */
@@ -515,79 +575,167 @@
     });
   }
 
-  /* ---------- 面积比较 ---------- */
-  function initZoneGrids() {
-    const gridA = document.getElementById("gridA");
-    const gridB = document.getElementById("gridB");
-    gridA.innerHTML = Array(ZONE_SIZE.a.total)
-      .fill(0)
-      .map((_, i) => `<div class="drop-cell" data-zone="a" data-i="${i}"></div>`)
-      .join("");
-    gridB.innerHTML = Array(ZONE_SIZE.b.total)
-      .fill(0)
-      .map((_, i) => `<div class="drop-cell" data-zone="b" data-i="${i}"></div>`)
-      .join("");
-    bindDropZones();
+  /* ---------- 面积比较（密铺画布） ---------- */
+  function buildSlotGrids() {
+    ["a", "b"].forEach((zone) => {
+      const grid = document.getElementById(zone === "a" ? "gridA" : "gridB");
+      const n = ZONE_CFG[zone].total;
+      grid.innerHTML = Array(n)
+        .fill(0)
+        .map((_, i) => `<div class="tile-slot" data-zone="${zone}" data-i="${i}"></div>`)
+        .join("");
+    });
   }
 
-  function initPalette() {
-    const el = document.getElementById("shapePalette");
-    el.innerHTML = ["square", "circle", "triangle"]
-      .map(
-        (t) =>
-          `<div class="palette-item${t === selectedShape ? " active" : ""}" data-shape="${t}" draggable="true">${shapeSvg(t, SHAPES[t].color, 48)}</div>`
-      )
-      .join("");
+  function setMiniIcon(el, type) {
+    el.className = "mini-shape " + type;
+  }
 
-    el.querySelectorAll(".palette-item").forEach((item) => {
-      item.addEventListener("click", () => selectPalette(item.dataset.shape));
-      item.addEventListener("dragstart", onDragStart);
-      item.addEventListener("dragend", onDragEnd);
+  function dominantShape(zone) {
+    const data = slots[zone].filter(Boolean);
+    if (!data.length) return ZONE_CFG[zone].defaultShape;
+    const counts = {};
+    data.forEach((s) => {
+      counts[s] = (counts[s] || 0) + 1;
     });
-    setupTouchDrag();
+    return Object.keys(counts).sort((x, y) => counts[y] - counts[x])[0];
+  }
+
+  function renderCompare() {
+    ["a", "b"].forEach((zone) => {
+      const grid = document.getElementById(zone === "a" ? "gridA" : "gridB");
+      const slotEls = grid.querySelectorAll(".tile-slot");
+      slots[zone].forEach((shape, i) => {
+        slotEls[i].innerHTML = shape
+          ? `<div class="tile-piece ${shape}"></div>`
+          : "";
+      });
+      const count = slots[zone].filter(Boolean).length;
+      const dom = dominantShape(zone);
+      document.getElementById(zone === "a" ? "countA" : "countB").textContent = count;
+      setMiniIcon(document.getElementById(zone === "a" ? "miniA" : "miniB"), dom);
+    });
+    updateCompareResult();
+  }
+
+  function updateCompareResult() {
+    const ca = slots.a.filter(Boolean).length;
+    const cb = slots.b.filter(Boolean).length;
+    const el = document.getElementById("compareResult");
+    if (!ca && !cb) {
+      el.textContent = "";
+      return;
+    }
+    if (ca > cb) el.textContent = "① 号图形面积更大";
+    else if (cb > ca) el.textContent = "② 号图形面积更大";
+    else el.textContent = "两个图形面积一样大";
+  }
+
+  function firstEmptyIndex(zone) {
+    return slots[zone].findIndex((s) => !s);
+  }
+
+  function placeNext(zone, shape) {
+    const i = firstEmptyIndex(zone);
+    if (i === -1) {
+      showToast("已经铺满了");
+      return false;
+    }
+    slots[zone][i] = shape;
+    renderCompare();
+    return true;
+  }
+
+  function placeAtSlot(zone, index, shape) {
+    if (index < 0 || index >= ZONE_CFG[zone].total) return;
+    if (slots[zone][index]) {
+      slots[zone][index] = null;
+    } else {
+      slots[zone][index] = shape;
+    }
+    renderCompare();
+  }
+
+  function fillAll(zone, shape) {
+    const n = ZONE_CFG[zone].total;
+    slots[zone] = Array(n).fill(shape);
+    renderCompare();
+    showToast(`${zone === "a" ? "①" : "②"}号密铺完成`);
+  }
+
+  function clearCompare() {
+    slots.a = Array(ZONE_CFG.a.total).fill(null);
+    slots.b = Array(ZONE_CFG.b.total).fill(null);
+    renderCompare();
+    showToast("已清空");
   }
 
   function selectPalette(shape) {
     selectedShape = shape;
-    document.querySelectorAll(".palette-item").forEach((p) => {
+    document.querySelectorAll(".palette-pick").forEach((p) => {
       p.classList.toggle("active", p.dataset.shape === shape);
     });
   }
 
-  let dragShape = null;
-  let ghost = null;
+  let draggingShape = null;
 
-  function onDragStart(e) {
-    const item = e.target.closest(".palette-item");
-    if (!item) return;
-    dragShape = item.dataset.shape;
-    item.classList.add("dragging");
-    e.dataTransfer.setData("text/plain", dragShape);
-    e.dataTransfer.effectAllowed = "copy";
-  }
+  function initCompareInteractions() {
+    document.querySelectorAll(".palette-pick").forEach((pick) => {
+      pick.addEventListener("click", () => selectPalette(pick.dataset.shape));
+      pick.addEventListener("dragstart", (e) => {
+        draggingShape = pick.dataset.shape;
+        pick.classList.add("dragging");
+        selectPalette(draggingShape);
+        e.dataTransfer.setData("application/x-shape", draggingShape);
+        e.dataTransfer.effectAllowed = "copy";
+      });
+      pick.addEventListener("dragend", () => {
+        pick.classList.remove("dragging");
+        draggingShape = null;
+      });
+    });
 
-  function onDragEnd(e) {
-    e.target.closest(".palette-item")?.classList.remove("dragging");
-    dragShape = null;
-  }
+    document.querySelectorAll(".compare-board").forEach((board) => {
+      const zone = board.dataset.zone;
 
-  function setupTouchDrag() {
+      board.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        board.classList.add("drag-over");
+        e.dataTransfer.dropEffect = "copy";
+      });
+      board.addEventListener("dragleave", () => board.classList.remove("drag-over"));
+      board.addEventListener("drop", (e) => {
+        e.preventDefault();
+        board.classList.remove("drag-over");
+        const shape =
+          e.dataTransfer.getData("application/x-shape") || draggingShape || selectedShape;
+        const slot = e.target.closest(".tile-slot");
+        if (slot) placeAtSlot(zone, +slot.dataset.i, shape);
+        else placeNext(zone, shape);
+      });
+      board.addEventListener("click", (e) => {
+        const slot = e.target.closest(".tile-slot");
+        if (slot) placeAtSlot(zone, +slot.dataset.i, selectedShape);
+        else placeNext(zone, selectedShape);
+      });
+    });
+
     let touchShape = null;
-    let touchGhost = null;
+    let touchEl = null;
 
-    document.querySelectorAll(".palette-item").forEach((item) => {
-      item.addEventListener(
+    document.querySelectorAll(".palette-pick").forEach((pick) => {
+      pick.addEventListener(
         "touchstart",
         (e) => {
-          touchShape = item.dataset.shape;
+          touchShape = pick.dataset.shape;
           selectPalette(touchShape);
-          const touch = e.touches[0];
-          touchGhost = document.createElement("div");
-          touchGhost.className = "drag-ghost";
-          touchGhost.innerHTML = shapeSvg(touchShape, SHAPES[touchShape].color, 48);
-          touchGhost.style.left = touch.clientX - 24 + "px";
-          touchGhost.style.top = touch.clientY - 24 + "px";
-          document.body.appendChild(touchGhost);
+          touchEl = document.createElement("div");
+          touchEl.className = "drag-ghost";
+          touchEl.innerHTML = `<div class="pick-shape ${touchShape}" style="width:48px;height:48px"></div>`;
+          const t = e.touches[0];
+          touchEl.style.left = t.clientX - 24 + "px";
+          touchEl.style.top = t.clientY - 24 + "px";
+          document.body.appendChild(touchEl);
         },
         { passive: true }
       );
@@ -596,106 +744,29 @@
     document.addEventListener(
       "touchmove",
       (e) => {
-        if (!touchGhost) return;
-        const touch = e.touches[0];
-        touchGhost.style.left = touch.clientX - 24 + "px";
-        touchGhost.style.top = touch.clientY - 24 + "px";
+        if (!touchEl) return;
+        const t = e.touches[0];
+        touchEl.style.left = t.clientX - 24 + "px";
+        touchEl.style.top = t.clientY - 24 + "px";
       },
       { passive: true }
     );
 
     document.addEventListener("touchend", (e) => {
-      if (!touchGhost || !touchShape) return;
-      const touch = e.changedTouches[0];
-      const el = document.elementFromPoint(touch.clientX, touch.clientY);
-      const cell = el?.closest(".drop-cell");
-      if (cell) placeInCell(cell.dataset.zone, +cell.dataset.i, touchShape);
-      touchGhost.remove();
-      touchGhost = null;
+      if (!touchEl) return;
+      const t = e.changedTouches[0];
+      const target = document.elementFromPoint(t.clientX, t.clientY);
+      const board = target?.closest(".compare-board");
+      if (board) {
+        const zone = board.dataset.zone;
+        const slot = target.closest(".tile-slot");
+        if (slot) placeAtSlot(zone, +slot.dataset.i, touchShape);
+        else placeNext(zone, touchShape);
+      }
+      touchEl.remove();
+      touchEl = null;
       touchShape = null;
     });
-  }
-
-  function placeInCell(zone, index, shape) {
-    const max = ZONE_SIZE[zone].total;
-    if (index < 0 || index >= max) return;
-    zoneData[zone][index] = shape;
-    renderZones();
-  }
-
-  function bindDropZones() {
-    document.querySelectorAll(".drop-zone").forEach((zone) => {
-      zone.addEventListener("dragover", (e) => {
-        if (e.target.classList.contains("drop-cell")) {
-          e.preventDefault();
-          e.dataTransfer.dropEffect = "copy";
-        }
-      });
-      zone.addEventListener("drop", (e) => {
-        const cell = e.target.closest(".drop-cell");
-        if (!cell) return;
-        e.preventDefault();
-        const shape = e.dataTransfer.getData("text/plain") || dragShape || selectedShape;
-        placeInCell(cell.dataset.zone, +cell.dataset.i, shape);
-      });
-      zone.addEventListener("click", (e) => {
-        const cell = e.target.closest(".drop-cell");
-        if (!cell) return;
-        placeInCell(cell.dataset.zone, +cell.dataset.i, selectedShape);
-      });
-    });
-  }
-
-  function renderZones() {
-    ["a", "b"].forEach((zone) => {
-      const grid = document.getElementById(zone === "a" ? "gridA" : "gridB");
-      const cells = grid.querySelectorAll(".drop-cell");
-      const data = zoneData[zone];
-      cells.forEach((cell, i) => {
-        const shape = data[i];
-        if (shape) {
-          cell.classList.add("filled");
-          cell.innerHTML = shapeSvg(shape, SHAPES[shape].color, 36);
-        } else {
-          cell.classList.remove("filled");
-          cell.innerHTML = "";
-        }
-      });
-      const count = data.filter(Boolean).length;
-      const dominant = getDominantShape(data) || selectedShape;
-      document.getElementById(zone === "a" ? "iconA" : "iconB").innerHTML = counterIcon(dominant);
-      document.getElementById(zone === "a" ? "textA" : "textB").textContent = "× " + count;
-    });
-  }
-
-  function getDominantShape(arr) {
-    const counts = {};
-    arr.filter(Boolean).forEach((s) => {
-      counts[s] = (counts[s] || 0) + 1;
-    });
-    let best = null;
-    let max = 0;
-    for (const k in counts) {
-      if (counts[k] > max) {
-        max = counts[k];
-        best = k;
-      }
-    }
-    return best;
-  }
-
-  function tessellate(zone) {
-    const { total } = ZONE_SIZE[zone];
-    zoneData[zone] = Array(total).fill(selectedShape);
-    renderZones();
-    showToast(`${zone === "a" ? "①" : "②"}号框已密铺完成`);
-  }
-
-  function clearAll() {
-    zoneData.a = [];
-    zoneData.b = [];
-    renderZones();
-    showToast("已清空");
   }
 
   /* ---------- Tabs ---------- */
@@ -708,15 +779,15 @@
     });
   });
 
-  document.getElementById("btnFill1").onclick = () => tessellate("a");
-  document.getElementById("btnFill2").onclick = () => tessellate("b");
-  document.getElementById("btnClear").onclick = clearAll;
+  document.getElementById("btnFill1").onclick = () => fillAll("a", "square");
+  document.getElementById("btnFill2").onclick = () => fillAll("b", "circle");
+  document.getElementById("btnClear").onclick = clearCompare;
 
   initLearnColors();
   initLearnShapes();
-  initZoneGrids();
-  initPalette();
-  renderZones();
+  buildSlotGrids();
+  initCompareInteractions();
+  renderCompare();
 })();
   </script>
 </body>
