@@ -32,9 +32,35 @@ jobs:
 
       - name: Prepare site
         run: |
-          mkdir -p _site/grade2
+          mkdir -p _site/grade2 _site/数学一年级 _site/area
           cp -r 数学一年级/* _site/
+          cp -r 数学一年级/* _site/数学一年级/
+          cp 数学一年级/area.html _site/area/index.html
+          cp 数学一年级/area.html "_site/认识面积.html"
+          cp 数学一年级/area.html "_site/数学一年级/认识面积.html"
           cp -r 数学二年级/* _site/grade2/
+          cat > _site/404.html <<'HTMLEOF'
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>页面未找到 · 认识面积课件</title>
+            <meta http-equiv="refresh" content="2;url=area.html" />
+            <style>
+              body{font-family:system-ui,sans-serif;text-align:center;padding:48px 20px;background:#e8f8f5;color:#37474f}
+              a{color:#3d8fd9;font-size:1.1rem}
+              h1{font-size:1.5rem}
+            </style>
+          </head>
+          <body>
+            <h1>404 页面不存在</h1>
+            <p>正在跳转到认识面积课件…</p>
+            <p><a href="area.html">点击打开：认识面积课件</a></p>
+            <p><a href="./">一年级数学手册首页</a></p>
+          </body>
+          </html>
+          HTMLEOF
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
