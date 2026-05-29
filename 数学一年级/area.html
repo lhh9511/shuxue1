@@ -178,6 +178,9 @@
       max-width: 280px;
       text-align: center;
     }
+    .compare-col.col-b {
+      max-width: 310px;
+    }
     .compare-counter {
       font-family: var(--font-display);
       font-size: 1.15rem;
@@ -205,7 +208,6 @@
     }
     .compare-board {
       width: 100%;
-      height: 128px;
       border: 3px solid #90a4ae;
       border-radius: 8px;
       background: #fff;
@@ -213,6 +215,15 @@
       margin: 0 auto;
       cursor: pointer;
       transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .compare-board.board-a {
+      height: 128px;
+      max-width: 260px;
+    }
+    .compare-board.board-b {
+      height: 152px;
+      max-width: 290px;
+      padding: 8px;
     }
     .compare-board.drag-over {
       border-color: var(--teal);
@@ -429,24 +440,24 @@
 
     <!-- 面积比较 -->
     <section class="panel" id="panel-compare">
-      <p class="hint">拖动图形填入空位；已有图形不会消失。点「密铺」只补空白格（可混放方块、圆、三角）</p>
+      <p class="hint">①号 10 个正方形 · ②号稍大 12 个圆形。可往空位添加其他图形；再次点击同一格或密铺可覆盖替换</p>
       <div class="compare-stage">
-        <div class="compare-col">
+        <div class="compare-col col-a">
           <div class="compare-counter" id="counterA">
             <span class="mini-shape square" id="miniA"></span>
             <span>× <strong id="countA">0</strong></span>
           </div>
-          <div class="compare-board" id="boardA" data-zone="a" tabindex="0" aria-label="图形1填充区">
+          <div class="compare-board board-a" id="boardA" data-zone="a" tabindex="0" aria-label="①号：10格正方形">
             <div class="tile-grid grid-a" id="gridA"></div>
           </div>
           <span class="compare-badge n1">1</span>
         </div>
-        <div class="compare-col">
+        <div class="compare-col col-b">
           <div class="compare-counter" id="counterB">
             <span class="mini-shape circle" id="miniB"></span>
             <span>× <strong id="countB">0</strong></span>
           </div>
-          <div class="compare-board" id="boardB" data-zone="b" tabindex="0" aria-label="图形2填充区">
+          <div class="compare-board board-b" id="boardB" data-zone="b" tabindex="0" aria-label="②号：12格圆形">
             <div class="tile-grid grid-b" id="gridB"></div>
           </div>
           <span class="compare-badge n2">2</span>
@@ -638,7 +649,7 @@
   function placeNext(zone, shape) {
     const i = firstEmptyIndex(zone);
     if (i === -1) {
-      showToast("已经铺满了");
+      showToast("已满，请点击某一格覆盖，或点密铺按钮");
       return false;
     }
     slots[zone][i] = shape;
@@ -652,15 +663,15 @@
 
   function placeAtSlot(zone, index, shape) {
     if (index < 0 || index >= ZONE_CFG[zone].total) return;
-    if (slots[zone][index]) {
-      showToast("该格已有图形，请选空位添加");
-      return;
-    }
+    const had = slots[zone][index];
     slots[zone][index] = shape;
     renderCompare();
+    if (had && had !== shape) {
+      showToast(`已替换为${shapeLabel(shape)}`);
+    }
   }
 
-  /** 密铺：只填充空位，不覆盖已有图形 */
+  /** 往空位添加（不覆盖已有格） */
   function fillEmpty(zone, shape) {
     let added = 0;
     slots[zone].forEach((s, i) => {
@@ -670,11 +681,20 @@
       }
     });
     if (added === 0) {
-      showToast(`${zone === "a" ? "①" : "②"}号框已满，无法再添加`);
+      showToast("没有空位了，请点击某一格覆盖替换");
     } else {
-      showToast(`${zone === "a" ? "①" : "②"}号框已添加 ${added} 个${shapeLabel(shape)}`);
+      showToast(`已添加 ${added} 个${shapeLabel(shape)}`);
     }
     renderCompare();
+  }
+
+  /** ①号密铺：10 个正方形；②号密铺：12 个圆形（全覆盖） */
+  function fillZone(zone, shape) {
+    const n = ZONE_CFG[zone].total;
+    for (let i = 0; i < n; i++) slots[zone][i] = shape;
+    renderCompare();
+    if (zone === "a") showToast("①号密铺：10 个正方形");
+    else showToast("②号密铺：12 个圆形");
   }
 
   function clearCompare() {
@@ -793,8 +813,8 @@
     });
   });
 
-  document.getElementById("btnFill1").onclick = () => fillEmpty("a", selectedShape);
-  document.getElementById("btnFill2").onclick = () => fillEmpty("b", selectedShape);
+  document.getElementById("btnFill1").onclick = () => fillZone("a", "square");
+  document.getElementById("btnFill2").onclick = () => fillZone("b", "circle");
   document.getElementById("btnClear").onclick = clearCompare;
 
   initLearnColors();
