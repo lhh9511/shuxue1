@@ -429,7 +429,7 @@
 
     <!-- 面积比较 -->
     <section class="panel" id="panel-compare">
-      <p class="hint">拖动下方图形到框内进行填充，或点击「密铺」按钮自动铺满</p>
+      <p class="hint">拖动图形填入空位；已有图形不会消失。点「密铺」只补空白格（可混放方块、圆、三角）</p>
       <div class="compare-stage">
         <div class="compare-col">
           <div class="compare-counter" id="counterA">
@@ -646,21 +646,35 @@
     return true;
   }
 
+  function shapeLabel(shape) {
+    return { square: "正方形", circle: "圆形", triangle: "三角形" }[shape] || shape;
+  }
+
   function placeAtSlot(zone, index, shape) {
     if (index < 0 || index >= ZONE_CFG[zone].total) return;
     if (slots[zone][index]) {
-      slots[zone][index] = null;
-    } else {
-      slots[zone][index] = shape;
+      showToast("该格已有图形，请选空位添加");
+      return;
     }
+    slots[zone][index] = shape;
     renderCompare();
   }
 
-  function fillAll(zone, shape) {
-    const n = ZONE_CFG[zone].total;
-    slots[zone] = Array(n).fill(shape);
+  /** 密铺：只填充空位，不覆盖已有图形 */
+  function fillEmpty(zone, shape) {
+    let added = 0;
+    slots[zone].forEach((s, i) => {
+      if (!s) {
+        slots[zone][i] = shape;
+        added++;
+      }
+    });
+    if (added === 0) {
+      showToast(`${zone === "a" ? "①" : "②"}号框已满，无法再添加`);
+    } else {
+      showToast(`${zone === "a" ? "①" : "②"}号框已添加 ${added} 个${shapeLabel(shape)}`);
+    }
     renderCompare();
-    showToast(`${zone === "a" ? "①" : "②"}号密铺完成`);
   }
 
   function clearCompare() {
@@ -779,8 +793,8 @@
     });
   });
 
-  document.getElementById("btnFill1").onclick = () => fillAll("a", "square");
-  document.getElementById("btnFill2").onclick = () => fillAll("b", "circle");
+  document.getElementById("btnFill1").onclick = () => fillEmpty("a", selectedShape);
+  document.getElementById("btnFill2").onclick = () => fillEmpty("b", selectedShape);
   document.getElementById("btnClear").onclick = clearCompare;
 
   initLearnColors();
