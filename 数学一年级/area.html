@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>认识面积 · AI融合课</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f0f7ff;
+      --surface: #fff;
+      --primary: #5b8def;
+      --primary-dark: #3d6fd4;
+      --accent: #ff9f43;
+      --green: #2ecc71;
+      --text: #2d3436;
+      --muted: #636e72;
+      --border: #dfe6e9;
+      --radius: 18px;
+      --font-display: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
+      --font-body: "Noto Sans SC", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(91, 141, 239, 0.15), transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(255, 159, 67, 0.12), transparent 40%);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 16px;
+    }
+    .header {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
+      color: #fff;
+      padding: 16px 20px;
+      box-shadow: 0 4px 20px rgba(91, 141, 239, 0.35);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+    .header .sub { font-size: 13px; opacity: 0.9; margin-top: 2px; }
+    .back-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+    }
+    .back-link:hover { background: rgba(255,255,255,0.35); }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+    .main-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .main-tab {
+      flex: 1;
+      max-width: 220px;
+      padding: 14px 20px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      cursor: pointer;
+      background: var(--surface);
+      color: var(--muted);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      transition: all 0.2s;
+    }
+    .main-tab.active {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(91, 141, 239, 0.4);
+    }
+    .panel { display: none; animation: fadeIn 0.3s ease; }
+    .panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .card h2 {
+      font-family: var(--font-display);
+      color: var(--primary);
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .mode-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .mode-tab {
+      padding: 10px 18px;
+      border: 2px solid var(--border);
+      background: #f8f9fa;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-tab.active {
+      border-color: var(--primary);
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .toolbar-label { font-weight: 700; font-size: 14px; color: var(--muted); }
+    .colors {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .color-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-btn:hover { transform: scale(1.1); }
+    .color-btn.active {
+      border-color: var(--text);
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--primary);
+    }
+    .shape-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .shape-btn {
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 88px;
+    }
+    .shape-btn svg { width: 48px; height: 48px; }
+    .shape-btn.active {
+      border-color: var(--primary);
+      background: #eef3ff;
+    }
+    .canvas-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 16px;
+      min-height: 320px;
+    }
+    .shape-canvas {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      touch-action: manipulation;
+    }
+    .grid-cell {
+      stroke: #b2bec3;
+      stroke-width: 1;
+      fill: #fff;
+      cursor: pointer;
+      transition: fill 0.15s;
+    }
+    .grid-cell:hover { opacity: 0.85; }
+    .grid-cell.filled { stroke: rgba(0,0,0,0.15); }
+    .shape-outline {
+      fill: none;
+      stroke: #2d3436;
+      stroke-width: 3;
+      pointer-events: none;
+    }
+    .area-count {
+      text-align: center;
+      margin-top: 12px;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.15s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
+      color: #fff;
+    }
+    .btn-outline {
+      background: #fff;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    /* 面积比较 */
+    .compare-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 640px) {
+      .compare-layout { grid-template-columns: 1fr; }
+    }
+    .compare-box {
+      border: 3px dashed var(--border);
+      border-radius: 16px;
+      min-height: 220px;
+      padding: 12px;
+      background: #fafbfc;
+      position: relative;
+    }
+    .compare-box h3 {
+      font-family: var(--font-display);
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    .compare-box .drop-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 3px;
+      max-width: 240px;
+      margin: 0 auto;
+    }
+    .compare-box .drop-cell {
+      aspect-ratio: 1;
+      background: #fff;
+      border: 1px solid #dfe6e9;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .compare-box .drop-cell.filled { border-color: transparent; }
+    .tile-tray {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 16px;
+      background: #f1f3f5;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      min-height: 72px;
+    }
+    .tile {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: grab;
+      border: 2px solid rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      touch-action: none;
+    }
+    .tile.dragging { opacity: 0.5; cursor: grabbing; }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--text);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-family: var(--font-display);
+      opacity: 0;
+      transition: all 0.35s;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div>
+        <h1>📐 认识面积</h1>
+        <p class="sub">AI融合课 · 交互课件</p>
+      </div>
+      <a class="back-link" href="index.html">← 返回手册</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="main-tabs">
+      <button type="button" class="main-tab active" data-panel="learn">认识面积</button>
+      <button type="button" class="main-tab" data-panel="compare">面积比较</button>
+    </div>
+
+    <!-- 认识面积 -->
+    <section class="panel active" id="panel-learn">
+      <div class="card">
+        <h2>密铺探究</h2>
+        <p class="hint" id="modeHint">
+          <strong>一号密铺：</strong>先选颜色，再点击方格，每次涂满 1 个小方格。
+        </p>
+        <div class="mode-tabs">
+          <button type="button" class="mode-tab active" data-mode="1">一号密铺</button>
+          <button type="button" class="mode-tab" data-mode="2">二号密铺</button>
+          <button type="button" class="mode-tab" data-mode="3">三号密铺</button>
+        </div>
+        <div class="toolbar">
+          <span class="toolbar-label">选颜色</span>
+          <div class="colors" id="colorPalette"></div>
+        </div>
+        <div class="shape-list" id="shapeList"></div>
+        <div class="canvas-wrap">
+          <svg class="shape-canvas" id="learnCanvas" viewBox="0 0 300 300" aria-label="图形密铺区"></svg>
+        </div>
+        <p class="area-count" id="areaCount">已涂：0 个小方格</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-outline" id="btnClearShape">清除本图</button>
+          <button type="button" class="btn btn-accent" id="btnFillAll">一键铺满</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 面积比较 -->
+    <section class="panel" id="panel-compare">
+      <div class="card">
+        <h2>面积比较</h2>
+        <p class="hint">
+          拖动下方彩色小方块到 A、B 框里拼满图形，或点击「密铺」自动铺满。
+          比一比哪个图形面积更大！
+        </p>
+        <div class="toolbar">
+          <span class="toolbar-label">填充颜色</span>
+          <div class="colors" id="compareColors"></div>
+        </div>
+        <div class="compare-layout">
+          <div class="compare-box" data-zone="a">
+            <h3>图形 A</h3>
+            <div class="drop-grid" id="gridA"></div>
+            <p class="area-count" id="countA">0 格</p>
+          </div>
+          <div class="compare-box" data-zone="b">
+            <h3>图形 B</h3>
+            <div class="drop-grid" id="gridB"></div>
+            <p class="area-count" id="countB">0 格</p>
+          </div>
+        </div>
+        <p class="hint" id="compareResult" style="text-align:center;font-weight:700;color:var(--primary)"></p>
+        <div class="tile-tray" id="tileTray"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="btnTessellateA">密铺 A</button>
+          <button type="button" class="btn btn-primary" id="btnTessellateB">密铺 B</button>
+          <button type="button" class="btn btn-outline" id="btnClearCompare">全部清空</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+(function () {
+  const COLORS = [
+    "#ff6b6b", "#4ecdc4", "#ffe66d", "#a29bfe",
+    "#fd79a8", "#74b9ff", "#55efc4", "#fab1a0",
+  ];
+
+  const MODE_HINTS = {
+    1: "<strong>一号密铺：</strong>先选颜色，再点击方格，每次涂满 1 个小方格。",
+    2: "<strong>二号密铺：</strong>每次点击会涂满 2 个相连的小方格（横或竖）。",
+    3: "<strong>三号密铺：</strong>每次点击会涂满 3 个相连的小方格。",
+  };
+
+  /* 各图形在 10×10 逻辑网格中的有效格子 (col, row) */
+  const SHAPE_GRIDS = {
+    triangle: {
+      name: "三角形",
+      cells: (() => {
+        const c = [];
+        for (let r = 0; r < 8; r++)
+          for (let col = 0; col <= r; col++) c.push([col + 1, r + 1]);
+        return c;
+      })(),
+      outline: "M 30 260 L 270 260 L 150 40 Z",
+    },
+    square: {
+      name: "正方形",
+      cells: (() => {
+        const c = [];
+        for (let r = 1; r <= 7; r++)
+          for (let col = 1; col <= 7; col++) c.push([col, r]);
+        return c;
+      })(),
+      outline: "M 55 55 L 245 55 L 245 245 L 55 245 Z",
+    },
+    parallelogram: {
+      name: "平行四边形",
+      cells: (() => {
+        const c = [];
+        for (let r = 0; r < 6; r++)
+          for (let col = 0; col < 6; col++) c.push([col + 2 + Math.floor(r / 2), r + 2]);
+        return c;
+      })(),
+      outline: "M 80 70 L 250 70 L 220 230 L 50 230 Z",
+    },
+    trapezoid: {
+      name: "梯形",
+      cells: (() => {
+        const c = [];
+        for (let r = 0; r < 6; r++) {
+          const w = 3 + r;
+          const start = Math.floor((7 - w) / 2) + 1;
+          for (let i = 0; i < w; i++) c.push([start + i, r + 2]);
+        }
+        return c;
+      })(),
+      outline: "M 90 80 L 210 80 L 250 240 L 50 240 Z",
+    },
+    circle: {
+      name: "圆形",
+      cells: (() => {
+        const c = [];
+        const cx = 4, cy = 4, r = 3.2;
+        for (let row = 1; row <= 8; row++)
+          for (let col = 1; col <= 8; col++)
+            if ((col - cx) ** 2 + (row - cy) ** 2 <= r * r) c.push([col, row]);
+        return c;
+      })(),
+      outline: null,
+      circle: { cx: 150, cy: 150, r: 105 },
+    },
+    notch: {
+      name: "缺角正方形",
+      cells: (() => {
+        const c = [];
+        for (let r = 1; r <= 7; r++)
+          for (let col = 1; col <= 7; col++)
+            if (!(col >= 6 && r <= 2)) c.push([col, r]);
+        return c;
+      })(),
+      outline: "M 55 55 L 245 55 L 245 245 L 55 245 Z M 245 55 L 245 120 L 180 55 Z",
+    },
+  };
+
+  const SHAPE_ORDER = ["triangle", "square", "parallelogram", "trapezoid", "circle", "notch"];
+
+  let currentMode = 1;
+  let currentShape = "triangle";
+  let selectedColor = COLORS[0];
+  let fillState = {};
+  let compareColor = COLORS[0];
+  const compareFill = { a: {}, b: {} };
+
+  const GRID = 10;
+  const PAD = 30;
+  const SIZE = 240;
+  const STEP = SIZE / GRID;
+
+  function cellToXY(col, row) {
+    return {
+      x: PAD + (col - 1) * STEP,
+      y: PAD + (row - 1) * STEP,
+    };
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  function initColors(containerId, onPick) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = COLORS.map(
+      (c, i) =>
+        `<button type="button" class="color-btn${i === 0 ? " active" : ""}" data-color="${c}" style="background:${c}" aria-label="颜色"></button>`
+    ).join("");
+    el.addEventListener("click", (e) => {
+      const btn = e.target.closest(".color-btn");
+      if (!btn) return;
+      el.querySelectorAll(".color-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      onPick(btn.dataset.color);
+    });
+  }
+
+  function getShapeKey() {
+    return `${currentShape}-${currentMode}`;
+  }
+
+  function getFilledCells() {
+    return fillState[getShapeKey()] || {};
+  }
+
+  function setFilledCells(map) {
+    fillState[getShapeKey()] = map;
+  }
+
+  function neighbors(col, row, cells) {
+    const set = new Set(cells.map((c) => c.join(",")));
+    const n = [];
+    [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dc, dr]) => {
+      const k = `${col + dc},${row + dr}`;
+      if (set.has(k)) n.push([col + dc, row + dr]);
+    });
+    return n;
+  }
+
+  function pickCellsToFill(col, row, cells, mode) {
+    const key = `${col},${row}`;
+    const filled = getFilledCells();
+    if (filled[key]) return [];
+
+    if (mode === 1) return [[col, row]];
+
+    const empty = cells.filter(([c, r]) => !filled[`${c},${r}`]);
+    const emptySet = new Set(empty.map((c) => c.join(",")));
+    if (!emptySet.has(key)) return [];
+
+    if (mode === 2) {
+      const nbs = neighbors(col, row, empty).filter(([c, r]) => emptySet.has(`${c},${r}`));
+      if (nbs.length) return [[col, row], nbs[0]];
+      const other = empty.find(([c, r]) => `${c},${r}` !== key);
+      return other ? [[col, row], other] : [[col, row]];
+    }
+
+    if (mode === 3) {
+      const nbs = neighbors(col, row, empty);
+      if (nbs.length >= 2) return [[col, row], nbs[0], nbs[1]];
+      if (nbs.length === 1) {
+        const n2 = neighbors(nbs[0][0], nbs[0][1], empty).find(
+          ([c, r]) => `${c},${r}` !== key && `${c},${r}` !== `${nbs[0][0]},${nbs[0][1]}`
+        );
+        return n2 ? [[col, row], nbs[0], n2] : [[col, row], nbs[0]];
+      }
+      return empty.slice(0, 3);
+    }
+    return [[col, row]];
+  }
+
+  function renderLearnCanvas() {
+    const svg = document.getElementById("learnCanvas");
+    const shape = SHAPE_GRIDS[currentShape];
+    const cells = shape.cells;
+    const filled = getFilledCells();
+    let html = "";
+
+    if (shape.circle) {
+      html += `<circle cx="${shape.circle.cx}" cy="${shape.circle.cy}" r="${shape.circle.r}" class="shape-outline" fill="#fff"/>`;
+    } else if (shape.outline) {
+      html += `<path d="${shape.outline}" class="shape-outline" fill="#fff"/>`;
+    }
+
+    cells.forEach(([col, row]) => {
+      const { x, y } = cellToXY(col, row);
+      const k = `${col},${row}`;
+      const color = filled[k] || "#fff";
+      const cls = filled[k] ? "grid-cell filled" : "grid-cell";
+      html += `<rect class="${cls}" data-col="${col}" data-row="${row}" x="${x}" y="${y}" width="${STEP - 2}" height="${STEP - 2}" rx="2" fill="${color}"/>`;
+    });
+
+    svg.innerHTML = html;
+
+    const count = Object.keys(filled).length;
+    document.getElementById("areaCount").textContent =
+      `已涂：${count} 个小方格（共 ${cells.length} 格）`;
+
+    svg.querySelectorAll(".grid-cell").forEach((rect) => {
+      rect.addEventListener("click", () => {
+        const col = +rect.dataset.col;
+        const row = +rect.dataset.row;
+        const toFill = pickCellsToFill(col, row, cells, currentMode);
+        if (!toFill.length) return;
+        const map = { ...filled };
+        toFill.forEach(([c, r]) => {
+          const kk = `${c},${r}`;
+          if (cells.some(([cc, rr]) => cc === c && rr === r)) map[kk] = selectedColor;
+        });
+        setFilledCells(map);
+        renderLearnCanvas();
+      });
+    });
+  }
+
+  function renderShapeButtons() {
+    const list = document.getElementById("shapeList");
+    list.innerHTML = SHAPE_ORDER.map((id) => {
+      const s = SHAPE_GRIDS[id];
+      const mini = miniSvg(id);
+      return `<button type="button" class="shape-btn${id === currentShape ? " active" : ""}" data-shape="${id}">${mini}<span>${s.name}</span></button>`;
+    }).join("");
+
+    list.querySelectorAll(".shape-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentShape = btn.dataset.shape;
+        list.querySelectorAll(".shape-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderLearnCanvas();
+      });
+    });
+  }
+
+  function miniSvg(id) {
+    const paths = {
+      triangle: '<polygon points="24,40 40,40 32,18" fill="#dfe6e9" stroke="#636e72"/>',
+      square: '<rect x="16" y="16" width="32" height="32" fill="#dfe6e9" stroke="#636e72"/>',
+      parallelogram: '<polygon points="14,22 42,18 38,38 10,42" fill="#dfe6e9" stroke="#636e72"/>',
+      trapezoid: '<polygon points="18,20 46,20 50,42 14,42" fill="#dfe6e9" stroke="#636e72"/>',
+      circle: '<circle cx="32" cy="30" r="18" fill="#dfe6e9" stroke="#636e72"/>',
+      notch: '<path d="M16 16h32v32H16z M48 16v14H34V16z" fill="#dfe6e9" stroke="#636e72"/>',
+    };
+    return `<svg viewBox="0 0 64 56" aria-hidden="true">${paths[id]}</svg>`;
+  }
+
+  /* ---------- 面积比较 ---------- */
+  const COMPARE_SHAPES = {
+    a: { rows: 5, cols: 6, mask: null },
+    b: { rows: 4, cols: 6, mask: "L" },
+  };
+
+  function buildCompareMask(rows, cols, type) {
+    const cells = [];
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++) {
+        if (type === "L" && c >= 4 && r <= 1) continue;
+        cells.push({ r, c });
+      }
+    return cells;
+  }
+
+  function renderCompareGrids() {
+    ["a", "b"].forEach((zone) => {
+      const cfg = zone === "a"
+        ? { rows: 5, cols: 6, type: null }
+        : { rows: 4, cols: 6, type: "L" };
+      const cells = buildCompareMask(cfg.rows, cfg.cols, cfg.type);
+      const grid = document.getElementById(zone === "a" ? "gridA" : "gridB");
+      grid.style.gridTemplateColumns = `repeat(${cfg.cols}, 1fr)`;
+      const filled = compareFill[zone];
+      grid.innerHTML = cells
+        .map(({ r, c }) => {
+          const k = `${c},${r}`;
+          const color = filled[k] || "";
+          return `<div class="drop-cell${color ? " filled" : ""}" data-zone="${zone}" data-c="${c}" data-r="${r}" style="background:${color || "#fff"}"></div>`;
+        })
+        .join("");
+
+      const count = Object.keys(filled).length;
+      document.getElementById(zone === "a" ? "countA" : "countB").textContent = `${count} 格`;
+    });
+    updateCompareResult();
+  }
+
+  function updateCompareResult() {
+    const ca = Object.keys(compareFill.a).length;
+    const cb = Object.keys(compareFill.b).length;
+    const el = document.getElementById("compareResult");
+    if (!ca && !cb) {
+      el.textContent = "";
+      return;
+    }
+    if (ca > cb) el.textContent = "图形 A 的面积更大！";
+    else if (cb > ca) el.textContent = "图形 B 的面积更大！";
+    else el.textContent = "两个图形面积一样大！";
+  }
+
+  function tessellateZone(zone) {
+    const cfg = zone === "a"
+      ? { rows: 5, cols: 6, type: null }
+      : { rows: 4, cols: 6, type: "L" };
+    const cells = buildCompareMask(cfg.rows, cfg.cols, cfg.type);
+    compareFill[zone] = {};
+    cells.forEach(({ r, c }) => {
+      compareFill[zone][`${c},${r}`] = compareColor;
+    });
+    renderCompareGrids();
+    showToast(`图形 ${zone.toUpperCase()} 已密铺完成`);
+  }
+
+  function initTileTray() {
+    const tray = document.getElementById("tileTray");
+    tray.innerHTML = "";
+    for (let i = 0; i < 24; i++) {
+      const t = document.createElement("div");
+      t.className = "tile";
+      t.draggable = true;
+      t.style.background = compareColor;
+      t.dataset.color = compareColor;
+      tray.appendChild(t);
+    }
+
+    let dragged = null;
+
+    tray.addEventListener("dragstart", (e) => {
+      if (!e.target.classList.contains("tile")) return;
+      dragged = e.target;
+      e.target.classList.add("dragging");
+      e.dataTransfer.setData("text/plain", compareColor);
+    });
+    tray.addEventListener("dragend", (e) => {
+      if (e.target.classList) e.target.classList.remove("dragging");
+    });
+
+    document.querySelectorAll(".drop-cell").forEach((cell) => {
+      cell.addEventListener("dragover", (e) => e.preventDefault());
+      cell.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const zone = cell.dataset.zone;
+        const k = `${cell.dataset.c},${cell.dataset.r}`;
+        const color = e.dataTransfer.getData("text/plain") || compareColor;
+        compareFill[zone][k] = color;
+        renderCompareGrids();
+        initTileTray();
+      });
+      cell.addEventListener("click", () => {
+        const zone = cell.dataset.zone;
+        const k = `${cell.dataset.c},${cell.dataset.r}`;
+        compareFill[zone][k] = compareColor;
+        renderCompareGrids();
+      });
+    });
+  }
+
+  function refreshTrayColors() {
+    document.querySelectorAll(".tile").forEach((t) => {
+      t.style.background = compareColor;
+      t.dataset.color = compareColor;
+    });
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  document.querySelectorAll(".main-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".main-tab").forEach((t) => t.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById("panel-" + tab.dataset.panel).classList.add("active");
+    });
+  });
+
+  document.querySelectorAll(".mode-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      currentMode = +tab.dataset.mode;
+      document.querySelectorAll(".mode-tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById("modeHint").innerHTML = MODE_HINTS[currentMode];
+      renderLearnCanvas();
+    });
+  });
+
+  initColors("colorPalette", (c) => {
+    selectedColor = c;
+  });
+
+  initColors("compareColors", (c) => {
+    compareColor = c;
+    refreshTrayColors();
+  });
+
+  document.getElementById("btnClearShape").onclick = () => {
+    setFilledCells({});
+    renderLearnCanvas();
+    showToast("已清除");
+  };
+
+  document.getElementById("btnFillAll").onclick = () => {
+    const cells = SHAPE_GRIDS[currentShape].cells;
+    const map = {};
+    cells.forEach(([c, r]) => {
+      map[`${c},${r}`] = selectedColor;
+    });
+    setFilledCells(map);
+    renderLearnCanvas();
+    showToast("已铺满");
+  };
+
+  document.getElementById("btnTessellateA").onclick = () => tessellateZone("a");
+  document.getElementById("btnTessellateB").onclick = () => tessellateZone("b");
+  document.getElementById("btnClearCompare").onclick = () => {
+    compareFill.a = {};
+    compareFill.b = {};
+    renderCompareGrids();
+    initTileTray();
+    showToast("已清空");
+  };
+
+  renderShapeButtons();
+  renderLearnCanvas();
+  renderCompareGrids();
+  initTileTray();
+})();
+  </script>
+</body>
+</html>

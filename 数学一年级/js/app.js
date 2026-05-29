@@ -98,7 +98,7 @@
     nav.innerHTML = LESSONS.map(
       (l) => `
       <button type="button" class="nav-item ${state.currentPage === l.id ? "active" : ""} ${state.completed.has(l.id) ? "done" : ""}"
-        data-go="${l.id}">
+        data-go="${l.id}" ${l.external ? `data-external="${l.external}"` : ""}>
         <span class="emoji">${l.emoji}</span>
         ${l.title}
       </button>`
@@ -111,7 +111,7 @@
     const grid = document.getElementById("homeCards");
     grid.innerHTML = LESSONS.map(
       (l) => `
-      <article class="topic-card" data-go="${l.id}">
+      <article class="topic-card" data-go="${l.id}" ${l.external ? `data-external="${l.external}"` : ""}>
         <span class="icon">${l.emoji}</span>
         <h3>${l.title}</h3>
         <p>${l.desc}</p>
@@ -854,7 +854,12 @@
 
     document.body.addEventListener("click", (e) => {
       const go = e.target.closest("[data-go]");
-      if (go) goTo(go.dataset.go);
+      if (!go) return;
+      if (go.dataset.external) {
+        window.location.href = go.dataset.external;
+        return;
+      }
+      goTo(go.dataset.go);
     });
 
     const menuBtn = document.getElementById("menuBtn");
