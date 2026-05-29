@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Noto Sans SC", sans-serif; }
+    .cover {
+      width: 1080px; height: 1440px; position: relative; overflow: hidden;
+      background: linear-gradient(160deg, #6aa0ff 0%, #7c5ce0 100%);
+      padding: 64px 56px; color: #fff;
+      display: flex; flex-direction: column;
+    }
+    .cover::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255,255,255,0.18), transparent 35%),
+        radial-gradient(circle at 90% 95%, rgba(255,159,67,0.25), transparent 40%);
+    }
+    .tag-top {
+      position: relative; align-self: flex-start;
+      background: #ffe66d; color: #5b3b00; font-weight: 900;
+      padding: 12px 28px; border-radius: 999px; font-size: 34px;
+      box-shadow: 0 8px 0 rgba(0,0,0,0.08);
+    }
+    .title {
+      position: relative; font-family: "ZCOOL KuaiLe", sans-serif;
+      font-size: 150px; line-height: 1.05; margin-top: 30px;
+      text-shadow: 0 6px 0 rgba(0,0,0,0.12);
+    }
+    .title .accent { color: #ffe66d; }
+    .subtitle {
+      position: relative; font-size: 46px; font-weight: 900; margin-top: 18px;
+      background: rgba(255,255,255,0.16); display: inline-block; align-self: flex-start;
+      padding: 10px 24px; border-radius: 16px;
+    }
+    .shot {
+      position: relative; margin-top: 40px; border-radius: 28px; overflow: hidden;
+      border: 8px solid #fff; box-shadow: 0 24px 50px rgba(0,0,0,0.3);
+      height: 560px; background: #fff;
+    }
+    .shot img { width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+    .points { position: relative; margin-top: 38px; display: flex; flex-direction: column; gap: 18px; }
+    .point {
+      font-size: 44px; font-weight: 900; display: flex; align-items: center; gap: 16px;
+      background: rgba(255,255,255,0.14); padding: 16px 26px; border-radius: 18px;
+    }
+    .point .ic { font-size: 46px; }
+    .footer {
+      position: relative; margin-top: auto; display: flex; align-items: center; justify-content: space-between;
+      background: #ff9f43; border-radius: 22px; padding: 26px 34px; box-shadow: 0 10px 0 rgba(0,0,0,0.12);
+    }
+    .footer .cta { font-family: "ZCOOL KuaiLe", sans-serif; font-size: 50px; color: #fff; }
+    .footer .free { background: #fff; color: #ff7a00; font-weight: 900; font-size: 38px; padding: 12px 24px; border-radius: 14px; }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <span class="tag-top">{{COVER_TAG}}</span>
+    <div class="title">{{COVER_TITLE_A}}<br /><span class="accent">{{COVER_TITLE_B}}</span></div>
+    <span class="subtitle">{{COVER_SUB}}</span>
+    <div class="shot"><img src="{{SHOT}}" alt="课件演示" /></div>
+    <div class="points">
+      <div class="point"><span class="ic">🎬</span>{{POINT1}}</div>
+      <div class="point"><span class="ic">🏆</span>闯关答题，答对撒花得⭐</div>
+      <div class="point"><span class="ic">📱</span>手机扫码即玩，无需下载</div>
+    </div>
+    <div class="footer">
+      <span class="cta">关注 + 回复【{{KEYWORD}}】</span>
+      <span class="free">免费领课件</span>
+    </div>
+  </div>
+</body>
+</html>

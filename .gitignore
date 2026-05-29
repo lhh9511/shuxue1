@@ -13,3 +13,11 @@ desktop.ini
 # Editor
 .vscode/
 .idea/
+
+# Node deps & archives
+node_modules/
+*.zip
+
+# 允许课件文案与模板入库（覆盖上面的 *.md 规则）
+!数学一年级/campaigns/**/*.md
+!数学一年级/templates/*.md

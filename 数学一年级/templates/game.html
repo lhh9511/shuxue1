@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{PAGE_TITLE}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f0f7ff;
+      --surface: #fff;
+      --primary: #5b8def;
+      --primary-dark: #3d6fd4;
+      --accent: #ff9f43;
+      --green: #2ecc71;
+      --red: #ff6b6b;
+      --blue: #4ea8ff;
+      --text: #2d3436;
+      --muted: #636e72;
+      --border: #dfe6e9;
+      --radius: 18px;
+      --font-display: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
+      --font-body: "Noto Sans SC", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(91, 141, 239, 0.15), transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(255, 159, 67, 0.12), transparent 40%);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 16px;
+    }
+    body.locked { overflow: hidden; }
+
+    /* ---------- 验证码 ---------- */
+    .auth-gate {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(91,141,239,0.95), rgba(124,92,224,0.95));
+    }
+    .auth-gate.hidden { display: none; }
+    .auth-card {
+      background: #fff; border-radius: 22px; padding: 32px 28px;
+      width: 100%; max-width: 360px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .auth-icon { font-size: 3rem; }
+    .auth-card h2 { font-family: var(--font-display); color: var(--primary-dark); margin: 6px 0 4px; font-size: 1.5rem; }
+    .auth-hint { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+    .auth-input {
+      width: 100%; padding: 14px 16px; font-size: 1.3rem; letter-spacing: 6px;
+      text-align: center; border: 2px solid var(--border); border-radius: 14px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .auth-input:focus { border-color: var(--primary); }
+    .auth-remember { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 14px 0; font-size: 13px; color: var(--muted); }
+    .auth-submit {
+      width: 100%; padding: 14px; border: none; border-radius: 14px; cursor: pointer;
+      font-family: var(--font-display); font-size: 1.2rem; color: #fff;
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
+    }
+    .auth-submit:active { transform: scale(0.98); }
+    .auth-error { color: var(--red); font-size: 13px; min-height: 18px; margin-top: 10px; }
+    .shake { animation: shake 0.4s; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    /* ---------- 头部 ---------- */
+    .app.hidden { display: none; }
+    .header {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
+      color: #fff; padding: 16px 20px; position: sticky; top: 0; z-index: 50;
+      box-shadow: 0 4px 20px rgba(91, 141, 239, 0.35);
+    }
+    .header-inner {
+      max-width: 900px; margin: 0 auto; display: flex; align-items: center;
+      justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    }
+    .header h1 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; }
+    .header .sub { font-size: 13px; opacity: 0.9; margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .stars-bar {
+      background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 999px;
+      font-family: var(--font-display); font-size: 1.1rem;
+    }
+    .back-link { color: #fff; text-decoration: none; font-size: 14px; padding: 8px 14px; background: rgba(255,255,255,0.2); border-radius: 10px; }
+    .back-link:hover { background: rgba(255,255,255,0.35); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 20px 16px 48px; }
+    .main-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .main-tab {
+      flex: 1; max-width: 240px; padding: 14px 20px; border: none; border-radius: var(--radius);
+      font-family: var(--font-display); font-size: 1.15rem; cursor: pointer;
+      background: var(--surface); color: var(--muted); box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      transition: all 0.2s;
+    }
+    .main-tab.active {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0); color: #fff;
+      box-shadow: 0 6px 16px rgba(91, 141, 239, 0.4);
+    }
+    .panel { display: none; animation: fadeIn 0.3s ease; }
+    .panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .card { background: var(--surface); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .card h2 { font-family: var(--font-display); color: var(--primary); font-size: 1.25rem; margin-bottom: 12px; }
+    .hint { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 14px; }
+
+    /* ---------- 算式 ---------- */
+    .equation { text-align: center; font-family: var(--font-display); font-size: 2.6rem; color: var(--text); margin: 10px 0 20px; }
+    .equation .op { color: var(--accent); margin: 0 10px; }
+    .equation .q { color: var(--primary); }
+
+    /* ---------- 十格阵 ---------- */
+    .frames { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+    .frame-wrap { text-align: center; }
+    .frame-label { font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+    .tenframe {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;
+      padding: 6px; background: #f1f3f5; border-radius: 12px; width: 220px;
+    }
+    .tf-cell {
+      aspect-ratio: 1; background: #fff; border: 2px solid #e2e8f0; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dot { width: 64%; height: 64%; border-radius: 50%; display: block; animation: pop 0.25s ease; }
+    @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+    .steps { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+    .step {
+      background: #f8faff; border: 2px solid #e7efff; border-radius: 12px; padding: 12px 16px;
+      font-size: 1.15rem; text-align: center; opacity: 0; transform: translateY(6px);
+    }
+    .step.show { opacity: 1; transform: none; transition: all 0.3s; }
+    .step b { color: var(--primary-dark); font-size: 1.3rem; }
+    .step .hl { color: var(--accent); font-weight: 700; }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
+    .btn { padding: 12px 24px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 15px; font-family: var(--font-display); transition: transform 0.15s; }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), #7c5ce0); color: #fff; }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-outline { background: #fff; border: 2px solid var(--border); color: var(--text); }
+
+    /* ---------- 闯关 ---------- */
+    .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: 420px; margin: 0 auto; }
+    .option {
+      padding: 22px; font-family: var(--font-display); font-size: 1.8rem; border-radius: 16px;
+      border: 3px solid var(--border); background: #fff; cursor: pointer; transition: all 0.15s;
+    }
+    .option:hover { border-color: var(--primary); background: #f4f8ff; }
+    .option.correct { border-color: var(--green); background: #eafff3; color: var(--green); }
+    .option.wrong { border-color: var(--red); background: #fff0f0; color: var(--red); }
+    .progress-line { text-align: center; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text); color: #fff; padding: 12px 24px; border-radius: 999px;
+      font-family: var(--font-display); opacity: 0; transition: all 0.35s; z-index: 150; pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 140; overflow: hidden; }
+    .confetti-piece { position: absolute; top: -16px; width: 10px; height: 14px; border-radius: 2px; animation: fall 1.6s linear forwards; }
+    @keyframes fall { to { transform: translateY(105vh) rotate(540deg); opacity: 0.2; } }
+  </style>
+</head>
+<body class="locked">
+  <!-- 验证码 -->
+  <div class="auth-gate" id="authGate" role="dialog" aria-modal="true">
+    <div class="auth-card">
+      <div class="auth-icon">🔐</div>
+      <h2>验证后进入</h2>
+      <p class="auth-hint" id="authHint"></p>
+      <input type="password" id="authCode" class="auth-input" inputmode="numeric" autocomplete="off" maxlength="16" placeholder="输入验证码" />
+      <label class="auth-remember"><input type="checkbox" id="authRemember" checked /> 7 天内免重复输入</label>
+      <button type="button" class="auth-submit" id="authSubmit">进入课件</button>
+      <p class="auth-error" id="authError" role="alert"></p>
+    </div>
+  </div>
+
+  <!-- 主应用 -->
+  <div class="app hidden" id="app">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <h1>{{EMOJI}} {{TITLE}}</h1>
+          <p class="sub">{{SUBTITLE}}</p>
+        </div>
+        <div class="header-right">
+          <div class="stars-bar" title="累计星星">⭐ <span id="totalStars">0</span></div>
+          <a class="back-link" href="index.html">← 返回手册</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="main-tabs">
+        <button type="button" class="main-tab active" data-panel="learn">凑十法演示</button>
+        <button type="button" class="main-tab" data-panel="practice">闯关练习</button>
+      </div>
+
+      <!-- 凑十法演示 -->
+      <section class="panel active" id="panel-learn">
+        <div class="card">
+          <h2>凑十法：先凑满 10，再加剩下的</h2>
+          <p class="hint">{{HINT}}</p>
+          <p class="equation" id="learnEq"></p>
+          <div class="frames">
+            <div class="frame-wrap">
+              <p class="frame-label" id="labelA"></p>
+              <div class="tenframe" id="frameA"></div>
+            </div>
+            <div class="frame-wrap">
+              <p class="frame-label" id="labelB"></p>
+              <div class="tenframe" id="frameB"></div>
+            </div>
+          </div>
+          <div class="steps" id="steps"></div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-accent" id="btnCouShi">✨ 凑十演示</button>
+            <button type="button" class="btn btn-outline" id="btnNextLearn">换一题</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 闯关练习 -->
+      <section class="panel" id="panel-practice">
+        <div class="card">
+          <h2>闯关练习</h2>
+          <p class="progress-line" id="progressLine">第 1 题 · 连对 0 题</p>
+          <p class="equation" id="practiceEq"></p>
+          <div class="options" id="options"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <script>
+  (function () {
+    /* 访问验证码（每个游戏独立，修改 code 即可换口令） */
+    const ACCESS_CONFIG = { code: "{{CODE}}", hint: "请输入老师或家长提供的验证码", rememberDays: 7 };
+    const AUTH_KEY = "{{SLUG}}-auth";
+    const STAR_KEY = "{{SLUG}}-stars";
+    /* 题型参数：加数范围与进位和区间，由流水线注入 */
+    const CFG = { min: {{MIN}}, max: {{MAX}}, sumMin: {{SUMMIN}}, sumMax: {{SUMMAX}} };
+    const COLORS = ["#ff6b6b", "#4ecdc4", "#ffe66d", "#a29bfe", "#fd79a8", "#74b9ff", "#55efc4", "#fab1a0"];
+
+    /* ---------- 验证码逻辑 ---------- */
+    function isAuthed() {
+      try {
+        const d = JSON.parse(localStorage.getItem(AUTH_KEY) || "null");
+        if (!d || Date.now() > d.expires) return false;
+        return d.code === ACCESS_CONFIG.code;
+      } catch (_) { return false; }
+    }
+    function saveAuth(remember) {
+      const ms = (remember ? ACCESS_CONFIG.rememberDays : 0.5) * 86400000;
+      localStorage.setItem(AUTH_KEY, JSON.stringify({ code: ACCESS_CONFIG.code, expires: Date.now() + ms }));
+    }
+    function showApp() {
+      document.getElementById("authGate").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      document.body.classList.remove("locked");
+    }
+    function initAuth() {
+      document.getElementById("authHint").textContent = ACCESS_CONFIG.hint;
+      const input = document.getElementById("authCode");
+      const errEl = document.getElementById("authError");
+      const card = document.querySelector(".auth-card");
+      function tryEnter() {
+        if (input.value.trim() === ACCESS_CONFIG.code) {
+          saveAuth(document.getElementById("authRemember").checked);
+          showApp(); startGame();
+        } else {
+          errEl.textContent = "验证码不正确，请重试";
+          card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+          input.value = ""; input.focus();
+        }
+      }
+      document.getElementById("authSubmit").addEventListener("click", tryEnter);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") tryEnter(); });
+      if (isAuthed()) { showApp(); startGame(); } else { input.focus(); }
+    }
+
+    /* ---------- 工具 ---------- */
+    let stars = +(localStorage.getItem(STAR_KEY) || 0);
+    function setStars(n) { stars = n; localStorage.setItem(STAR_KEY, n); document.getElementById("totalStars").textContent = n; }
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg; t.classList.add("show");
+      clearTimeout(showToast._t); showToast._t = setTimeout(() => t.classList.remove("show"), 1800);
+    }
+    function celebrate() {
+      const c = document.getElementById("confetti");
+      for (let i = 0; i < 28; i++) {
+        const p = document.createElement("i");
+        p.className = "confetti-piece";
+        p.style.left = Math.random() * 100 + "%";
+        p.style.background = COLORS[i % COLORS.length];
+        p.style.animationDelay = (Math.random() * 0.3).toFixed(2) + "s";
+        c.appendChild(p); setTimeout(() => p.remove(), 1900);
+      }
+    }
+    /* 生成进位加法：两个加数在 [min,max]，和落在 [sumMin,sumMax] */
+    function genCarry() {
+      let a, b;
+      do {
+        a = CFG.min + Math.floor(Math.random() * (CFG.max - CFG.min + 1));
+        b = CFG.min + Math.floor(Math.random() * (CFG.max - CFG.min + 1));
+      } while (a + b < CFG.sumMin || a + b > CFG.sumMax);
+      return { a, b };
+    }
+    function renderFrame(el, count, color, fromIdx) {
+      let html = "";
+      for (let i = 0; i < 10; i++) {
+        const filled = i < count;
+        const dc = (fromIdx != null && i >= fromIdx && i < count) ? "var(--accent)" : color;
+        html += `<div class="tf-cell">${filled ? `<span class="dot" style="background:${dc}"></span>` : ""}</div>`;
+      }
+      el.innerHTML = html;
+    }
+
+    /* ---------- 凑十法演示 ---------- */
+    let learn = { a: 0, b: 0 };
+    function newLearn() {
+      learn = genCarry();
+      const { a, b } = learn;
+      document.getElementById("learnEq").innerHTML = `${a} <span class="op">+</span> ${b} <span class="op">=</span> <span class="q">?</span>`;
+      document.getElementById("labelA").textContent = `第一个数：${a}`;
+      document.getElementById("labelB").textContent = `第二个数：${b}`;
+      renderFrame(document.getElementById("frameA"), a, "var(--red)");
+      renderFrame(document.getElementById("frameB"), b, "var(--blue)");
+      document.getElementById("steps").innerHTML = "";
+    }
+    function showCouShi() {
+      const { a, b } = learn;
+      const need = 10 - a;        // 把 a 凑成 10 需要借的数
+      const rest = b - need;      // 第二个数借走之后剩下的
+      const result = a + b;
+      renderFrame(document.getElementById("frameA"), 10, "var(--red)", a);
+      renderFrame(document.getElementById("frameB"), rest, "var(--blue)");
+      const steps = [
+        `把 <b>${b}</b> 分成 <span class="hl">${need}</span> 和 <span class="hl">${rest}</span>`,
+        `先凑十：<b>${a}</b> + <span class="hl">${need}</span> = <b>10</b>`,
+        `再相加：<b>10</b> + <span class="hl">${rest}</span> = <b>${result}</b>`,
+      ];
+      const box = document.getElementById("steps");
+      box.innerHTML = steps.map((s) => `<div class="step">${s}</div>`).join("");
+      [...box.children].forEach((el, i) => setTimeout(() => el.classList.add("show"), 250 * (i + 1)));
+    }
+
+    /* ---------- 闯关练习 ---------- */
+    let streak = 0, qIndex = 1, cur = null, locked = false;
+    function newPractice() {
+      cur = genCarry(); locked = false;
+      const result = cur.a + cur.b;
+      const opts = new Set([result]);
+      while (opts.size < 4) {
+        const delta = [-2, -1, 1, 2, 10, -10][Math.floor(Math.random() * 6)];
+        const v = result + delta;
+        if (v > 0 && v <= 20) opts.add(v);
+      }
+      const shuffled = [...opts].sort(() => Math.random() - 0.5);
+      document.getElementById("practiceEq").innerHTML = `${cur.a} <span class="op">+</span> ${cur.b} <span class="op">=</span> <span class="q">?</span>`;
+      document.getElementById("progressLine").textContent = `第 ${qIndex} 题 · 连对 ${streak} 题`;
+      const box = document.getElementById("options");
+      box.innerHTML = shuffled.map((v) => `<button type="button" class="option" data-v="${v}">${v}</button>`).join("");
+      box.querySelectorAll(".option").forEach((btn) => btn.addEventListener("click", () => answer(btn, result)));
+    }
+    function answer(btn, result) {
+      if (locked) return; locked = true;
+      const v = +btn.dataset.v;
+      if (v === result) {
+        btn.classList.add("correct");
+        streak++; qIndex++; setStars(stars + 1);
+        showToast("答对啦，奖励 1 颗星！⭐"); celebrate();
+        setTimeout(newPractice, 1100);
+      } else {
+        btn.classList.add("wrong"); streak = 0; locked = false;
+        const right = document.querySelector(`.option[data-v="${result}"]`);
+        if (right) right.classList.add("correct");
+        showToast("再想想，先凑成 10 哦～");
+        setTimeout(() => { btn.classList.remove("wrong"); if (right) right.classList.remove("correct"); }, 1200);
+      }
+    }
+
+    /* ---------- 启动 ---------- */
+    function startGame() {
+      setStars(stars);
+      newLearn(); newPractice();
+    }
+    document.querySelectorAll(".main-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".main-tab").forEach((t) => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("panel-" + tab.dataset.panel).classList.add("active");
+      });
+    });
+    document.getElementById("btnCouShi").addEventListener("click", showCouShi);
+    document.getElementById("btnNextLearn").addEventListener("click", newLearn);
+
+    initAuth();
+  })();
+  </script>
+</body>
+</html>
