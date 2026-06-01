@@ -1,4 +1,4 @@
-# 部署 数学课件（一年级 + 二年级）
+# 部署 数学课件（一年级 + 二年级 + 三年级）
 
 name: Deploy 数学课件
 
@@ -8,6 +8,7 @@ on:
     paths:
       - "数学一年级/**"
       - "数学二年级/**"
+      - "数学三年级/**"
       - "index.html"
       - "README.md"
       - ".github/workflows/deploy-math-grade1.yml"
@@ -34,7 +35,7 @@ jobs:
 
       - name: Prepare site
         run: |
-          mkdir -p _site/grade2 _site/数学一年级 _site/area
+          mkdir -p _site/grade2 _site/grade3 _site/数学一年级 _site/数学二年级 _site/数学三年级 _site/area
           cp index.html _site/index.html
           cp -r 数学一年级/* _site/
           cp -r 数学一年级/* _site/数学一年级/
@@ -43,6 +44,9 @@ jobs:
           cp 数学一年级/area.html "_site/认识面积.html"
           cp 数学一年级/area.html "_site/数学一年级/认识面积.html"
           cp -r 数学二年级/* _site/grade2/
+          cp -r 数学二年级/* _site/数学二年级/
+          cp -r 数学三年级/* _site/grade3/
+          cp -r 数学三年级/* _site/数学三年级/
           cat > _site/404.html <<'HTMLEOF'
           <!DOCTYPE html>
           <html lang="zh-CN">

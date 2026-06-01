@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>三年级数学互动手册</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body class="body-locked">
+  <div class="auth-gate" id="authGate" role="dialog" aria-labelledby="authTitle" aria-modal="true">
+    <div class="auth-card">
+      <div class="auth-icon">🔐</div>
+      <h2 id="authTitle">验证后进入</h2>
+      <p class="auth-hint" id="authHint"></p>
+      <label class="auth-label" for="authCode">验证码</label>
+      <input
+        type="password"
+        id="authCode"
+        class="auth-input"
+        inputmode="numeric"
+        autocomplete="off"
+        maxlength="16"
+        placeholder="请输入验证码"
+      />
+      <label class="auth-remember">
+        <input type="checkbox" id="authRemember" checked />
+        <span>7 天内免重复输入</span>
+      </label>
+      <button type="button" class="btn btn-primary btn-lg auth-submit" id="authSubmit">
+        进入课件
+      </button>
+      <p class="auth-error" id="authError" role="alert"></p>
+    </div>
+  </div>
+
+  <div class="app app--locked" id="mainApp">
+    <header class="header">
+      <div class="header-inner">
+        <button type="button" class="menu-btn" id="menuBtn" aria-label="打开菜单">☰</button>
+        <h1 class="logo">
+          <span class="logo-icon">📚</span>
+          三年级数学手册
+        </h1>
+        <div class="stars-bar" id="starsBar" title="累计星星">
+          <span class="star-icon">⭐</span>
+          <span id="totalStars">0</span>
+        </div>
+        <button type="button" class="lock-btn" id="lockBtn" title="退出并锁定" aria-label="退出并锁定">🔒</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <p class="sidebar-title">学习目录</p>
+        <nav class="nav" id="nav"></nav>
+      </aside>
+
+      <main class="main" id="main">
+        <section class="page home active" id="page-home">
+          <div class="hero">
+            <div class="hero-mascot">🦁</div>
+            <h2>你好，数学小勇士！</h2>
+            <p>跟着小狮子一起挑战三年级数学，闯关赢星星！</p>
+            <button type="button" class="btn btn-primary btn-lg" data-go="bigAddSub">
+              开始挑战 →
+            </button>
+          </div>
+          <div class="card-grid" id="homeCards"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
