@@ -8,6 +8,8 @@ on:
     paths:
       - "数学一年级/**"
       - "数学二年级/**"
+      - "index.html"
+      - "README.md"
       - ".github/workflows/deploy-math-grade1.yml"
   workflow_dispatch:
 
@@ -33,8 +35,10 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site/grade2 _site/数学一年级 _site/area
+          cp index.html _site/index.html
           cp -r 数学一年级/* _site/
           cp -r 数学一年级/* _site/数学一年级/
+          cp 数学一年级/area.html _site/area.html
           cp 数学一年级/area.html _site/area/index.html
           cp 数学一年级/area.html "_site/认识面积.html"
           cp 数学一年级/area.html "_site/数学一年级/认识面积.html"

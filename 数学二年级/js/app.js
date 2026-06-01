@@ -177,11 +177,19 @@
     const renderers = {
       hundred: renderHundred,
       compare100: renderCompare100,
+      carryAdd: renderCarryAdd,
+      borrowSub: renderBorrowSub,
       multiply: renderMultiply,
       divide: renderDivide,
+      remainder: renderRemainder,
       mixed: renderMixed,
       money: renderMoney,
       length: renderLength,
+      weight: renderWeight,
+      shapes2: renderShapes2,
+      angle: renderAngle,
+      symmetry: renderSymmetry,
+      stats: renderStats,
       clock2: renderClock2,
       pattern2: renderPattern2,
     };
@@ -293,6 +301,125 @@
     }
 
     newRound();
+  }
+
+  /* --- 进位加法 --- */
+  function renderCarryAdd(lesson, container) {
+    let score = 0;
+    const total = 8;
+    let current = null;
+
+    function genProblem() {
+      const b = randInt(5, 9);
+      const onesA = randInt(10 - b, 9);
+      const a = randInt(1, 8) * 10 + onesA;
+      if (a + b > 99) return genProblem();
+      return { text: `${a} + ${b} = ?`, ans: a + b };
+    }
+
+    function draw() {
+      current = genProblem();
+      const pct = (score / total) * 100;
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>进位加法 (${score}/${total})</h3>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div class="quiz-display">${current.text}</div>
+          <p style="text-align:center;color:#636e72;font-size:14px">个位满十要向十位进 1</p>
+          <input type="number" class="answer-input" id="ansCarry" min="0" max="99" inputmode="numeric" />
+          <div class="btn-group" style="justify-content:center">
+            <button type="button" class="btn btn-primary" id="btnCarry">提交答案</button>
+          </div>
+          ${feedbackEl("fb-carry")}
+        </div>`;
+
+      const input = document.getElementById("ansCarry");
+      input.focus();
+      function submit() {
+        const val = parseInt(input.value, 10);
+        if (isNaN(val)) {
+          showFeedback("fb-carry", false, "请输入数字哦！");
+          return;
+        }
+        if (val === current.ans) {
+          score++;
+          showFeedback("fb-carry", true, "正确！");
+          if (score >= total) {
+            addStars(3);
+            markComplete("carryAdd");
+            return;
+          }
+          setTimeout(draw, 800);
+        } else {
+          showFeedback("fb-carry", false, `再算算，答案是 ${current.ans}。`);
+        }
+      }
+      document.getElementById("btnCarry").onclick = submit;
+      input.onkeydown = (e) => {
+        if (e.key === "Enter") submit();
+      };
+    }
+    draw();
+  }
+
+  /* --- 退位减法 --- */
+  function renderBorrowSub(lesson, container) {
+    let score = 0;
+    const total = 8;
+    let current = null;
+
+    function genProblem() {
+      const b = randInt(3, 9);
+      const onesA = randInt(0, b - 1);
+      const a = randInt(2, 9) * 10 + onesA;
+      return { text: `${a} − ${b} = ?`, ans: a - b };
+    }
+
+    function draw() {
+      current = genProblem();
+      const pct = (score / total) * 100;
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>退位减法 (${score}/${total})</h3>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div class="quiz-display">${current.text}</div>
+          <p style="text-align:center;color:#636e72;font-size:14px">个位不够减，向十位借 1</p>
+          <input type="number" class="answer-input" id="ansBorrow" min="0" max="99" inputmode="numeric" />
+          <div class="btn-group" style="justify-content:center">
+            <button type="button" class="btn btn-primary" id="btnBorrow">提交答案</button>
+          </div>
+          ${feedbackEl("fb-borrow")}
+        </div>`;
+
+      const input = document.getElementById("ansBorrow");
+      input.focus();
+      function submit() {
+        const val = parseInt(input.value, 10);
+        if (isNaN(val)) {
+          showFeedback("fb-borrow", false, "请输入数字哦！");
+          return;
+        }
+        if (val === current.ans) {
+          score++;
+          showFeedback("fb-borrow", true, "正确！");
+          if (score >= total) {
+            addStars(3);
+            markComplete("borrowSub");
+            return;
+          }
+          setTimeout(draw, 800);
+        } else {
+          showFeedback("fb-borrow", false, `答案是 ${current.ans}，想想借位。`);
+        }
+      }
+      document.getElementById("btnBorrow").onclick = submit;
+      input.onkeydown = (e) => {
+        if (e.key === "Enter") submit();
+      };
+    }
+    draw();
   }
 
   /* --- 表内乘法 --- */
@@ -411,6 +538,57 @@
       });
     }
 
+    newRound();
+  }
+
+  /* --- 有余数除法 --- */
+  function renderRemainder(lesson, container) {
+    let round = 0;
+
+    function newRound() {
+      const div = randInt(3, 9);
+      const quotient = randInt(2, 5);
+      const rem = randInt(1, div - 1);
+      const totalItems = div * quotient + rem;
+      const fruit = FRUITS[randInt(0, FRUITS.length - 1)];
+
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>第 ${round + 1} 关：平均分</h3>
+          <p style="text-align:center;color:#636e72">${totalItems} 个 ${fruit} 平均分给 ${div} 人，每人几个？还剩几个？</p>
+          <div class="quiz-display">${totalItems} ÷ ${div} = ? …… ?</div>
+          <p style="text-align:center;font-size:15px;color:#636e72">第一个空填商，第二个空填余数</p>
+          <div class="remainder-inputs">
+            <label>商 <input type="number" class="answer-input answer-input--sm" id="remQ" min="0" max="9" /></label>
+            <label>余数 <input type="number" class="answer-input answer-input--sm" id="remR" min="0" max="9" /></label>
+          </div>
+          <div class="btn-group" style="justify-content:center">
+            <button type="button" class="btn btn-primary" id="btnRem">提交</button>
+          </div>
+          ${feedbackEl("fb-rem")}
+        </div>`;
+
+      document.getElementById("btnRem").onclick = () => {
+        const q = parseInt(document.getElementById("remQ").value, 10);
+        const r = parseInt(document.getElementById("remR").value, 10);
+        if (isNaN(q) || isNaN(r)) {
+          showFeedback("fb-rem", false, "请填写商和余数。");
+          return;
+        }
+        if (q === quotient && r === rem) {
+          showFeedback("fb-rem", true, `对了！${totalItems}÷${div}=${quotient}……${rem}`);
+          round++;
+          if (round >= 4) {
+            addStars(2);
+            markComplete("remainder");
+          }
+          setTimeout(newRound, 1200);
+        } else {
+          showFeedback("fb-rem", false, "余数要比除数小，再试一次。");
+        }
+      };
+    }
     newRound();
   }
 
@@ -586,6 +764,256 @@
             showFeedback("fb-length", false, `${item.name} 应该用 ${wrongUnit === item.unit ? "厘米" : "米"} 吗？再想想长短。`);
           }
         };
+      });
+    }
+
+    newRound();
+  }
+
+  /* --- 克与千克 --- */
+  function renderWeight(lesson, container) {
+    const items = [
+      { name: "橡皮", g: 20, emoji: "🧽" },
+      { name: "苹果", g: 200, emoji: "🍎" },
+      { name: "书包", kg: 2, emoji: "🎒" },
+      { name: "鸡蛋", g: 50, emoji: "🥚" },
+      { name: "小朋友", kg: 25, emoji: "🧒" },
+    ];
+    let round = 0;
+
+    function newRound() {
+      const item = items[randInt(0, items.length - 1)];
+      const useKg = "kg" in item;
+      const val = useKg ? item.kg : item.g;
+      const correct = useKg ? "kg" : "g";
+
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>第 ${round + 1} 关：选合适单位</h3>
+          <div class="length-item">
+            <span class="length-emoji">${item.emoji}</span>
+            <p>${item.name} 大约 ${val} （ ？ ）</p>
+          </div>
+          <div class="unit-pad">
+            <button type="button" class="unit-btn" data-u="g">克 g</button>
+            <button type="button" class="unit-btn" data-u="kg">千克 kg</button>
+          </div>
+          ${feedbackEl("fb-weight")}
+        </div>`;
+
+      document.querySelectorAll(".unit-btn").forEach((btn) => {
+        btn.onclick = () => {
+          if (btn.dataset.u === correct) {
+            btn.classList.add("correct");
+            showFeedback("fb-weight", true, `对了！${item.name} 用 ${correct === "g" ? "克" : "千克"}。`);
+            round++;
+            if (round >= 5) {
+              addStars(2);
+              markComplete("weight");
+            }
+            setTimeout(newRound, 1200);
+          } else {
+            btn.classList.add("wrong");
+            showFeedback("fb-weight", false, "想想物品是轻还是重。");
+          }
+        };
+      });
+    }
+
+    newRound();
+  }
+
+  /* --- 认识图形 --- */
+  function renderShapes2(lesson, container) {
+    const shapes = [
+      { name: "长方形", sides: "对边相等", emoji: "▭" },
+      { name: "正方形", sides: "四边相等", emoji: "⬜" },
+      { name: "平行四边形", sides: "对边平行且相等", emoji: "▱" },
+    ];
+    let round = 0;
+
+    function newRound() {
+      const s = shapes[randInt(0, shapes.length - 1)];
+      const wrong = pick(shapes.filter((x) => x.name !== s.name), 2);
+
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>第 ${round + 1} 关：这是哪种图形？</h3>
+          <div class="shape-quiz-display">${s.emoji}</div>
+          <p style="text-align:center;color:#636e72">${s.sides}</p>
+          <div class="pattern-options" id="shapeOpts2"></div>
+          ${feedbackEl("fb-shapes2")}
+        </div>`;
+
+      const opts = shuffle([s, ...wrong]);
+      const box = document.getElementById("shapeOpts2");
+      opts.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pattern-opt";
+        btn.textContent = opt.name;
+        btn.onclick = () => {
+          if (opt.name === s.name) {
+            showFeedback("fb-shapes2", true, `正确！${s.name}：${s.sides}`);
+            round++;
+            if (round >= 5) {
+              addStars(2);
+              markComplete("shapes2");
+            }
+            setTimeout(newRound, 1200);
+          } else {
+            showFeedback("fb-shapes2", false, "看看边有什么特点。");
+          }
+        };
+        box.appendChild(btn);
+      });
+    }
+
+    newRound();
+  }
+
+  /* --- 认识角 --- */
+  function renderAngle(lesson, container) {
+    const types = [
+      { id: "right", label: "直角", emoji: "📐", desc: "像三角尺上的角" },
+      { id: "acute", label: "锐角", emoji: "🔺", desc: "比直角小" },
+      { id: "obtuse", label: "钝角", emoji: "🔻", desc: "比直角大" },
+    ];
+    let round = 0;
+
+    function newRound() {
+      const t = types[randInt(0, types.length - 1)];
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>第 ${round + 1} 关：这是什么角？</h3>
+          <div class="angle-display angle-display--${t.id}">${t.emoji}</div>
+          <p style="text-align:center;color:#636e72">${t.desc}</p>
+          <div class="pattern-options" id="angleOpts"></div>
+          ${feedbackEl("fb-angle")}
+        </div>`;
+
+      shuffle(types).forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pattern-opt";
+        btn.textContent = opt.label;
+        btn.onclick = () => {
+          if (opt.id === t.id) {
+            showFeedback("fb-angle", true, `对了！这是${t.label}。`);
+            round++;
+            if (round >= 5) {
+              addStars(2);
+              markComplete("angle");
+            }
+            setTimeout(newRound, 1200);
+          } else {
+            showFeedback("fb-angle", false, "和直角比一比大小。");
+          }
+        };
+        document.getElementById("angleOpts").appendChild(btn);
+      });
+    }
+
+    newRound();
+  }
+
+  /* --- 轴对称 --- */
+  function renderSymmetry(lesson, container) {
+    const pairs = [
+      { emoji: "🦋", symmetric: true },
+      { emoji: "🔺", symmetric: false },
+      { emoji: "❤️", symmetric: true },
+      { emoji: "⭐", symmetric: false },
+      { emoji: "🪞", symmetric: true },
+    ];
+    let round = 0;
+
+    function newRound() {
+      const item = pairs[randInt(0, pairs.length - 1)];
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>第 ${round + 1} 关：能沿中线对折重合吗？</h3>
+          <div class="symmetry-show">${item.emoji}</div>
+          <div class="unit-pad">
+            <button type="button" class="unit-btn" data-y="1">能，是轴对称</button>
+            <button type="button" class="unit-btn" data-y="0">不能</button>
+          </div>
+          ${feedbackEl("fb-sym")}
+        </div>`;
+
+      document.querySelectorAll(".unit-btn").forEach((btn) => {
+        btn.onclick = () => {
+          const yes = btn.dataset.y === "1";
+          if (yes === item.symmetric) {
+            btn.classList.add("correct");
+            showFeedback("fb-sym", true, item.symmetric ? "对折两边一样！" : "这个图形对折不能完全重合。");
+            round++;
+            if (round >= 5) {
+              addStars(2);
+              markComplete("symmetry");
+            }
+            setTimeout(newRound, 1200);
+          } else {
+            btn.classList.add("wrong");
+            showFeedback("fb-sym", false, "想象一下对折后会重合吗？");
+          }
+        };
+      });
+    }
+
+    newRound();
+  }
+
+  /* --- 简单统计 --- */
+  function renderStats(lesson, container) {
+    let round = 0;
+
+    function newRound() {
+      const labels = pick(["🍎", "🍊", "🍌", "🍇"], 3);
+      const counts = labels.map(() => randInt(2, 8));
+      const maxIdx = counts.indexOf(Math.max(...counts));
+      const maxLabel = labels[maxIdx];
+
+      container.innerHTML =
+        lessonShell(lesson) +
+        `<div class="panel">
+          <h3>第 ${round + 1} 关：哪种水果最多？</h3>
+          <div class="stats-chart" id="statsChart"></div>
+          <div class="pattern-options" id="statsOpts"></div>
+          ${feedbackEl("fb-stats")}
+        </div>`;
+
+      const chart = document.getElementById("statsChart");
+      labels.forEach((lbl, i) => {
+        const row = document.createElement("div");
+        row.className = "stats-row";
+        row.innerHTML = `<span class="stats-label">${lbl}</span><span class="stats-bar" style="width:${counts[i] * 12}px"></span><span class="stats-num">${counts[i]}</span>`;
+        chart.appendChild(row);
+      });
+
+      shuffle(labels).forEach((lbl) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pattern-opt";
+        btn.textContent = lbl;
+        btn.onclick = () => {
+          if (lbl === maxLabel) {
+            showFeedback("fb-stats", true, `${maxLabel} 有 ${counts[maxIdx]} 个，最多！`);
+            round++;
+            if (round >= 4) {
+              addStars(2);
+              markComplete("stats");
+            }
+            setTimeout(newRound, 1200);
+          } else {
+            showFeedback("fb-stats", false, "比一比哪一行最长。");
+          }
+        };
+        document.getElementById("statsOpts").appendChild(btn);
       });
     }
 

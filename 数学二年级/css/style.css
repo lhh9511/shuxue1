@@ -1210,3 +1210,75 @@ body {
   border: 2px solid var(--border);
   margin-top: 4px;
 }
+
+.remainder-inputs {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.remainder-inputs label {
+  font-weight: 700;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.answer-input--sm {
+  width: 80px;
+  font-size: 1.4rem;
+  padding: 10px;
+}
+
+.shape-quiz-display {
+  font-size: 5rem;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.angle-display {
+  font-size: 4rem;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.symmetry-show {
+  font-size: 5rem;
+  text-align: center;
+  margin: 24px 0;
+}
+
+.stats-chart {
+  max-width: 360px;
+  margin: 0 auto 20px;
+}
+
+.stats-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.stats-label {
+  width: 2rem;
+  font-size: 1.4rem;
+}
+
+.stats-bar {
+  display: inline-block;
+  height: 20px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 8px;
+  min-width: 24px;
+}
+
+.stats-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--primary);
+}
