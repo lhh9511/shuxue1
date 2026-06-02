@@ -1,4 +1,4 @@
-# 部署 数学课件（一年级 + 二年级 + 三年级 + 四年级 + 五年级 + 六年级）
+# 部署 数学课件（一至六年级 + 端午节专题）
 
 name: Deploy 数学课件
 
@@ -12,6 +12,7 @@ on:
       - "数学四年级/**"
       - "数学五年级/**"
       - "数学六年级/**"
+      - "端午节/**"
       - "index.html"
       - "README.md"
       - ".github/workflows/deploy-math-grade1.yml"
@@ -38,7 +39,7 @@ jobs:
 
       - name: Prepare site
         run: |
-          mkdir -p _site/grade2 _site/grade3 _site/grade4 _site/grade5 _site/grade6 _site/数学一年级 _site/数学二年级 _site/数学三年级 _site/数学四年级 _site/数学五年级 _site/数学六年级 _site/area
+          mkdir -p _site/grade2 _site/grade3 _site/grade4 _site/grade5 _site/grade6 _site/duanwu _site/数学一年级 _site/数学二年级 _site/数学三年级 _site/数学四年级 _site/数学五年级 _site/数学六年级 _site/端午节 _site/area
           cp index.html _site/index.html
           cp -r 数学一年级/* _site/
           cp -r 数学一年级/* _site/数学一年级/
@@ -56,6 +57,8 @@ jobs:
           cp -r 数学五年级/* _site/数学五年级/
           cp -r 数学六年级/* _site/grade6/
           cp -r 数学六年级/* _site/数学六年级/
+          cp -r 端午节/* _site/duanwu/
+          cp -r 端午节/* _site/端午节/
           cat > _site/404.html <<'HTMLEOF'
           <!DOCTYPE html>
           <html lang="zh-CN">
