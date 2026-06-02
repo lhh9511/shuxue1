@@ -29,12 +29,74 @@
       </div>
       <div class="card-row">
         <button type="button" class="game-card game-card--zongzi" data-go="zongzi">
-          <div class="game-icon">🥟</div>
+          <div class="game-icon game-icon--svg">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="粽子">
+              <defs>
+                <linearGradient id="ssg-leaf" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#84c95e"/>
+                  <stop offset="1" stop-color="#2c5e1f"/>
+                </linearGradient>
+              </defs>
+              <ellipse cx="50" cy="92" rx="36" ry="4" fill="#000" opacity="0.18"/>
+              <polygon points="50,10 90,84 10,84" fill="url(#ssg-leaf)" stroke="#1c3a14" stroke-width="2.5" stroke-linejoin="round"/>
+              <polygon points="50,28 80,78 20,78" fill="rgba(255,255,255,0.12)"/>
+              <line x1="50" y1="14" x2="50" y2="84" stroke="#1c3a14" stroke-width="1" opacity="0.4"/>
+              <path d="M 20 50 Q 50 44 80 50" stroke="#8d5524" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M 16 66 Q 50 60 84 66" stroke="#8d5524" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M 50 16 L 50 82" stroke="#8d5524" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 48 16 Q 50 14 52 16" stroke="#5b3a14" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
           <h3>包粽子工坊</h3>
           <p>选粽叶形状，自由添加食材，<br>包出独一无二的粽子！</p>
         </button>
         <button type="button" class="game-card game-card--race" data-go="race">
-          <div class="game-icon">🛶</div>
+          <div class="game-icon game-icon--svg">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="龙舟">
+              <defs>
+                <linearGradient id="ssg-water" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#74b9ff"/>
+                  <stop offset="1" stop-color="#3b94d0"/>
+                </linearGradient>
+                <linearGradient id="ssg-boat" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#b07b48"/>
+                  <stop offset="1" stop-color="#5b3a14"/>
+                </linearGradient>
+              </defs>
+              <!-- water -->
+              <rect x="0" y="76" width="100" height="24" fill="url(#ssg-water)"/>
+              <path d="M 0 84 Q 12 80 24 84 T 48 84 T 72 84 T 100 84" stroke="#fff" stroke-width="1.2" fill="none" opacity="0.7"/>
+              <path d="M 0 92 Q 14 88 28 92 T 56 92 T 84 92 T 100 92" stroke="#fff" stroke-width="1" fill="none" opacity="0.5"/>
+              <!-- dragon head -->
+              <path d="M 6 64 Q 10 46 22 50 L 26 60 L 30 55 L 28 66 L 24 72 L 18 74 L 10 70 Q 4 67 6 64 Z"
+                    fill="#c0392b" stroke="#5b0a0a" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="20" cy="55" r="2.2" fill="#fff" stroke="#000" stroke-width="0.6"/>
+              <circle cx="20" cy="55" r="0.9" fill="#000"/>
+              <path d="M 12 58 Q 16 56 20 58" stroke="#fff" stroke-width="0.6" fill="none"/>
+              <!-- dragon tail -->
+              <path d="M 80 64 L 92 52 L 90 64 L 96 60 L 92 72 L 88 66 L 80 76 Z"
+                    fill="#c0392b" stroke="#5b0a0a" stroke-width="1.5" stroke-linejoin="round"/>
+              <!-- boat body -->
+              <path d="M 18 66 L 84 66 Q 90 66 86 76 Q 52 86 18 76 Q 12 70 18 66 Z"
+                    fill="url(#ssg-boat)" stroke="#3a2511" stroke-width="2"/>
+              <path d="M 18 66 L 84 66" stroke="#3a2511" stroke-width="2.5"/>
+              <!-- paddlers -->
+              <circle cx="38" cy="56" r="3.5" fill="#f4c79a" stroke="#3a2511" stroke-width="0.6"/>
+              <rect x="34" y="59" width="8" height="9" rx="2" fill="#e74c3c" stroke="#3a2511" stroke-width="0.6"/>
+              <line x1="38" y1="50" x2="38" y2="60" stroke="#5b3a14" stroke-width="1.4"/>
+              <circle cx="38" cy="48" r="1.6" fill="#a56b35" stroke="#3a2511" stroke-width="0.5"/>
+
+              <circle cx="52" cy="56" r="3.5" fill="#f4c79a" stroke="#3a2511" stroke-width="0.6"/>
+              <rect x="48" y="59" width="8" height="9" rx="2" fill="#27ae60" stroke="#3a2511" stroke-width="0.6"/>
+              <line x1="52" y1="50" x2="52" y2="60" stroke="#5b3a14" stroke-width="1.4"/>
+              <circle cx="52" cy="48" r="1.6" fill="#a56b35" stroke="#3a2511" stroke-width="0.5"/>
+
+              <circle cx="66" cy="56" r="3.5" fill="#f4c79a" stroke="#3a2511" stroke-width="0.6"/>
+              <rect x="62" y="59" width="8" height="9" rx="2" fill="#3498db" stroke="#3a2511" stroke-width="0.6"/>
+              <line x1="66" y1="50" x2="66" y2="60" stroke="#5b3a14" stroke-width="1.4"/>
+              <circle cx="66" cy="48" r="1.6" fill="#a56b35" stroke="#3a2511" stroke-width="0.5"/>
+            </svg>
+          </div>
           <h3>划龙舟竞渡</h3>
           <p>限时答题前进一步，<br>抢先冲线拿 🏆！</p>
         </button>
