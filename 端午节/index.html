@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>端午节小游戏 · 粽子工坊 + 龙舟竞渡</title>
+  <title>端午节小游戏 · 包粽子 + 划龙舟</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,9 +11,7 @@
 </head>
 <body>
   <header class="topbar">
-    <button type="button" class="home-btn" data-go="splash" aria-label="回首页">
-      <span class="emoji">🏠</span>
-    </button>
+    <button type="button" class="home-btn" data-go="splash" aria-label="回首页">🏠</button>
     <h1 class="title">🐉 端午节小游戏 🥟</h1>
     <div class="stars-bar" title="累计星星">
       <span>⭐</span><span id="totalStars">0</span>
@@ -21,130 +19,173 @@
   </header>
 
   <main id="main">
-    <!-- Splash screen -->
-    <section class="screen screen-splash active" id="screen-splash">
+    <!-- Splash -->
+    <section class="screen active" id="screen-splash">
       <div class="banner">
         <div class="lantern lantern--left">🏮</div>
         <h2 class="banner-title">端午安康！</h2>
-        <p class="banner-sub">选一项你想玩的小游戏</p>
+        <p class="banner-sub">选一个你想玩的小游戏</p>
         <div class="lantern lantern--right">🏮</div>
       </div>
       <div class="card-row">
         <button type="button" class="game-card game-card--zongzi" data-go="zongzi">
           <div class="game-icon">🥟</div>
-          <h3>粽子工坊</h3>
-          <p>挑一种喜欢的口味，<br>点击食材自己包粽子！</p>
+          <h3>包粽子工坊</h3>
+          <p>选粽叶形状，自由添加食材，<br>包出独一无二的粽子！</p>
         </button>
         <button type="button" class="game-card game-card--race" data-go="race">
           <div class="game-icon">🛶</div>
           <h3>划龙舟竞渡</h3>
-          <p>答对问题就前进一步，<br>最快到达终点拿 🏆！</p>
+          <p>限时答题前进一步，<br>抢先冲线拿 🏆！</p>
         </button>
       </div>
       <p class="footer-tip">「五月五，是端阳。门插艾，香满堂。吃粽子，洒白糖。龙舟下水喜洋洋。」</p>
     </section>
 
     <!-- Zongzi screen -->
-    <section class="screen screen-zongzi" id="screen-zongzi">
-      <div class="zongzi-stage">
-        <!-- Step 1: pick flavor -->
-        <div class="zongzi-step" id="zongzi-pick">
-          <h2 class="step-title">🥟 选一种口味</h2>
-          <p class="step-sub">点击一张卡片开始包粽子</p>
-          <div class="flavor-grid" id="flavorGrid"></div>
-        </div>
+    <section class="screen" id="screen-zongzi">
+      <!-- Step 1: pick leaf shape -->
+      <div class="zg-step" id="zg-shape">
+        <h2 class="step-title">第 1 步：选粽叶形状</h2>
+        <p class="step-sub">点一种喜欢的粽形开始制作</p>
+        <div class="shape-grid" id="shapeGrid"></div>
+      </div>
 
-        <!-- Step 2: assemble -->
-        <div class="zongzi-step zongzi-step--hidden" id="zongzi-make">
-          <h2 class="step-title">点击食材，加进粽叶里</h2>
-          <p class="step-sub" id="recipeHint"></p>
-          <div class="make-layout">
-            <!-- Leaf wrapper -->
-            <div class="leaf-wrapper">
-              <svg class="leaf-svg" viewBox="0 0 220 220" aria-hidden="true">
-                <defs>
-                  <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#7ac15c" />
-                    <stop offset="100%" stop-color="#3a7d2a" />
-                  </linearGradient>
-                </defs>
-                <polygon points="110,12 200,170 110,210 20,170" fill="url(#leafGrad)" stroke="#2c5e1f" stroke-width="3" />
-                <polygon points="110,40 175,160 110,185 45,160" fill="rgba(255,255,255,0.12)" />
-              </svg>
+      <!-- Step 2: free add ingredients -->
+      <div class="zg-step zg-step--hidden" id="zg-fill">
+        <div class="fill-head">
+          <h2 class="step-title">第 2 步：自由添加食材</h2>
+          <p class="step-sub">想放什么放什么。多点几下可以放多份哦~</p>
+        </div>
+        <div class="fill-layout">
+          <!-- The leaf -->
+          <div class="leaf-stage">
+            <div class="leaf-wrap" id="leafWrap">
+              <svg class="leaf-shape" id="leafShape" viewBox="0 0 240 240" aria-hidden="true"></svg>
               <div class="leaf-inside" id="leafInside"></div>
-              <div class="leaf-label" id="leafLabel">糯米还没放进来…</div>
             </div>
-            <!-- Recipe checklist -->
-            <div class="recipe-panel">
-              <h3>这种口味需要：</h3>
-              <ul class="recipe-list" id="recipeList"></ul>
-              <button type="button" class="btn btn-secondary" id="btnReset">🗑️ 倒掉重来</button>
-              <button type="button" class="btn btn-primary" id="btnWrap" disabled>🪢 包好 → 下锅！</button>
+            <div class="leaf-tally" id="leafTally">还没放任何食材</div>
+            <div class="leaf-btn-row">
+              <button type="button" class="btn btn-outline btn-sm" id="btnReset">🗑️ 倒掉重来</button>
+              <button type="button" class="btn btn-primary btn-sm" id="btnWrap" disabled>🪢 包好 → 下锅</button>
             </div>
           </div>
-          <!-- Ingredients buffet -->
-          <h3 class="buffet-title">🧺 食材篮</h3>
-          <div class="buffet" id="buffet"></div>
+          <!-- Ingredient buffet -->
+          <div class="buffet-wrap">
+            <p class="buffet-tag">🧺 食材篮 · 点击添加</p>
+            <div class="buffet" id="buffet"></div>
+            <p class="buffet-hint">提示：粽子至少要有<strong> 糯米 </strong>，不然不算粽子哦~</p>
+          </div>
         </div>
+      </div>
 
-        <!-- Step 3: cooking + celebrate -->
-        <div class="zongzi-step zongzi-step--hidden" id="zongzi-cook">
-          <h2 class="step-title">🔥 锅里咕嘟咕嘟…</h2>
-          <div class="pot-wrap">
-            <div class="pot">
-              <div class="pot-bubble"></div>
-              <div class="pot-bubble pot-bubble--2"></div>
-              <div class="pot-bubble pot-bubble--3"></div>
-              <div class="pot-zongzi" id="cookingZongzi">🥟</div>
-              <div class="pot-rim"></div>
-            </div>
-            <div class="pot-flame">🔥🔥🔥</div>
-          </div>
-          <p class="cooking-text" id="cookingText">煮 1 小时…</p>
+      <!-- Step 3: wrap animation -->
+      <div class="zg-step zg-step--hidden" id="zg-wrap">
+        <h2 class="step-title">🪢 包扎中…</h2>
+        <p class="step-sub" id="wrapText">麻绳一圈一圈缠上去…</p>
+        <div class="wrap-stage">
+          <svg class="wrap-svg" id="wrapSvg" viewBox="0 0 300 300"></svg>
         </div>
+      </div>
 
-        <div class="zongzi-step zongzi-step--hidden" id="zongzi-done">
-          <h2 class="step-title">🎉 出锅啦！</h2>
-          <div class="finished-zongzi" id="finishedZongzi">🥟</div>
-          <p class="finished-desc" id="finishedDesc"></p>
-          <div class="btn-row">
-            <button type="button" class="btn btn-primary" id="btnAnother">🥟 再包一个</button>
-            <button type="button" class="btn btn-outline" data-go="race">🛶 试试龙舟竞渡</button>
+      <!-- Step 4: cooking -->
+      <div class="zg-step zg-step--hidden" id="zg-cook">
+        <h2 class="step-title">🔥 锅里咕嘟咕嘟…</h2>
+        <div class="pot-wrap">
+          <div class="pot">
+            <div class="pot-bubble"></div>
+            <div class="pot-bubble pot-bubble--2"></div>
+            <div class="pot-bubble pot-bubble--3"></div>
+            <div class="pot-bubble pot-bubble--4"></div>
+            <div class="pot-zongzi" id="cookZongzi"></div>
+            <div class="pot-rim"></div>
           </div>
+          <div class="pot-flame">🔥🔥🔥</div>
+        </div>
+        <p class="cooking-text" id="cookText">煮 1 分钟…</p>
+      </div>
+
+      <!-- Step 5: done -->
+      <div class="zg-step zg-step--hidden" id="zg-done">
+        <h2 class="step-title">🎉 出锅啦！</h2>
+        <div class="done-card">
+          <div class="done-zongzi" id="doneZongzi"></div>
+          <div class="done-info">
+            <h3 class="done-name" id="doneName"></h3>
+            <p class="done-tags" id="doneTags"></p>
+            <p class="done-desc" id="doneDesc"></p>
+            <div class="done-stats" id="doneStats"></div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="btnAnother">🥟 再包一个</button>
+          <button type="button" class="btn btn-outline" data-go="race">🛶 去划龙舟</button>
         </div>
       </div>
     </section>
 
-    <!-- Race screen -->
-    <section class="screen screen-race" id="screen-race">
-      <h2 class="step-title">🐉 划龙舟竞渡</h2>
-      <p class="step-sub" id="raceSub">先到达终点的赢 🏆！每答对一题前进一格。</p>
-
-      <div class="river" id="river">
-        <div class="lane lane--player" id="lanePlayer">
-          <div class="lane-label">🧑 你</div>
-          <div class="lane-track" id="trackPlayer"></div>
-        </div>
-        <div class="lane lane--cpu" id="laneCpu">
-          <div class="lane-label">🤖 对手</div>
-          <div class="lane-track" id="trackCpu"></div>
+    <!-- Race -->
+    <section class="screen" id="screen-race">
+      <!-- Difficulty pick -->
+      <div class="race-step" id="rc-pick">
+        <h2 class="step-title">🐉 划龙舟竞渡</h2>
+        <p class="step-sub">选一个难度开始比赛</p>
+        <div class="diff-grid">
+          <button type="button" class="diff-card" data-diff="easy">
+            <div class="diff-icon">🌊</div>
+            <h3>新手村</h3>
+            <p>水道 10 格 · 25 秒/题<br>对手稳速前进</p>
+          </button>
+          <button type="button" class="diff-card" data-diff="mid">
+            <div class="diff-icon">⛵</div>
+            <h3>进阶赛</h3>
+            <p>水道 12 格 · 15 秒/题<br>对手稳健竞争</p>
+          </button>
+          <button type="button" class="diff-card" data-diff="hard">
+            <div class="diff-icon">⚡</div>
+            <h3>大师赛</h3>
+            <p>水道 15 格 · 10 秒/题<br>对手越战越勇</p>
+          </button>
         </div>
       </div>
 
-      <div class="quiz-card" id="quizCard">
-        <p class="quiz-progress" id="quizProgress"></p>
-        <p class="quiz-question" id="quizQuestion"></p>
-        <div class="quiz-options" id="quizOptions"></div>
-        <p class="quiz-feedback" id="quizFeedback"></p>
+      <!-- Race active -->
+      <div class="race-step race-step--hidden" id="rc-race">
+        <p class="race-status" id="raceStatus"></p>
+        <div class="river" id="river">
+          <div class="lane lane--player">
+            <div class="lane-label">🧑 你</div>
+            <div class="lane-track" id="trackPlayer"></div>
+          </div>
+          <div class="lane lane--cpu">
+            <div class="lane-label">🤖 对手</div>
+            <div class="lane-track" id="trackCpu"></div>
+          </div>
+        </div>
+
+        <div class="quiz-card" id="quizCard">
+          <div class="quiz-head">
+            <span class="quiz-progress" id="quizProgress"></span>
+            <span class="quiz-streak" id="quizStreak"></span>
+            <span class="quiz-timer" id="quizTimer">⏱️ 15</span>
+          </div>
+          <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+          <p class="quiz-question" id="quizQuestion"></p>
+          <div class="quiz-options" id="quizOptions"></div>
+          <p class="quiz-feedback" id="quizFeedback"></p>
+        </div>
       </div>
 
-      <div class="race-result race-result--hidden" id="raceResult">
+      <!-- Race result -->
+      <div class="race-step race-step--hidden" id="rc-result">
         <div class="result-icon" id="resultIcon">🏆</div>
-        <h3 id="resultTitle">恭喜冲过终点！</h3>
+        <h3 id="resultTitle">恭喜冲线！</h3>
         <p id="resultText"></p>
+        <div class="result-stats" id="resultStats"></div>
         <div class="btn-row">
           <button type="button" class="btn btn-primary" id="btnRaceAgain">🛶 再来一局</button>
           <button type="button" class="btn btn-outline" data-go="zongzi">🥟 包个粽子庆祝</button>
+          <button type="button" class="btn btn-outline" data-go="splash">🏠 回首页</button>
         </div>
       </div>
     </section>
