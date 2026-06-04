@@ -13,6 +13,7 @@ desktop.ini
 # Editor
 .vscode/
 .idea/
+.claude/
 
 # Node deps & archives
 node_modules/

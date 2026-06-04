@@ -173,22 +173,9 @@
     @keyframes fall { to { transform: translateY(105vh) rotate(540deg); opacity: 0.2; } }
   </style>
 </head>
-<body class="locked">
-  <!-- 验证码 -->
-  <div class="auth-gate" id="authGate" role="dialog" aria-modal="true">
-    <div class="auth-card">
-      <div class="auth-icon">🔐</div>
-      <h2>验证后进入</h2>
-      <p class="auth-hint" id="authHint"></p>
-      <input type="password" id="authCode" class="auth-input" inputmode="numeric" autocomplete="off" maxlength="16" placeholder="输入验证码" />
-      <label class="auth-remember"><input type="checkbox" id="authRemember" checked /> 7 天内免重复输入</label>
-      <button type="button" class="auth-submit" id="authSubmit">进入课件</button>
-      <p class="auth-error" id="authError" role="alert"></p>
-    </div>
-  </div>
-
+<body>
   <!-- 主应用 -->
-  <div class="app hidden" id="app">
+  <div class="app" id="app">
     <header class="header">
       <div class="header-inner">
         <div>
@@ -249,50 +236,11 @@
 
   <script>
   (function () {
-    /* 访问验证码（每个游戏独立，修改 code 即可换口令） */
-    const ACCESS_CONFIG = { code: "{{CODE}}", hint: "请输入老师或家长提供的验证码", rememberDays: 7 };
     const AUTH_KEY = "{{SLUG}}-auth";
     const STAR_KEY = "{{SLUG}}-stars";
     /* 题型参数：加数范围与进位和区间，由流水线注入 */
     const CFG = { min: {{MIN}}, max: {{MAX}}, sumMin: {{SUMMIN}}, sumMax: {{SUMMAX}} };
     const COLORS = ["#ff6b6b", "#4ecdc4", "#ffe66d", "#a29bfe", "#fd79a8", "#74b9ff", "#55efc4", "#fab1a0"];
-
-    /* ---------- 验证码逻辑 ---------- */
-    function isAuthed() {
-      try {
-        const d = JSON.parse(localStorage.getItem(AUTH_KEY) || "null");
-        if (!d || Date.now() > d.expires) return false;
-        return d.code === ACCESS_CONFIG.code;
-      } catch (_) { return false; }
-    }
-    function saveAuth(remember) {
-      const ms = (remember ? ACCESS_CONFIG.rememberDays : 0.5) * 86400000;
-      localStorage.setItem(AUTH_KEY, JSON.stringify({ code: ACCESS_CONFIG.code, expires: Date.now() + ms }));
-    }
-    function showApp() {
-      document.getElementById("authGate").classList.add("hidden");
-      document.getElementById("app").classList.remove("hidden");
-      document.body.classList.remove("locked");
-    }
-    function initAuth() {
-      document.getElementById("authHint").textContent = ACCESS_CONFIG.hint;
-      const input = document.getElementById("authCode");
-      const errEl = document.getElementById("authError");
-      const card = document.querySelector(".auth-card");
-      function tryEnter() {
-        if (input.value.trim() === ACCESS_CONFIG.code) {
-          saveAuth(document.getElementById("authRemember").checked);
-          showApp(); startGame();
-        } else {
-          errEl.textContent = "验证码不正确，请重试";
-          card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
-          input.value = ""; input.focus();
-        }
-      }
-      document.getElementById("authSubmit").addEventListener("click", tryEnter);
-      input.addEventListener("keydown", (e) => { if (e.key === "Enter") tryEnter(); });
-      if (isAuthed()) { showApp(); startGame(); } else { input.focus(); }
-    }
 
     /* ---------- 工具 ---------- */
     let stars = +(localStorage.getItem(STAR_KEY) || 0);
@@ -412,7 +360,7 @@
     document.getElementById("btnCouShi").addEventListener("click", showCouShi);
     document.getElementById("btnNextLearn").addEventListener("click", newLearn);
 
-    initAuth();
+    startGame();
   })();
   </script>
 </body>

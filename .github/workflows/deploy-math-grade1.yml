@@ -14,6 +14,9 @@ on:
       - "数学六年级/**"
       - "端午节/**"
       - "index.html"
+      - "games.html"
+      - "css/**"
+      - "js/**"
       - "README.md"
       - ".github/workflows/deploy-math-grade1.yml"
   workflow_dispatch:
@@ -41,6 +44,9 @@ jobs:
         run: |
           mkdir -p _site/grade2 _site/grade3 _site/grade4 _site/grade5 _site/grade6 _site/duanwu _site/数学一年级 _site/数学二年级 _site/数学三年级 _site/数学四年级 _site/数学五年级 _site/数学六年级 _site/端午节 _site/area
           cp index.html _site/index.html
+          cp games.html _site/games.html
+          cp -r css _site/css
+          cp -r js _site/js
           cp -r 数学一年级/* _site/
           cp -r 数学一年级/* _site/数学一年级/
           cp 数学一年级/area.html _site/area.html

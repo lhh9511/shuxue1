@@ -1,10 +1,3 @@
-/** 访问验证码（修改 code 即可更换口令） */
-const ACCESS_CONFIG = {
-  code: "5566",
-  hint: "请输入老师或家长提供的验证码",
-  rememberDays: 7,
-};
-
 const LESSONS = [
   {
     id: "decMul",

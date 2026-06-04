@@ -3,825 +3,857 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI融合课 · 认识面积交互课件</title>
+  <title>认识面积 · AI融合课</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --mint: #dff5f0;
-      --mint-deep: #c5ebe3;
-      --teal: #4db6ac;
-      --teal-dark: #3a9d94;
-      --title-blue: #3d8fd9;
-      --canvas-yellow: #fff9e6;
-      --orange: #ff7043;
-      --blue-shape: #42a5f5;
-      --purple: #ab47bc;
-      --pink: #f48fb1;
-      --text: #37474f;
-      --muted: #78909c;
-      --card-radius: 24px;
+      --bg: #f0f7ff;
+      --surface: #fff;
+      --primary: #5b8def;
+      --primary-dark: #3d6fd4;
+      --accent: #ff9f43;
+      --green: #2ecc71;
+      --text: #2d3436;
+      --muted: #636e72;
+      --border: #dfe6e9;
+      --radius: 18px;
       --font-display: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
       --font-body: "Noto Sans SC", system-ui, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: var(--font-body);
-      min-height: 100vh;
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(91, 141, 239, 0.15), transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(255, 159, 67, 0.12), transparent 40%);
       color: var(--text);
-      background: linear-gradient(160deg, #e8f8f5 0%, #dff5f0 40%, #d4efe8 100%);
-      padding: 20px 16px 32px;
+      min-height: 100vh;
+      font-size: 16px;
     }
-    .page-header {
-      max-width: 720px;
-      margin: 0 auto 16px;
-      padding: 0 8px;
-    }
-    .page-header h1 {
-      font-family: var(--font-display);
-      font-size: clamp(1.8rem, 5vw, 2.4rem);
-      color: var(--title-blue);
-      font-weight: 400;
-      line-height: 1.2;
-    }
-    .page-header p {
-      font-family: var(--font-display);
-      font-size: clamp(1.1rem, 3.5vw, 1.45rem);
-      color: var(--title-blue);
-      opacity: 0.95;
-      margin-top: 4px;
-    }
-    .card {
-      max-width: 720px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: var(--card-radius);
-      box-shadow: 0 12px 40px rgba(77, 182, 172, 0.18);
-      padding: 24px 20px 28px;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      margin-bottom: 18px;
-      background: #f5f5f5;
-      border-radius: 999px;
-      padding: 4px;
-      max-width: 360px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .tab {
-      flex: 1;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 999px;
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      cursor: pointer;
-      background: transparent;
-      color: var(--muted);
-      transition: all 0.25s;
-    }
-    .tab.active {
-      background: var(--teal);
+    .header {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
       color: #fff;
-      box-shadow: 0 4px 12px rgba(77, 182, 172, 0.45);
+      padding: 16px 20px;
+      box-shadow: 0 4px 20px rgba(91, 141, 239, 0.35);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
-    .hint {
-      text-align: center;
-      color: var(--muted);
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+    .header .sub { font-size: 13px; opacity: 0.9; margin-top: 2px; }
+    .back-link {
+      color: #fff;
+      text-decoration: none;
       font-size: 14px;
-      margin-bottom: 16px;
-      line-height: 1.6;
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
     }
-    .panel { display: none; }
-    .panel.active { display: block; animation: fadeIn 0.3s ease; }
+    .back-link:hover { background: rgba(255,255,255,0.35); }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+    .main-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .main-tab {
+      flex: 1;
+      max-width: 220px;
+      padding: 14px 20px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      cursor: pointer;
+      background: var(--surface);
+      color: var(--muted);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      transition: all 0.2s;
+    }
+    .main-tab.active {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(91, 141, 239, 0.4);
+    }
+    .panel { display: none; animation: fadeIn 0.3s ease; }
+    .panel.active { display: block; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: none; }
     }
-    /* 认识面积 */
-    .colors {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
-    .color-dot {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 3px solid transparent;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .color-dot:hover { transform: scale(1.08); }
-    .color-dot.active {
-      border-color: #2196f3;
-      box-shadow: 0 0 0 3px #fff, 0 0 0 5px #2196f3;
-    }
-    .learn-canvas {
-      background: var(--canvas-yellow);
-      border-radius: 16px;
-      padding: 28px 20px;
-      min-height: 280px;
-    }
-    .shapes-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px 16px;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-    .shape-item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 12px;
-      transition: transform 0.15s;
-    }
-    .shape-item:hover { transform: scale(1.04); }
-    .shape-item svg {
-      width: 100%;
-      max-width: 110px;
-      height: auto;
-      display: block;
-    }
-    .shape-item .shape-fill {
-      stroke: #81d4fa;
-      stroke-width: 3;
-      transition: fill 0.2s;
-    }
-    .shape-item .shape-notch {
-      fill: none;
-      stroke: #81d4fa;
-      stroke-width: 3;
-    }
-    /* 面积比较 */
-    .compare-stage {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      align-items: flex-start;
-      margin-bottom: 22px;
-    }
-    @media (max-width: 520px) {
-      .compare-stage { gap: 8px; }
-    }
-    .compare-col {
-      flex: 1;
-      max-width: 280px;
-      text-align: center;
-    }
-    .compare-col.col-b {
-      max-width: 310px;
-    }
-    .compare-counter {
+    .card h2 {
       font-family: var(--font-display);
-      font-size: 1.15rem;
-      color: var(--text);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 30px;
+      color: var(--primary);
+      font-size: 1.25rem;
+      margin-bottom: 12px;
     }
-    .compare-counter .mini-shape {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-    .compare-counter .mini-shape.square { background: var(--orange); }
-    .compare-counter .mini-shape.circle {
-      background: var(--blue-shape);
-      border-radius: 50%;
-    }
-    .compare-counter .mini-shape.triangle {
-      background: var(--purple);
-      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    }
-    .compare-board {
-      width: 100%;
-      border: 3px solid #90a4ae;
-      border-radius: 8px;
-      background: #fff;
-      padding: 6px;
-      margin: 0 auto;
-      cursor: pointer;
-      transition: box-shadow 0.2s, border-color 0.2s;
-    }
-    .compare-board.board-a {
-      height: 128px;
-      max-width: 260px;
-    }
-    .compare-board.board-b {
-      height: 152px;
-      max-width: 290px;
-      padding: 8px;
-    }
-    .compare-board.drag-over {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.35);
-    }
-    .tile-grid {
-      width: 100%;
-      height: 100%;
-      display: grid;
-    }
-    .tile-grid.grid-a {
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: 0;
-    }
-    .tile-grid.grid-b {
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 5px 6px;
-    }
-    .tile-slot {
-      position: relative;
-      min-width: 0;
-      min-height: 0;
-    }
-    .tile-piece {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      animation: tilePop 0.2s ease;
-    }
-    @keyframes tilePop {
-      from { transform: scale(0.6); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .tile-piece.square {
-      background: var(--orange);
-      border-radius: 1px;
-    }
-    .tile-grid.grid-a .tile-piece.square { inset: 0; }
-    .tile-piece.circle {
-      background: var(--blue-shape);
-      border-radius: 50%;
-      inset: 6%;
-    }
-    .tile-piece.triangle {
-      background: var(--purple);
-      clip-path: polygon(50% 4%, 96% 96%, 4% 96%);
-      inset: 4%;
-    }
-    .compare-badge {
-      display: inline-flex;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      color: #fff;
-      font-weight: 700;
-      font-size: 15px;
-      align-items: center;
-      justify-content: center;
-      margin-top: 12px;
-    }
-    .compare-badge.n1 { background: #ef5350; }
-    .compare-badge.n2 { background: var(--blue-shape); }
-    .shape-palette {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 28px;
-      margin-bottom: 24px;
-      padding: 8px 0;
-    }
-    .palette-pick {
-      width: 64px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: grab;
-      border: 3px solid transparent;
-      border-radius: 14px;
-      padding: 8px;
-      touch-action: none;
-      transition: border-color 0.2s, transform 0.15s;
-    }
-    .palette-pick.active {
-      border-color: #2196f3;
-      background: rgba(33, 150, 243, 0.08);
-    }
-    .palette-pick.dragging { opacity: 0.45; cursor: grabbing; }
-    .palette-pick .pick-shape { pointer-events: none; }
-    .pick-shape {
-      width: 46px;
-      height: 46px;
-    }
-    .pick-shape.square { background: var(--orange); }
-    .pick-shape.circle {
-      background: var(--blue-shape);
-      border-radius: 50%;
-    }
-    .pick-shape.triangle {
-      background: var(--purple);
-      clip-path: polygon(50% 6%, 94% 94%, 6% 94%);
-    }
-    .compare-result {
-      text-align: center;
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      color: var(--teal-dark);
-      margin: -8px 0 14px;
-      min-height: 1.4em;
-    }
-    .action-btns {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .action-btn {
-      padding: 12px 22px;
-      border-radius: 999px;
-      font-family: var(--font-display);
-      font-size: 1rem;
-      cursor: pointer;
-      border: 2px solid #b0bec5;
-      background: #fff;
-      color: var(--teal-dark);
-      transition: all 0.2s;
-    }
-    .action-btn:hover {
-      border-color: var(--teal);
-      background: #e0f2f1;
-    }
-    .action-btn.clear {
-      border: none;
-      background: #ffccbc;
-      color: #fff;
-    }
-    .action-btn.clear:hover { background: #ffab91; }
-    .page-footer {
-      max-width: 720px;
-      margin: 24px auto 0;
-      text-align: center;
-    }
-    .footer-pill {
-      display: inline-block;
-      background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
-      padding: 14px 36px;
-      border-radius: 999px;
-      font-family: var(--font-display);
-      font-size: clamp(1.2rem, 4vw, 1.5rem);
-      color: #e65100;
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
       margin-bottom: 14px;
     }
-    .footer-links {
+    .mode-tabs {
       display: flex;
-      justify-content: center;
-      gap: 20px;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .mode-tab {
+      padding: 10px 18px;
+      border: 2px solid var(--border);
+      background: #f8f9fa;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-tab.active {
+      border-color: var(--primary);
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .toolbar-label { font-weight: 700; font-size: 14px; color: var(--muted); }
+    .colors {
+      display: flex;
+      gap: 8px;
       flex-wrap: wrap;
     }
-    .footer-links a {
-      color: var(--title-blue);
-      text-decoration: none;
-      font-size: 14px;
+    .color-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
     }
-    .footer-links a:hover { text-decoration: underline; }
+    .color-btn:hover { transform: scale(1.1); }
+    .color-btn.active {
+      border-color: var(--text);
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--primary);
+    }
+    .shape-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .shape-btn {
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 88px;
+    }
+    .shape-btn svg { width: 48px; height: 48px; }
+    .shape-btn.active {
+      border-color: var(--primary);
+      background: #eef3ff;
+    }
+    .canvas-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 16px;
+      min-height: 320px;
+    }
+    .shape-canvas {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      touch-action: manipulation;
+    }
+    .grid-cell {
+      stroke: #b2bec3;
+      stroke-width: 1;
+      fill: #fff;
+      cursor: pointer;
+      transition: fill 0.15s;
+    }
+    .grid-cell:hover { opacity: 0.85; }
+    .grid-cell.filled { stroke: rgba(0,0,0,0.15); }
+    .shape-outline {
+      fill: none;
+      stroke: #2d3436;
+      stroke-width: 3;
+      pointer-events: none;
+    }
+    .area-count {
+      text-align: center;
+      margin-top: 12px;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.15s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #7c5ce0);
+      color: #fff;
+    }
+    .btn-outline {
+      background: #fff;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    /* 面积比较 */
+    .compare-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 640px) {
+      .compare-layout { grid-template-columns: 1fr; }
+    }
+    .compare-box {
+      border: 3px dashed var(--border);
+      border-radius: 16px;
+      min-height: 220px;
+      padding: 12px;
+      background: #fafbfc;
+      position: relative;
+    }
+    .compare-box h3 {
+      font-family: var(--font-display);
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    .compare-box .drop-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 3px;
+      max-width: 240px;
+      margin: 0 auto;
+    }
+    .compare-box .drop-cell {
+      aspect-ratio: 1;
+      background: #fff;
+      border: 1px solid #dfe6e9;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .compare-box .drop-cell.filled { border-color: transparent; }
+    .tile-tray {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 16px;
+      background: #f1f3f5;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      min-height: 72px;
+    }
+    .tile {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: grab;
+      border: 2px solid rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      touch-action: none;
+    }
+    .tile.dragging { opacity: 0.5; cursor: grabbing; }
     .toast {
       position: fixed;
       bottom: 24px;
       left: 50%;
-      transform: translateX(-50%) translateY(60px);
-      background: rgba(55, 71, 79, 0.92);
+      transform: translateX(-50%) translateY(80px);
+      background: var(--text);
       color: #fff;
       padding: 12px 24px;
       border-radius: 999px;
-      font-size: 14px;
+      font-family: var(--font-display);
       opacity: 0;
       transition: all 0.35s;
-      z-index: 200;
+      z-index: 100;
       pointer-events: none;
     }
     .toast.show {
-      opacity: 1;
       transform: translateX(-50%) translateY(0);
-    }
-    .drag-ghost {
-      position: fixed;
-      pointer-events: none;
-      z-index: 300;
-      opacity: 0.85;
+      opacity: 1;
     }
   </style>
 </head>
 <body>
-  <header class="page-header">
-    <h1>AI融合课</h1>
-    <p>认识面积交互课件</p>
+  <header class="header">
+    <div class="header-inner">
+      <div>
+        <h1>📐 认识面积</h1>
+        <p class="sub">AI融合课 · 交互课件</p>
+      </div>
+      <a class="back-link" href="index.html">← 返回手册</a>
+    </div>
   </header>
 
-  <main class="card">
-    <div class="tabs">
-      <button type="button" class="tab active" data-panel="learn">认识面积</button>
-      <button type="button" class="tab" data-panel="compare">面积比较</button>
+  <div class="container">
+    <div class="main-tabs">
+      <button type="button" class="main-tab active" data-panel="learn">认识面积</button>
+      <button type="button" class="main-tab" data-panel="compare">面积比较</button>
     </div>
 
     <!-- 认识面积 -->
     <section class="panel active" id="panel-learn">
-      <p class="hint">选择一种颜色，然后点击图形进行填充</p>
-      <div class="colors" id="learnColors"></div>
-      <div class="learn-canvas">
-        <div class="shapes-grid" id="shapesGrid"></div>
+      <div class="card">
+        <h2>密铺探究</h2>
+        <p class="hint" id="modeHint">
+          <strong>一号密铺：</strong>先选颜色，再点击方格，每次涂满 1 个小方格。
+        </p>
+        <div class="mode-tabs">
+          <button type="button" class="mode-tab active" data-mode="1">一号密铺</button>
+          <button type="button" class="mode-tab" data-mode="2">二号密铺</button>
+          <button type="button" class="mode-tab" data-mode="3">三号密铺</button>
+        </div>
+        <div class="toolbar">
+          <span class="toolbar-label">选颜色</span>
+          <div class="colors" id="colorPalette"></div>
+        </div>
+        <div class="shape-list" id="shapeList"></div>
+        <div class="canvas-wrap">
+          <svg class="shape-canvas" id="learnCanvas" viewBox="0 0 300 300" aria-label="图形密铺区"></svg>
+        </div>
+        <p class="area-count" id="areaCount">已涂：0 个小方格</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-outline" id="btnClearShape">清除本图</button>
+          <button type="button" class="btn btn-accent" id="btnFillAll">一键铺满</button>
+        </div>
       </div>
     </section>
 
     <!-- 面积比较 -->
     <section class="panel" id="panel-compare">
-      <p class="hint">①号 10 个正方形 · ②号稍大 12 个圆形。可往空位添加其他图形；再次点击同一格或密铺可覆盖替换</p>
-      <div class="compare-stage">
-        <div class="compare-col col-a">
-          <div class="compare-counter" id="counterA">
-            <span class="mini-shape square" id="miniA"></span>
-            <span>× <strong id="countA">0</strong></span>
+      <div class="card">
+        <h2>面积比较</h2>
+        <p class="hint">
+          拖动下方彩色小方块到 A、B 框里拼满图形，或点击「密铺」自动铺满。
+          比一比哪个图形面积更大！
+        </p>
+        <div class="toolbar">
+          <span class="toolbar-label">填充颜色</span>
+          <div class="colors" id="compareColors"></div>
+        </div>
+        <div class="compare-layout">
+          <div class="compare-box" data-zone="a">
+            <h3>图形 A</h3>
+            <div class="drop-grid" id="gridA"></div>
+            <p class="area-count" id="countA">0 格</p>
           </div>
-          <div class="compare-board board-a" id="boardA" data-zone="a" tabindex="0" aria-label="①号：10格正方形">
-            <div class="tile-grid grid-a" id="gridA"></div>
+          <div class="compare-box" data-zone="b">
+            <h3>图形 B</h3>
+            <div class="drop-grid" id="gridB"></div>
+            <p class="area-count" id="countB">0 格</p>
           </div>
-          <span class="compare-badge n1">1</span>
         </div>
-        <div class="compare-col col-b">
-          <div class="compare-counter" id="counterB">
-            <span class="mini-shape circle" id="miniB"></span>
-            <span>× <strong id="countB">0</strong></span>
-          </div>
-          <div class="compare-board board-b" id="boardB" data-zone="b" tabindex="0" aria-label="②号：12格圆形">
-            <div class="tile-grid grid-b" id="gridB"></div>
-          </div>
-          <span class="compare-badge n2">2</span>
+        <p class="hint" id="compareResult" style="text-align:center;font-weight:700;color:var(--primary)"></p>
+        <div class="tile-tray" id="tileTray"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="btnTessellateA">密铺 A</button>
+          <button type="button" class="btn btn-primary" id="btnTessellateB">密铺 B</button>
+          <button type="button" class="btn btn-outline" id="btnClearCompare">全部清空</button>
         </div>
-      </div>
-      <p class="compare-result" id="compareResult"></p>
-      <div class="shape-palette" id="shapePalette">
-        <div class="palette-pick active" data-shape="square" draggable="true">
-          <div class="pick-shape square"></div>
-        </div>
-        <div class="palette-pick" data-shape="circle" draggable="true">
-          <div class="pick-shape circle"></div>
-        </div>
-        <div class="palette-pick" data-shape="triangle" draggable="true">
-          <div class="pick-shape triangle"></div>
-        </div>
-      </div>
-      <div class="action-btns">
-        <button type="button" class="action-btn" id="btnFill1">①号密铺</button>
-        <button type="button" class="action-btn" id="btnFill2">②号密铺</button>
-        <button type="button" class="action-btn clear" id="btnClear">清空</button>
       </div>
     </section>
-  </main>
+  </div>
 
-  <footer class="page-footer">
-    <div class="footer-pill">《认识面积与大小》</div>
-    <div class="footer-links">
-      <a href="area.html" download="认识面积.html">HTML离线文件</a>
-      <a href="#" onclick="alert('请在希沃白板或本地打开配套 PPT');return false">PPT | 希沃</a>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status"></div>
 
   <script>
 (function () {
-  const LEARN_COLORS = ["#ef5350", "#66bb6a", "#42a5f5", "#ffee58", "#ec407a"];
-  const ZONE_CFG = {
-    a: { total: 10, defaultShape: "square", gridClass: "grid-a" },
-    b: { total: 12, defaultShape: "circle", gridClass: "grid-b" },
+  const COLORS = [
+    "#ff6b6b", "#4ecdc4", "#ffe66d", "#a29bfe",
+    "#fd79a8", "#74b9ff", "#55efc4", "#fab1a0",
+  ];
+
+  const MODE_HINTS = {
+    1: "<strong>一号密铺：</strong>先选颜色，再点击方格，每次涂满 1 个小方格。",
+    2: "<strong>二号密铺：</strong>每次点击会涂满 2 个相连的小方格（横或竖）。",
+    3: "<strong>三号密铺：</strong>每次点击会涂满 3 个相连的小方格。",
   };
 
-  let learnColor = LEARN_COLORS[3];
-  let selectedShape = "square";
-  const slots = {
-    a: Array(ZONE_CFG.a.total).fill(null),
-    b: Array(ZONE_CFG.b.total).fill(null),
+  /* 各图形在 10×10 逻辑网格中的有效格子 (col, row) */
+  const SHAPE_GRIDS = {
+    triangle: {
+      name: "三角形",
+      cells: (() => {
+        const c = [];
+        for (let r = 0; r < 8; r++)
+          for (let col = 0; col <= r; col++) c.push([col + 1, r + 1]);
+        return c;
+      })(),
+      outline: "M 30 260 L 270 260 L 150 40 Z",
+    },
+    square: {
+      name: "正方形",
+      cells: (() => {
+        const c = [];
+        for (let r = 1; r <= 7; r++)
+          for (let col = 1; col <= 7; col++) c.push([col, r]);
+        return c;
+      })(),
+      outline: "M 55 55 L 245 55 L 245 245 L 55 245 Z",
+    },
+    parallelogram: {
+      name: "平行四边形",
+      cells: (() => {
+        const c = [];
+        for (let r = 0; r < 6; r++)
+          for (let col = 0; col < 6; col++) c.push([col + 2 + Math.floor(r / 2), r + 2]);
+        return c;
+      })(),
+      outline: "M 80 70 L 250 70 L 220 230 L 50 230 Z",
+    },
+    trapezoid: {
+      name: "梯形",
+      cells: (() => {
+        const c = [];
+        for (let r = 0; r < 6; r++) {
+          const w = 3 + r;
+          const start = Math.floor((7 - w) / 2) + 1;
+          for (let i = 0; i < w; i++) c.push([start + i, r + 2]);
+        }
+        return c;
+      })(),
+      outline: "M 90 80 L 210 80 L 250 240 L 50 240 Z",
+    },
+    circle: {
+      name: "圆形",
+      cells: (() => {
+        const c = [];
+        const cx = 4, cy = 4, r = 3.2;
+        for (let row = 1; row <= 8; row++)
+          for (let col = 1; col <= 8; col++)
+            if ((col - cx) ** 2 + (row - cy) ** 2 <= r * r) c.push([col, row]);
+        return c;
+      })(),
+      outline: null,
+      circle: { cx: 150, cy: 150, r: 105 },
+    },
+    notch: {
+      name: "缺角正方形",
+      cells: (() => {
+        const c = [];
+        for (let r = 1; r <= 7; r++)
+          for (let col = 1; col <= 7; col++)
+            if (!(col >= 6 && r <= 2)) c.push([col, r]);
+        return c;
+      })(),
+      outline: "M 55 55 L 245 55 L 245 245 L 55 245 Z M 245 55 L 245 120 L 180 55 Z",
+    },
   };
 
-  const shapeFills = {
-    triangle: "#ff7043",
-    square: "#66bb6a",
-    parallelogram: "#42a5f5",
-    trapezoid: "#f48fb1",
-    circle: "#ff7043",
-    notch: "transparent",
-  };
+  const SHAPE_ORDER = ["triangle", "square", "parallelogram", "trapezoid", "circle", "notch"];
+
+  let currentMode = 1;
+  let currentShape = "triangle";
+  let selectedColor = COLORS[0];
+  let fillState = {};
+  let compareColor = COLORS[0];
+  const compareFill = { a: {}, b: {} };
+
+  const GRID = 10;
+  const PAD = 30;
+  const SIZE = 240;
+  const STEP = SIZE / GRID;
+
+  function cellToXY(col, row) {
+    return {
+      x: PAD + (col - 1) * STEP,
+      y: PAD + (row - 1) * STEP,
+    };
+  }
 
   function showToast(msg) {
     const t = document.getElementById("toast");
     t.textContent = msg;
     t.classList.add("show");
     clearTimeout(showToast._t);
-    showToast._t = setTimeout(() => t.classList.remove("show"), 2000);
+    showToast._t = setTimeout(() => t.classList.remove("show"), 2200);
   }
 
-  /* ---------- 认识面积 ---------- */
-  function initLearnColors() {
-    const el = document.getElementById("learnColors");
-    el.innerHTML = LEARN_COLORS.map(
+  function initColors(containerId, onPick) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = COLORS.map(
       (c, i) =>
-        `<button type="button" class="color-dot${c === learnColor ? " active" : ""}" data-color="${c}" style="background:${c}" aria-label="颜色"></button>`
+        `<button type="button" class="color-btn${i === 0 ? " active" : ""}" data-color="${c}" style="background:${c}" aria-label="颜色"></button>`
     ).join("");
-    el.onclick = (e) => {
-      const btn = e.target.closest(".color-dot");
+    el.addEventListener("click", (e) => {
+      const btn = e.target.closest(".color-btn");
       if (!btn) return;
-      learnColor = btn.dataset.color;
-      el.querySelectorAll(".color-dot").forEach((d) => d.classList.remove("active"));
+      el.querySelectorAll(".color-btn").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-    };
+      onPick(btn.dataset.color);
+    });
   }
 
-  function initLearnShapes() {
-    const grid = document.getElementById("shapesGrid");
-    const stroke = 'stroke="#81d4fa" stroke-width="3"';
-    const defs = [
-      {
-        id: "triangle",
-        svg: `<svg viewBox="0 0 120 100"><polygon class="shape-fill" points="60,12 108,92 12,92" fill="${shapeFills.triangle}" ${stroke}/></svg>`,
-      },
-      {
-        id: "square",
-        svg: `<svg viewBox="0 0 120 100"><rect class="shape-fill" x="20" y="15" width="80" height="80" fill="${shapeFills.square}" ${stroke}/></svg>`,
-      },
-      {
-        id: "parallelogram",
-        svg: `<svg viewBox="0 0 120 100"><polygon class="shape-fill" points="35,15 105,15 85,85 15,85" fill="${shapeFills.parallelogram}" ${stroke}/></svg>`,
-      },
-      {
-        id: "trapezoid",
-        svg: `<svg viewBox="0 0 120 100"><polygon class="shape-fill" points="30,20 90,20 108,85 12,85" fill="${shapeFills.trapezoid}" ${stroke}/></svg>`,
-      },
-      {
-        id: "circle",
-        svg: `<svg viewBox="0 0 120 100"><circle class="shape-fill" cx="60" cy="50" r="42" fill="${shapeFills.circle}" ${stroke}/></svg>`,
-      },
-      {
-        id: "notch",
-        svg: `<svg viewBox="0 0 120 100">
-          <path class="shape-fill" d="M20 15 H100 V55 H70 V85 H20 Z" fill="transparent"/>
-          <path class="shape-notch" d="M20 15 H100 V55 H70 V55 H70 V85 H20 Z" fill="none"/>
-        </svg>`,
-      },
-    ];
-    grid.innerHTML = defs
-      .map((d) => `<div class="shape-item" data-id="${d.id}">${d.svg}</div>`)
-      .join("");
+  function getShapeKey() {
+    return `${currentShape}-${currentMode}`;
+  }
 
-    grid.querySelectorAll(".shape-item").forEach((item) => {
-      item.addEventListener("click", () => {
-        item.querySelectorAll(".shape-fill, .shape-notch").forEach((el) => {
-          el.setAttribute("fill", learnColor);
+  function getFilledCells() {
+    return fillState[getShapeKey()] || {};
+  }
+
+  function setFilledCells(map) {
+    fillState[getShapeKey()] = map;
+  }
+
+  function neighbors(col, row, cells) {
+    const set = new Set(cells.map((c) => c.join(",")));
+    const n = [];
+    [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dc, dr]) => {
+      const k = `${col + dc},${row + dr}`;
+      if (set.has(k)) n.push([col + dc, row + dr]);
+    });
+    return n;
+  }
+
+  function pickCellsToFill(col, row, cells, mode) {
+    const key = `${col},${row}`;
+    const filled = getFilledCells();
+    if (filled[key]) return [];
+
+    if (mode === 1) return [[col, row]];
+
+    const empty = cells.filter(([c, r]) => !filled[`${c},${r}`]);
+    const emptySet = new Set(empty.map((c) => c.join(",")));
+    if (!emptySet.has(key)) return [];
+
+    if (mode === 2) {
+      const nbs = neighbors(col, row, empty).filter(([c, r]) => emptySet.has(`${c},${r}`));
+      if (nbs.length) return [[col, row], nbs[0]];
+      const other = empty.find(([c, r]) => `${c},${r}` !== key);
+      return other ? [[col, row], other] : [[col, row]];
+    }
+
+    if (mode === 3) {
+      const nbs = neighbors(col, row, empty);
+      if (nbs.length >= 2) return [[col, row], nbs[0], nbs[1]];
+      if (nbs.length === 1) {
+        const n2 = neighbors(nbs[0][0], nbs[0][1], empty).find(
+          ([c, r]) => `${c},${r}` !== key && `${c},${r}` !== `${nbs[0][0]},${nbs[0][1]}`
+        );
+        return n2 ? [[col, row], nbs[0], n2] : [[col, row], nbs[0]];
+      }
+      return empty.slice(0, 3);
+    }
+    return [[col, row]];
+  }
+
+  function renderLearnCanvas() {
+    const svg = document.getElementById("learnCanvas");
+    const shape = SHAPE_GRIDS[currentShape];
+    const cells = shape.cells;
+    const filled = getFilledCells();
+    let html = "";
+
+    if (shape.circle) {
+      html += `<circle cx="${shape.circle.cx}" cy="${shape.circle.cy}" r="${shape.circle.r}" class="shape-outline" fill="#fff"/>`;
+    } else if (shape.outline) {
+      html += `<path d="${shape.outline}" class="shape-outline" fill="#fff"/>`;
+    }
+
+    cells.forEach(([col, row]) => {
+      const { x, y } = cellToXY(col, row);
+      const k = `${col},${row}`;
+      const color = filled[k] || "#fff";
+      const cls = filled[k] ? "grid-cell filled" : "grid-cell";
+      html += `<rect class="${cls}" data-col="${col}" data-row="${row}" x="${x}" y="${y}" width="${STEP - 2}" height="${STEP - 2}" rx="2" fill="${color}"/>`;
+    });
+
+    svg.innerHTML = html;
+
+    const count = Object.keys(filled).length;
+    document.getElementById("areaCount").textContent =
+      `已涂：${count} 个小方格（共 ${cells.length} 格）`;
+
+    svg.querySelectorAll(".grid-cell").forEach((rect) => {
+      rect.addEventListener("click", () => {
+        const col = +rect.dataset.col;
+        const row = +rect.dataset.row;
+        const toFill = pickCellsToFill(col, row, cells, currentMode);
+        if (!toFill.length) return;
+        const map = { ...filled };
+        toFill.forEach(([c, r]) => {
+          const kk = `${c},${r}`;
+          if (cells.some(([cc, rr]) => cc === c && rr === r)) map[kk] = selectedColor;
         });
+        setFilledCells(map);
+        renderLearnCanvas();
       });
     });
   }
 
-  /* ---------- 面积比较（密铺画布） ---------- */
-  function buildSlotGrids() {
+  function renderShapeButtons() {
+    const list = document.getElementById("shapeList");
+    list.innerHTML = SHAPE_ORDER.map((id) => {
+      const s = SHAPE_GRIDS[id];
+      const mini = miniSvg(id);
+      return `<button type="button" class="shape-btn${id === currentShape ? " active" : ""}" data-shape="${id}">${mini}<span>${s.name}</span></button>`;
+    }).join("");
+
+    list.querySelectorAll(".shape-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentShape = btn.dataset.shape;
+        list.querySelectorAll(".shape-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderLearnCanvas();
+      });
+    });
+  }
+
+  function miniSvg(id) {
+    const paths = {
+      triangle: '<polygon points="24,40 40,40 32,18" fill="#dfe6e9" stroke="#636e72"/>',
+      square: '<rect x="16" y="16" width="32" height="32" fill="#dfe6e9" stroke="#636e72"/>',
+      parallelogram: '<polygon points="14,22 42,18 38,38 10,42" fill="#dfe6e9" stroke="#636e72"/>',
+      trapezoid: '<polygon points="18,20 46,20 50,42 14,42" fill="#dfe6e9" stroke="#636e72"/>',
+      circle: '<circle cx="32" cy="30" r="18" fill="#dfe6e9" stroke="#636e72"/>',
+      notch: '<path d="M16 16h32v32H16z M48 16v14H34V16z" fill="#dfe6e9" stroke="#636e72"/>',
+    };
+    return `<svg viewBox="0 0 64 56" aria-hidden="true">${paths[id]}</svg>`;
+  }
+
+  /* ---------- 面积比较 ---------- */
+  const COMPARE_SHAPES = {
+    a: { rows: 5, cols: 6, mask: null },
+    b: { rows: 4, cols: 6, mask: "L" },
+  };
+
+  function buildCompareMask(rows, cols, type) {
+    const cells = [];
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++) {
+        if (type === "L" && c >= 4 && r <= 1) continue;
+        cells.push({ r, c });
+      }
+    return cells;
+  }
+
+  function renderCompareGrids() {
     ["a", "b"].forEach((zone) => {
+      const cfg = zone === "a"
+        ? { rows: 5, cols: 6, type: null }
+        : { rows: 4, cols: 6, type: "L" };
+      const cells = buildCompareMask(cfg.rows, cfg.cols, cfg.type);
       const grid = document.getElementById(zone === "a" ? "gridA" : "gridB");
-      const n = ZONE_CFG[zone].total;
-      grid.innerHTML = Array(n)
-        .fill(0)
-        .map((_, i) => `<div class="tile-slot" data-zone="${zone}" data-i="${i}"></div>`)
+      grid.style.gridTemplateColumns = `repeat(${cfg.cols}, 1fr)`;
+      const filled = compareFill[zone];
+      grid.innerHTML = cells
+        .map(({ r, c }) => {
+          const k = `${c},${r}`;
+          const color = filled[k] || "";
+          return `<div class="drop-cell${color ? " filled" : ""}" data-zone="${zone}" data-c="${c}" data-r="${r}" style="background:${color || "#fff"}"></div>`;
+        })
         .join("");
-    });
-  }
 
-  function setMiniIcon(el, type) {
-    el.className = "mini-shape " + type;
-  }
-
-  function dominantShape(zone) {
-    const data = slots[zone].filter(Boolean);
-    if (!data.length) return ZONE_CFG[zone].defaultShape;
-    const counts = {};
-    data.forEach((s) => {
-      counts[s] = (counts[s] || 0) + 1;
-    });
-    return Object.keys(counts).sort((x, y) => counts[y] - counts[x])[0];
-  }
-
-  function renderCompare() {
-    ["a", "b"].forEach((zone) => {
-      const grid = document.getElementById(zone === "a" ? "gridA" : "gridB");
-      const slotEls = grid.querySelectorAll(".tile-slot");
-      slots[zone].forEach((shape, i) => {
-        slotEls[i].innerHTML = shape
-          ? `<div class="tile-piece ${shape}"></div>`
-          : "";
-      });
-      const count = slots[zone].filter(Boolean).length;
-      const dom = dominantShape(zone);
-      document.getElementById(zone === "a" ? "countA" : "countB").textContent = count;
-      setMiniIcon(document.getElementById(zone === "a" ? "miniA" : "miniB"), dom);
+      const count = Object.keys(filled).length;
+      document.getElementById(zone === "a" ? "countA" : "countB").textContent = `${count} 格`;
     });
     updateCompareResult();
   }
 
   function updateCompareResult() {
-    const ca = slots.a.filter(Boolean).length;
-    const cb = slots.b.filter(Boolean).length;
+    const ca = Object.keys(compareFill.a).length;
+    const cb = Object.keys(compareFill.b).length;
     const el = document.getElementById("compareResult");
     if (!ca && !cb) {
       el.textContent = "";
       return;
     }
-    if (ca > cb) el.textContent = "① 号图形面积更大";
-    else if (cb > ca) el.textContent = "② 号图形面积更大";
-    else el.textContent = "两个图形面积一样大";
+    if (ca > cb) el.textContent = "图形 A 的面积更大！";
+    else if (cb > ca) el.textContent = "图形 B 的面积更大！";
+    else el.textContent = "两个图形面积一样大！";
   }
 
-  function firstEmptyIndex(zone) {
-    return slots[zone].findIndex((s) => !s);
-  }
-
-  function placeNext(zone, shape) {
-    const i = firstEmptyIndex(zone);
-    if (i === -1) {
-      showToast("已满，请点击某一格覆盖，或点密铺按钮");
-      return false;
-    }
-    slots[zone][i] = shape;
-    renderCompare();
-    return true;
-  }
-
-  function shapeLabel(shape) {
-    return { square: "正方形", circle: "圆形", triangle: "三角形" }[shape] || shape;
-  }
-
-  function placeAtSlot(zone, index, shape) {
-    if (index < 0 || index >= ZONE_CFG[zone].total) return;
-    const had = slots[zone][index];
-    slots[zone][index] = shape;
-    renderCompare();
-    if (had && had !== shape) {
-      showToast(`已替换为${shapeLabel(shape)}`);
-    }
-  }
-
-  /** 往空位添加（不覆盖已有格） */
-  function fillEmpty(zone, shape) {
-    let added = 0;
-    slots[zone].forEach((s, i) => {
-      if (!s) {
-        slots[zone][i] = shape;
-        added++;
-      }
+  function tessellateZone(zone) {
+    const cfg = zone === "a"
+      ? { rows: 5, cols: 6, type: null }
+      : { rows: 4, cols: 6, type: "L" };
+    const cells = buildCompareMask(cfg.rows, cfg.cols, cfg.type);
+    compareFill[zone] = {};
+    cells.forEach(({ r, c }) => {
+      compareFill[zone][`${c},${r}`] = compareColor;
     });
-    if (added === 0) {
-      showToast("没有空位了，请点击某一格覆盖替换");
-    } else {
-      showToast(`已添加 ${added} 个${shapeLabel(shape)}`);
+    renderCompareGrids();
+    showToast(`图形 ${zone.toUpperCase()} 已密铺完成`);
+  }
+
+  function initTileTray() {
+    const tray = document.getElementById("tileTray");
+    tray.innerHTML = "";
+    for (let i = 0; i < 24; i++) {
+      const t = document.createElement("div");
+      t.className = "tile";
+      t.draggable = true;
+      t.style.background = compareColor;
+      t.dataset.color = compareColor;
+      tray.appendChild(t);
     }
-    renderCompare();
-  }
 
-  /** ①号密铺：10 个正方形；②号密铺：12 个圆形（全覆盖） */
-  function fillZone(zone, shape) {
-    const n = ZONE_CFG[zone].total;
-    for (let i = 0; i < n; i++) slots[zone][i] = shape;
-    renderCompare();
-    if (zone === "a") showToast("①号密铺：10 个正方形");
-    else showToast("②号密铺：12 个圆形");
-  }
+    let dragged = null;
 
-  function clearCompare() {
-    slots.a = Array(ZONE_CFG.a.total).fill(null);
-    slots.b = Array(ZONE_CFG.b.total).fill(null);
-    renderCompare();
-    showToast("已清空");
-  }
-
-  function selectPalette(shape) {
-    selectedShape = shape;
-    document.querySelectorAll(".palette-pick").forEach((p) => {
-      p.classList.toggle("active", p.dataset.shape === shape);
+    tray.addEventListener("dragstart", (e) => {
+      if (!e.target.classList.contains("tile")) return;
+      dragged = e.target;
+      e.target.classList.add("dragging");
+      e.dataTransfer.setData("text/plain", compareColor);
     });
-  }
-
-  let draggingShape = null;
-
-  function initCompareInteractions() {
-    document.querySelectorAll(".palette-pick").forEach((pick) => {
-      pick.addEventListener("click", () => selectPalette(pick.dataset.shape));
-      pick.addEventListener("dragstart", (e) => {
-        draggingShape = pick.dataset.shape;
-        pick.classList.add("dragging");
-        selectPalette(draggingShape);
-        e.dataTransfer.setData("application/x-shape", draggingShape);
-        e.dataTransfer.effectAllowed = "copy";
-      });
-      pick.addEventListener("dragend", () => {
-        pick.classList.remove("dragging");
-        draggingShape = null;
-      });
+    tray.addEventListener("dragend", (e) => {
+      if (e.target.classList) e.target.classList.remove("dragging");
     });
 
-    document.querySelectorAll(".compare-board").forEach((board) => {
-      const zone = board.dataset.zone;
-
-      board.addEventListener("dragover", (e) => {
+    document.querySelectorAll(".drop-cell").forEach((cell) => {
+      cell.addEventListener("dragover", (e) => e.preventDefault());
+      cell.addEventListener("drop", (e) => {
         e.preventDefault();
-        board.classList.add("drag-over");
-        e.dataTransfer.dropEffect = "copy";
+        const zone = cell.dataset.zone;
+        const k = `${cell.dataset.c},${cell.dataset.r}`;
+        const color = e.dataTransfer.getData("text/plain") || compareColor;
+        compareFill[zone][k] = color;
+        renderCompareGrids();
+        initTileTray();
       });
-      board.addEventListener("dragleave", () => board.classList.remove("drag-over"));
-      board.addEventListener("drop", (e) => {
-        e.preventDefault();
-        board.classList.remove("drag-over");
-        const shape =
-          e.dataTransfer.getData("application/x-shape") || draggingShape || selectedShape;
-        const slot = e.target.closest(".tile-slot");
-        if (slot) placeAtSlot(zone, +slot.dataset.i, shape);
-        else placeNext(zone, shape);
+      cell.addEventListener("click", () => {
+        const zone = cell.dataset.zone;
+        const k = `${cell.dataset.c},${cell.dataset.r}`;
+        compareFill[zone][k] = compareColor;
+        renderCompareGrids();
       });
-      board.addEventListener("click", (e) => {
-        const slot = e.target.closest(".tile-slot");
-        if (slot) placeAtSlot(zone, +slot.dataset.i, selectedShape);
-        else placeNext(zone, selectedShape);
-      });
-    });
-
-    let touchShape = null;
-    let touchEl = null;
-
-    document.querySelectorAll(".palette-pick").forEach((pick) => {
-      pick.addEventListener(
-        "touchstart",
-        (e) => {
-          touchShape = pick.dataset.shape;
-          selectPalette(touchShape);
-          touchEl = document.createElement("div");
-          touchEl.className = "drag-ghost";
-          touchEl.innerHTML = `<div class="pick-shape ${touchShape}" style="width:48px;height:48px"></div>`;
-          const t = e.touches[0];
-          touchEl.style.left = t.clientX - 24 + "px";
-          touchEl.style.top = t.clientY - 24 + "px";
-          document.body.appendChild(touchEl);
-        },
-        { passive: true }
-      );
-    });
-
-    document.addEventListener(
-      "touchmove",
-      (e) => {
-        if (!touchEl) return;
-        const t = e.touches[0];
-        touchEl.style.left = t.clientX - 24 + "px";
-        touchEl.style.top = t.clientY - 24 + "px";
-      },
-      { passive: true }
-    );
-
-    document.addEventListener("touchend", (e) => {
-      if (!touchEl) return;
-      const t = e.changedTouches[0];
-      const target = document.elementFromPoint(t.clientX, t.clientY);
-      const board = target?.closest(".compare-board");
-      if (board) {
-        const zone = board.dataset.zone;
-        const slot = target.closest(".tile-slot");
-        if (slot) placeAtSlot(zone, +slot.dataset.i, touchShape);
-        else placeNext(zone, touchShape);
-      }
-      touchEl.remove();
-      touchEl = null;
-      touchShape = null;
     });
   }
 
-  /* ---------- Tabs ---------- */
-  document.querySelectorAll(".tab").forEach((tab) => {
+  function refreshTrayColors() {
+    document.querySelectorAll(".tile").forEach((t) => {
+      t.style.background = compareColor;
+      t.dataset.color = compareColor;
+    });
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  document.querySelectorAll(".main-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
-      document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+      document.querySelectorAll(".main-tab").forEach((t) => t.classList.remove("active"));
       document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
       tab.classList.add("active");
       document.getElementById("panel-" + tab.dataset.panel).classList.add("active");
     });
   });
 
-  document.getElementById("btnFill1").onclick = () => fillZone("a", "square");
-  document.getElementById("btnFill2").onclick = () => fillZone("b", "circle");
-  document.getElementById("btnClear").onclick = clearCompare;
+  document.querySelectorAll(".mode-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      currentMode = +tab.dataset.mode;
+      document.querySelectorAll(".mode-tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById("modeHint").innerHTML = MODE_HINTS[currentMode];
+      renderLearnCanvas();
+    });
+  });
 
-  initLearnColors();
-  initLearnShapes();
-  buildSlotGrids();
-  initCompareInteractions();
-  renderCompare();
+  initColors("colorPalette", (c) => {
+    selectedColor = c;
+  });
+
+  initColors("compareColors", (c) => {
+    compareColor = c;
+    refreshTrayColors();
+  });
+
+  document.getElementById("btnClearShape").onclick = () => {
+    setFilledCells({});
+    renderLearnCanvas();
+    showToast("已清除");
+  };
+
+  document.getElementById("btnFillAll").onclick = () => {
+    const cells = SHAPE_GRIDS[currentShape].cells;
+    const map = {};
+    cells.forEach(([c, r]) => {
+      map[`${c},${r}`] = selectedColor;
+    });
+    setFilledCells(map);
+    renderLearnCanvas();
+    showToast("已铺满");
+  };
+
+  document.getElementById("btnTessellateA").onclick = () => tessellateZone("a");
+  document.getElementById("btnTessellateB").onclick = () => tessellateZone("b");
+  document.getElementById("btnClearCompare").onclick = () => {
+    compareFill.a = {};
+    compareFill.b = {};
+    renderCompareGrids();
+    initTileTray();
+    showToast("已清空");
+  };
+
+  renderShapeButtons();
+  renderLearnCanvas();
+  renderCompareGrids();
+  initTileTray();
 })();
   </script>
 </body>
