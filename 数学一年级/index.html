@@ -9,34 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
 </head>
-<body class="body-locked">
-  <div class="auth-gate" id="authGate" role="dialog" aria-labelledby="authTitle" aria-modal="true">
-    <div class="auth-card">
-      <div class="auth-icon">🔐</div>
-      <h2 id="authTitle">验证后进入</h2>
-      <p class="auth-hint" id="authHint"></p>
-      <label class="auth-label" for="authCode">验证码</label>
-      <input
-        type="password"
-        id="authCode"
-        class="auth-input"
-        inputmode="numeric"
-        autocomplete="off"
-        maxlength="16"
-        placeholder="请输入验证码"
-      />
-      <label class="auth-remember">
-        <input type="checkbox" id="authRemember" checked />
-        <span>7 天内免重复输入</span>
-      </label>
-      <button type="button" class="btn btn-primary btn-lg auth-submit" id="authSubmit">
-        进入课件
-      </button>
-      <p class="auth-error" id="authError" role="alert"></p>
-    </div>
-  </div>
-
-  <div class="app app--locked" id="mainApp">
+<body>
+  <div class="app" id="mainApp">
     <header class="header">
       <div class="header-inner">
         <button type="button" class="menu-btn" id="menuBtn" aria-label="打开菜单">☰</button>
@@ -48,7 +22,7 @@
           <span class="star-icon">⭐</span>
           <span id="totalStars">0</span>
         </div>
-        <button type="button" class="lock-btn" id="lockBtn" title="退出并锁定" aria-label="退出并锁定">🔒</button>
+        <a class="lock-btn" href="../../games.html" title="返回主页选择年级" aria-label="返回主页" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center;">🏠</a>
       </div>
     </header>
 
@@ -67,11 +41,6 @@
             <button type="button" class="btn btn-primary btn-lg" data-go="counting">
               开始学习 →
             </button>
-            <p style="margin-top:20px">
-              <a href="area.html" style="color:#3d8fd9;font-weight:700;text-decoration:none;font-size:1.05rem">
-                📐 认识面积课件（免验证直达）
-              </a>
-            </p>
           </div>
           <div class="card-grid" id="homeCards"></div>
         </section>
@@ -84,6 +53,11 @@
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/auth.js"></script>
+  <script>
+    // 验证码已移除：自动启动 app
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof window.startApp === "function") window.startApp();
+    });
+  </script>
 </body>
 </html>

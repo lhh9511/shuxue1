@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1-6 年级小游戏总入口 · 小学数学互动课件</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f0f4ff;
+      --surface: #ffffff;
+      --text: #2d3436;
+      --muted: #636e72;
+      --border: #e3e8ef;
+      --shadow: 0 6px 18px rgba(45, 52, 54, 0.08);
+      --shadow-hover: 0 14px 30px rgba(45, 52, 54, 0.14);
+      --radius: 18px;
+      --font-display: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
+      --font-body: "Noto Sans SC", system-ui, sans-serif;
+
+      --c1: #ff6b6b;   /* 一年级 - 红 */
+      --c2: #0984e3;   /* 二年级 - 蓝 */
+      --c3: #00b894;   /* 三年级 - 绿 */
+      --c4: #6c5ce7;   /* 四年级 - 紫 */
+      --c5: #e17055;   /* 五年级 - 橙 */
+      --c6: #5f3dc4;   /* 六年级 - 深紫 */
+      --cf: #c0392b;   /* 节日 - 朱红 */
+      --ca: #fd79a8;   /* 专题 - 粉 */
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 8% 12%, rgba(108, 92, 231, 0.18), transparent 40%),
+        radial-gradient(circle at 92% 88%, rgba(0, 206, 201, 0.16), transparent 42%);
+      min-height: 100vh;
+      font-size: 16px;
+    }
+
+    /* === 顶部导航 === */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .topbar h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin: 0;
+      color: var(--c4);
+      font-weight: 400;
+    }
+    .topbar .sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-left: 6px;
+    }
+    .topbar .spacer { flex: 1; }
+    .topbar a.home {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+    .topbar a.home:hover { color: var(--c4); border-color: var(--c4); }
+
+    /* 跳转锚点 */
+    .anchor-row {
+      max-width: 1200px;
+      margin: 12px auto 0;
+      padding: 0 20px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .anchor-row a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .anchor-row a:hover { color: var(--c4); border-color: var(--c4); }
+
+    /* === 主容器 === */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    /* 介绍 */
+    .intro {
+      background: linear-gradient(135deg, rgba(108, 92, 231, 0.12), rgba(0, 206, 201, 0.12));
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 28px;
+    }
+    .intro h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--c4);
+      margin: 0 0 6px;
+      font-weight: 400;
+    }
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* 年级 section */
+    .grade-section {
+      margin-bottom: 36px;
+    }
+    .grade-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .grade-head .badge {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      color: #fff;
+    }
+    .grade-head h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      margin: 0;
+      color: var(--text);
+      font-weight: 400;
+    }
+    .grade-head .count {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* 卡片网格 */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    /* 卡片本体（大卡片） */
+    a.game-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-decoration: none;
+      color: inherit;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+      border: 2px solid transparent;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+      min-height: 148px;
+      overflow: hidden;
+    }
+    /* 左侧彩色条 */
+    a.game-card::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+      background: var(--accent);
+      opacity: 0.85;
+    }
+    a.game-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+    a.game-card .body {
+      flex: 1;
+      min-width: 0;
+    }
+    a.game-card .body h3 {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      margin: 0 0 6px;
+      color: var(--text);
+      font-weight: 400;
+    }
+    a.game-card .body p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    a.game-card .body .meta {
+      margin-top: 10px;
+      display: inline-block;
+      font-size: 12px;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    a.game-card .thumb {
+      flex: 0 0 auto;
+      width: 112px;
+      height: 112px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      background: var(--accent);
+      color: #fff;
+      line-height: 1;
+      box-shadow: 0 6px 14px color-mix(in srgb, var(--accent) 35%, transparent);
+    }
+    a.game-card .arrow {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      font-size: 18px;
+      color: var(--accent);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: all 0.2s;
+    }
+    a.game-card:hover .arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* 各年级主题色 */
+    .theme-1 { --accent: var(--c1); }
+    .theme-2 { --accent: var(--c2); }
+    .theme-3 { --accent: var(--c3); }
+    .theme-4 { --accent: var(--c4); }
+    .theme-5 { --accent: var(--c5); }
+    .theme-6 { --accent: var(--c6); }
+    .theme-festival { --accent: var(--cf); }
+    .theme-area { --accent: var(--ca); }
+
+    .grade-head .badge { background: var(--accent); color: #fff; }
+
+    /* 响应式 */
+    @media (max-width: 720px) {
+      .game-grid { grid-template-columns: 1fr; }
+      a.game-card { padding: 18px 20px; min-height: 120px; }
+      a.game-card .thumb { width: 84px; height: 84px; font-size: 48px; border-radius: 18px; }
+      a.game-card .body h3 { font-size: 1.3rem; }
+      .topbar h1 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1>🎮 1-6 年级小游戏总入口</h1>
+      <span class="sub">所有互动小游戏一站式直达</span>
+      <span class="spacer"></span>
+      <a class="home" href="index.html">← 简洁首页</a>
+    </div>
+    <nav class="anchor-row">
+      <a href="#g1">一年级</a>
+      <a href="#g2">二年级</a>
+      <a href="#g3">三年级</a>
+      <a href="#g4">四年级</a>
+      <a href="#g5">五年级</a>
+      <a href="#g6">六年级</a>
+      <a href="#festival">🐉 端午节</a>
+      <a href="#area">📐 面积专题</a>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <section class="intro">
+      <h2>📚 选择任意一个小游戏开始学习</h2>
+      <p>
+        这里汇总了 1-6 年级全册 <strong>96 关</strong>数学互动游戏，外加端午节主题（粽子工坊 + 龙舟竞渡）和「认识面积」专题。
+        点击卡片即可进入对应年级，进入后需输入验证码（由老师或家长提供）。
+      </p>
+    </section>
+
+    <!-- 年级区段：使用 data 属性，JS 自动渲染 -->
+    <section class="grade-section theme-1" id="g1">
+      <div class="grade-head">
+        <span class="badge">一</span>
+        <h2>一年级数学</h2>
+        <span class="count" data-count="g1"></span>
+      </div>
+      <div class="game-grid" data-mount="g1" data-href="数学一年级/" data-prefix="第"></div>
+    </section>
+
+    <section class="grade-section theme-2" id="g2">
+      <div class="grade-head">
+        <span class="badge">二</span>
+        <h2>二年级数学</h2>
+        <span class="count" data-count="g2"></span>
+      </div>
+      <div class="game-grid" data-mount="g2" data-href="数学二年级/" data-prefix="第"></div>
+    </section>
+
+    <section class="grade-section theme-3" id="g3">
+      <div class="grade-head">
+        <span class="badge">三</span>
+        <h2>三年级数学</h2>
+        <span class="count" data-count="g3"></span>
+      </div>
+      <div class="game-grid" data-mount="g3" data-href="数学三年级/" data-prefix="第"></div>
+    </section>
+
+    <section class="grade-section theme-4" id="g4">
+      <div class="grade-head">
+        <span class="badge">四</span>
+        <h2>四年级数学</h2>
+        <span class="count" data-count="g4"></span>
+      </div>
+      <div class="game-grid" data-mount="g4" data-href="数学四年级/" data-prefix="第"></div>
+    </section>
+
+    <section class="grade-section theme-5" id="g5">
+      <div class="grade-head">
+        <span class="badge">五</span>
+        <h2>五年级数学</h2>
+        <span class="count" data-count="g5"></span>
+      </div>
+      <div class="game-grid" data-mount="g5" data-href="数学五年级/" data-prefix="第"></div>
+    </section>
+
+    <section class="grade-section theme-6" id="g6">
+      <div class="grade-head">
+        <span class="badge">六</span>
+        <h2>六年级数学</h2>
+        <span class="count" data-count="g6"></span>
+      </div>
+      <div class="game-grid" data-mount="g6" data-href="数学六年级/" data-prefix="第"></div>
+    </section>
+
+    <section class="grade-section theme-festival" id="festival">
+      <div class="grade-head">
+        <span class="badge">🐉</span>
+        <h2>端午节专题</h2>
+        <span class="count">2 个游戏</span>
+      </div>
+      <div class="game-grid" data-mount="festival"></div>
+    </section>
+
+    <section class="grade-section theme-area" id="area">
+      <div class="grade-head">
+        <span class="badge">📐</span>
+        <h2>认识面积 · 专题</h2>
+        <span class="count">2 个模式：密铺 / 比较</span>
+      </div>
+      <div class="game-grid" data-mount="area"></div>
+    </section>
+
+  </main>
+
+  <script>
+  /* ==== 全部游戏数据（标题、emoji、描述、跳转） ==== */
+  const ALL_GAMES = {
+    /* 1-6 年级：每个 grade 是一个数组，元素为关卡 */
+    g1: [
+      { id: "counting",   title: "数一数",       emoji: "🍎", desc: "认识 1～10，学会点数" },
+      { id: "compare",    title: "比一比",       emoji: "⚖️", desc: "比较多和少、大和小" },
+      { id: "sort",       title: "分一分",       emoji: "🧺", desc: "按颜色或形状分类" },
+      { id: "position",   title: "认位置",       emoji: "🧭", desc: "上下左右与前后" },
+      { id: "numbers",    title: "10 以内的数",   emoji: "🔢", desc: "读写数字，理解数量" },
+      { id: "shapes",     title: "认识图形",     emoji: "🔷", desc: "圆、正方、三角、长方" },
+      { id: "clock",      title: "认识钟表",     emoji: "🕐", desc: "整点时刻" },
+      { id: "addsub",     title: "加减法",       emoji: "➕", desc: "20 以内口算练习" },
+      { id: "pattern",    title: "找规律",       emoji: "🌈", desc: "图形与数字排列" },
+      { id: "area",       title: "认识面积",     emoji: "📐", desc: "密铺涂色与面积比较", href: "数学一年级/area.html" },
+    ],
+    g2: [
+      { id: "hundred",     title: "100 以内的数",  emoji: "💯", desc: "数位与读写" },
+      { id: "compare100",  title: "比大小",       emoji: "⚖️", desc: "100 以内大小比较" },
+      { id: "carryAdd",    title: "进位加法",     emoji: "⬆️", desc: "两位数进位加" },
+      { id: "borrowSub",   title: "退位减法",     emoji: "⬇️", desc: "两位数退位减" },
+      { id: "multiply",    title: "表内乘法",     emoji: "✖️", desc: "1-9 乘法口诀" },
+      { id: "divide",      title: "表内除法",     emoji: "➗", desc: "用乘法口诀求商" },
+      { id: "remainder",   title: "有余数除法",   emoji: "🍪", desc: "分东西有余数" },
+      { id: "mixed",       title: "加减混合",     emoji: "➕", desc: "连加连减混合运算" },
+      { id: "money",       title: "认识人民币",   emoji: "💰", desc: "元角分换算" },
+      { id: "length",      title: "长度单位",     emoji: "📏", desc: "厘米、米、毫米" },
+      { id: "weight",      title: "质量单位",     emoji: "⚖️", desc: "克与千克" },
+      { id: "shapes2",     title: "认识图形",     emoji: "🔶", desc: "角与平面图形" },
+      { id: "angle",       title: "认识角",       emoji: "📐", desc: "角的初步认识" },
+      { id: "symmetry",    title: "图形对称",     emoji: "🦋", desc: "轴对称图形" },
+      { id: "stats",       title: "简单统计",     emoji: "📊", desc: "数据收集与整理" },
+      { id: "clock2",      title: "认识时间",     emoji: "🕐", desc: "时分与半时" },
+      { id: "pattern2",    title: "找规律",       emoji: "🌈", desc: "数列与图形规律" },
+    ],
+    g3: [
+      { id: "bigAddSub",   title: "万以内加减法",   emoji: "🧮", desc: "大数进退位" },
+      { id: "mulOne",      title: "多位数 × 一位数", emoji: "✖️", desc: "笔算乘法" },
+      { id: "divOne",      title: "除数是一位数",   emoji: "➗", desc: "笔算除法" },
+      { id: "multiple",    title: "倍的认识",       emoji: "🔁", desc: "倍数概念" },
+      { id: "perimeter",   title: "周长",           emoji: "🔲", desc: "长方形周长" },
+      { id: "areaG3",      title: "面积",           emoji: "🟦", desc: "长方形面积" },
+      { id: "fraction",    title: "分数初步",       emoji: "🍕", desc: "几分之一" },
+      { id: "decimal",     title: "小数初步",       emoji: "💧", desc: "小数的认识" },
+      { id: "timeUnit",    title: "时分秒",         emoji: "⏱️", desc: "时间单位换算" },
+      { id: "kmTon",       title: "千米与吨",       emoji: "🚛", desc: "较大的单位" },
+      { id: "measure",     title: "毫米与分米",     emoji: "📏", desc: "长度单位" },
+      { id: "ymd",         title: "年月日",         emoji: "📅", desc: "日期与星期" },
+      { id: "clock24",     title: "24 时计时法",    emoji: "🕓", desc: "普通与 24 时" },
+      { id: "direction",   title: "位置与方向",     emoji: "🧭", desc: "东南西北" },
+      { id: "chance",      title: "可能性",         emoji: "🎲", desc: "事件可能性" },
+      { id: "venn",        title: "数学广角—集合",  emoji: "⭕", desc: "集合与重叠" },
+    ],
+    g4: [
+      { id: "bigNumber",     title: "大数的认识",       emoji: "🔢", desc: "亿级数位" },
+      { id: "mul2x3",        title: "三位数 × 两位数",   emoji: "✖️", desc: "笔算乘法" },
+      { id: "div2",          title: "除数是两位数",     emoji: "➗", desc: "笔算除法" },
+      { id: "areaBig",       title: "公顷与平方千米",   emoji: "🌾", desc: "大面积单位" },
+      { id: "angle4",        title: "角的度量",         emoji: "📐", desc: "量角器使用" },
+      { id: "parallel",      title: "平行四边形和梯形", emoji: "🔷", desc: "四边形分类" },
+      { id: "ops4",          title: "四则运算顺序",     emoji: "🧠", desc: "先乘除后加减" },
+      { id: "lawAdd",        title: "加法运算定律",     emoji: "🔁", desc: "交换律结合律" },
+      { id: "lawMul",        title: "乘法运算定律",     emoji: "🪄", desc: "乘法分配律等" },
+      { id: "decimalMean",   title: "小数的意义",       emoji: "💠", desc: "小数的性质" },
+      { id: "decimalAddSub", title: "小数加减法",       emoji: "➕", desc: "竖式计算" },
+      { id: "triangle",      title: "三角形",           emoji: "🔺", desc: "三角形的特性" },
+      { id: "view",          title: "观察物体",         emoji: "👀", desc: "三视图" },
+      { id: "lineChart",     title: "折线统计图",       emoji: "📈", desc: "数据走势" },
+      { id: "chicken",       title: "数学广角—鸡兔同笼", emoji: "🐔", desc: "经典趣题" },
+      { id: "average",       title: "平均数",           emoji: "📊", desc: "平均数意义" },
+    ],
+    g5: [
+      { id: "decMul",     title: "小数乘法",       emoji: "✖️", desc: "小数 × 整数 / 小数" },
+      { id: "decDiv",     title: "小数除法",       emoji: "➗", desc: "小数除法竖式" },
+      { id: "position",   title: "位置（数对）",   emoji: "📍", desc: "用数对定位" },
+      { id: "equation",   title: "简易方程",       emoji: "📐", desc: "用字母表示数" },
+      { id: "polyArea",   title: "多边形面积",     emoji: "🔷", desc: "平行四边形等面积" },
+      { id: "tree",       title: "数学广角—植树",  emoji: "🌳", desc: "间隔问题" },
+      { id: "chance5",    title: "可能性",         emoji: "🎲", desc: "等可能事件" },
+      { id: "factor",     title: "因数与倍数",     emoji: "🔢", desc: "找因数找倍数" },
+      { id: "divFeat",    title: "倍数的特征",     emoji: "🧪", desc: "2/3/5 倍数" },
+      { id: "prime",      title: "质数与合数",     emoji: "🧱", desc: "判断质合数" },
+      { id: "volume",     title: "长方体与正方体", emoji: "🧊", desc: "表面积与体积" },
+      { id: "fracMean",   title: "分数的意义",     emoji: "🍰", desc: "分数单位等" },
+      { id: "reduceCommon", title: "约分与通分",   emoji: "🧮", desc: "化简与通分" },
+      { id: "fracAddSub", title: "分数加减法",     emoji: "➕", desc: "异分母加减" },
+      { id: "lineChart5", title: "折线统计图",     emoji: "📈", desc: "复式统计" },
+      { id: "defective",  title: "找次品",         emoji: "🔍", desc: "称重策略" },
+    ],
+    g6: [
+      { id: "fracMul",     title: "分数乘法",       emoji: "✖️", desc: "分数 × 分数" },
+      { id: "fracDiv",     title: "分数除法",       emoji: "➗", desc: "分数 ÷ 分数" },
+      { id: "ratio",       title: "比",             emoji: "🔗", desc: "比的意义与化简" },
+      { id: "circlePeri",  title: "圆的周长",       emoji: "⭕", desc: "C = 2πr" },
+      { id: "circleArea",  title: "圆的面积",       emoji: "🟠", desc: "S = πr²" },
+      { id: "percentConv", title: "百分数互化",     emoji: "💯", desc: "分数小数百分数" },
+      { id: "discount",    title: "折扣与成数",     emoji: "🏷️", desc: "生活中的百分数" },
+      { id: "interest",    title: "利率（利息）",   emoji: "🏦", desc: "利息计算" },
+      { id: "negative",    title: "负数",           emoji: "🌡️", desc: "正负数认识" },
+      { id: "cylinderSurf",title: "圆柱表面积",     emoji: "🥫", desc: "侧面积 + 底面积" },
+      { id: "cylinderVol", title: "圆柱体积",       emoji: "🧊", desc: "V = Sh" },
+      { id: "coneVol",     title: "圆锥体积",       emoji: "🍦", desc: "V = 1/3 Sh" },
+      { id: "proportion",  title: "正比例与反比例", emoji: "⚖️", desc: "判断比例关系" },
+      { id: "solveProp",   title: "解比例",         emoji: "🧮", desc: "求未知项" },
+      { id: "pieChart",    title: "扇形统计图",     emoji: "📊", desc: "占比与角度" },
+      { id: "pigeon",      title: "数学广角—鸽巢",  emoji: "🐦", desc: "抽屉原理" },
+    ],
+
+    /* 端午：每个游戏跳到不同的 #anchor（没有 anchor 时进入首页） */
+    festival: [
+      {
+        title: "包粽子工坊",
+        emoji: "🍙",
+        desc: "选粽叶形状 + 自由加食材，包出独一无二的粽子",
+        href: "端午节/index.html#zongzi",
+      },
+      {
+        title: "龙舟竞渡",
+        emoji: "🐉",
+        desc: "答题前进，三档难度，冲线拿 🏆 金杯",
+        href: "端午节/index.html#race",
+      },
+    ],
+
+    area: [
+      {
+        title: "密铺探究",
+        emoji: "🟦",
+        desc: "选颜色涂小方格，理解面积就是格子数",
+        href: "数学一年级/area.html#panel-learn",
+      },
+      {
+        title: "面积比较",
+        emoji: "⚖️",
+        desc: "拖动方块铺满两个图形，比一比谁更大",
+        href: "数学一年级/area.html#panel-compare",
+      },
+    ],
+  };
+
+  /* ==== 渲染逻辑 ==== */
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    })[c]);
+  }
+
+  function makeCard(game, baseHref, index) {
+    const href = game.href || `${baseHref}#${game.id}`;
+    const meta = index != null ? `第 ${index + 1} 关` : "";
+    return `
+      <a class="game-card" href="${escapeHtml(href)}">
+        <div class="body">
+          <h3>${escapeHtml(game.title)}</h3>
+          <p>${escapeHtml(game.desc || "")}</p>
+          ${meta ? `<span class="meta">${escapeHtml(meta)}</span>` : ""}
+        </div>
+        <div class="thumb" aria-hidden="true">${escapeHtml(game.emoji || "🎮")}</div>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    `;
+  }
+
+  function mountGrade(gradeKey) {
+    const list = ALL_GAMES[gradeKey];
+    if (!list) return;
+    const mountEl = document.querySelector(`[data-mount="${gradeKey}"]`);
+    if (!mountEl) return;
+    const baseHref = mountEl.dataset.href || "";
+    const hasIndex = !!mountEl.dataset.prefix; // 年级类显示「第 N 关」，节日/专题不显示
+
+    mountEl.innerHTML = list
+      .map((g, i) => makeCard(g, baseHref, hasIndex ? i : null))
+      .join("");
+
+    const countEl = document.querySelector(`[data-count="${gradeKey}"]`);
+    if (countEl) countEl.textContent = `共 ${list.length} 个游戏`;
+  }
+
+  ["g1", "g2", "g3", "g4", "g5", "g6", "festival", "area"].forEach(mountGrade);
+  </script>
+
+</body>
+</html>
+</content>
+</invoke>
