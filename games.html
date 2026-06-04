@@ -3,192 +3,344 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>小学数学互动课件 · 1-6 年级</title>
+  <title>小学数学小游戏 · 1-6 年级</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --c1: #ff6b6b; --c2: #0984e3; --c3: #00b894;
-      --c4: #6c5ce7; --c5: #e17055; --c6: #5f3dc4;
-      --cf: #c0392b; --ca: #fd79a8;
+      --bg: #f4f7ff;
+      --surface: #ffffff;
+      --text: #2d3436;
+      --muted: #636e72;
+      --border: #e3e8ef;
+      --shadow: 0 2px 8px rgba(45, 52, 54, 0.08);
+      --font-display: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
+      --font-body: "Noto Sans SC", system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; height: 100%; }
     body {
-      font-family: "Noto Sans SC", system-ui, sans-serif;
-      color: #2d3436;
-      background: #f0f4ff;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 8% 12%, rgba(108, 92, 231, 0.12), transparent 40%),
+        radial-gradient(circle at 92% 88%, rgba(0, 206, 201, 0.10), transparent 42%);
+      min-height: 100vh;
+      font-size: 16px;
     }
 
-    /* 顶部 site title + tab 栏 */
     .topbar {
-      flex: 0 0 auto;
-      background: linear-gradient(135deg, #6c5ce7 0%, #5f3dc4 50%, #00cec9 100%);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(108, 92, 231, 0.35);
-    }
-    .topbar-inner {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 14px 20px 0;
+      padding: 28px 20px 12px;
+      text-align: center;
     }
     .topbar h1 {
-      font-family: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
-      font-size: 1.4rem;
-      margin: 0 0 12px;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin: 0 0 6px;
+      color: #6c5ce7;
       font-weight: 400;
+    }
+    .topbar p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 20px 60px;
+    }
+
+    .grade-section { margin-top: 28px; }
+    .grade-head {
       display: flex;
       align-items: center;
       gap: 10px;
+      margin-bottom: 12px;
+      padding-left: 4px;
     }
-    .topbar h1 .sub {
-      font-size: 0.85rem;
-      opacity: 0.85;
-      font-family: "Noto Sans SC", sans-serif;
+    .grade-head .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .grade-head h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      margin: 0;
+      color: var(--text);
+      font-weight: 400;
+    }
+    .grade-head .count {
+      color: var(--muted);
+      font-size: 13px;
+      margin-left: auto;
     }
 
-    .tabs {
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    a.game {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .tab {
-      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 10px 18px;
-      border-radius: 12px 12px 0 0;
-      background: rgba(255, 255, 255, 0.18);
-      color: #fff;
+      gap: 10px;
+      background: var(--surface);
+      padding: 12px 14px;
+      border-radius: 12px;
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      border-bottom: 3px solid transparent;
-      transition: background 0.18s, transform 0.12s;
+      color: inherit;
+      box-shadow: var(--shadow);
+      border: 2px solid transparent;
+      transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
     }
-    .tab:hover { background: rgba(255, 255, 255, 0.32); }
-    .tab.active {
-      background: #f0f4ff;
-      color: #2d3436;
-      border-bottom-color: var(--c4, #6c5ce7);
-      transform: translateY(1px);
+    a.game:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent, #6c5ce7);
     }
-    .tab .emoji { font-size: 18px; }
-    .tab[data-grade="1"].active { color: var(--c1); border-bottom-color: var(--c1); }
-    .tab[data-grade="2"].active { color: var(--c2); border-bottom-color: var(--c2); }
-    .tab[data-grade="3"].active { color: var(--c3); border-bottom-color: var(--c3); }
-    .tab[data-grade="4"].active { color: var(--c4); border-bottom-color: var(--c4); }
-    .tab[data-grade="5"].active { color: var(--c5); border-bottom-color: var(--c5); }
-    .tab[data-grade="6"].active { color: var(--c6); border-bottom-color: var(--c6); }
-    .tab[data-grade="festival"].active { color: var(--cf); border-bottom-color: var(--cf); }
-    .tab[data-grade="area"].active { color: var(--ca); border-bottom-color: var(--ca); }
-
-    /* iframe 容器 */
-    .frame-wrap {
-      flex: 1 1 auto;
-      background: #fff;
-      min-height: 0;
-      position: relative;
-    }
-    iframe#stage {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      background: #fff;
-    }
-    .frame-loading {
-      position: absolute;
-      inset: 0;
+    a.game .emoji {
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #636e72;
+      font-size: 20px;
+      background: var(--accent, #6c5ce7);
+      color: #fff;
+    }
+    a.game .name {
+      flex: 1;
+      min-width: 0;
+      font-weight: 500;
       font-size: 15px;
-      background: rgba(240, 244, 255, 0.85);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .frame-loading.show { opacity: 1; }
-    .frame-loading .spin {
-      width: 28px; height: 28px;
-      border: 3px solid #dfe6e9;
-      border-top-color: #6c5ce7;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin-right: 10px;
+    a.game .idx {
+      font-size: 11px;
+      color: var(--muted);
+      flex: 0 0 auto;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
-    @media (max-width: 720px) {
-      .topbar h1 { font-size: 1.1rem; }
-      .tab { padding: 8px 12px; font-size: 13px; }
+    /* 各年级主题色 */
+    .g1 { --accent: #ff6b6b; }
+    .g2 { --accent: #0984e3; }
+    .g3 { --accent: #00b894; }
+    .g4 { --accent: #6c5ce7; }
+    .g5 { --accent: #e17055; }
+    .g6 { --accent: #5f3dc4; }
+    .gf { --accent: #c0392b; }
+    .ga { --accent: #fd79a8; }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 20px;
+    }
+
+    @media (max-width: 520px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .topbar h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
   <header class="topbar">
-    <div class="topbar-inner">
-      <h1>📚 小学数学互动课件 <span class="sub">· 选个年级开始玩</span></h1>
-      <nav class="tabs" id="tabs">
-        <button type="button" class="tab active" data-grade="1" data-src="数学一年级/index.html"><span class="emoji">🐻</span>一年级</button>
-        <button type="button" class="tab" data-grade="2" data-src="数学二年级/index.html"><span class="emoji">🦊</span>二年级</button>
-        <button type="button" class="tab" data-grade="3" data-src="数学三年级/index.html"><span class="emoji">🦁</span>三年级</button>
-        <button type="button" class="tab" data-grade="4" data-src="数学四年级/index.html"><span class="emoji">🦅</span>四年级</button>
-        <button type="button" class="tab" data-grade="5" data-src="数学五年级/index.html"><span class="emoji">🐯</span>五年级</button>
-        <button type="button" class="tab" data-grade="6" data-src="数学六年级/index.html"><span class="emoji">🦉</span>六年级</button>
-        <button type="button" class="tab" data-grade="festival" data-src="端午节/index.html"><span class="emoji">🐉</span>端午节</button>
-        <button type="button" class="tab" data-grade="area" data-src="数学一年级/area.html"><span class="emoji">📐</span>面积专题</button>
-      </nav>
-    </div>
+    <h1>📚 小学数学小游戏</h1>
+    <p>1-6 年级 · 共 96 关 · 点哪个玩哪个，无需验证码</p>
   </header>
 
-  <div class="frame-wrap">
-    <iframe id="stage" title="数学课件" src="数学一年级/index.html"></iframe>
-    <div class="frame-loading" id="loading"><span class="spin"></span>载入中…</div>
-  </div>
+  <main class="container" id="root">
+    <!-- JS 渲染 -->
+  </main>
+
+  <footer>🏠 <a href="index.html" style="color:inherit">简洁版首页</a></footer>
 
   <script>
-    (function () {
-      const tabs = document.querySelectorAll("#tabs .tab");
-      const stage = document.getElementById("stage");
-      const loading = document.getElementById("loading");
+    const GAMES = {
+      g1: {
+        label: "一年级", count: 10, base: "数学一年级/",
+        items: [
+          ["counting",  "数一数",      "🍎"],
+          ["compare",   "比一比",      "⚖️"],
+          ["sort",      "分一分",      "🧺"],
+          ["position",  "认位置",      "🧭"],
+          ["numbers",   "10 以内的数",  "🔢"],
+          ["shapes",    "认识图形",    "🔷"],
+          ["clock",     "认识钟表",    "🕐"],
+          ["addsub",    "加减法",      "➕"],
+          ["pattern",   "找规律",      "🌈"],
+          ["area",      "认识面积",    "📐", "数学一年级/area.html"],
+        ],
+      },
+      g2: {
+        label: "二年级", count: 17, base: "数学二年级/",
+        items: [
+          ["hundred",    "100 以内的数",  "💯"],
+          ["compare100", "比大小",       "⚖️"],
+          ["carryAdd",   "进位加法",     "⬆️"],
+          ["borrowSub",  "退位减法",     "⬇️"],
+          ["multiply",   "表内乘法",     "✖️"],
+          ["divide",     "表内除法",     "➗"],
+          ["remainder",  "有余数除法",   "🍪"],
+          ["mixed",      "加减混合",     "➕"],
+          ["money",      "认识人民币",   "💰"],
+          ["length",     "长度单位",     "📏"],
+          ["weight",     "质量单位",     "⚖️"],
+          ["shapes2",    "认识图形",     "🔶"],
+          ["angle",      "认识角",       "📐"],
+          ["symmetry",   "图形对称",     "🦋"],
+          ["stats",      "简单统计",     "📊"],
+          ["clock2",     "认识时间",     "🕐"],
+          ["pattern2",   "找规律",       "🌈"],
+        ],
+      },
+      g3: {
+        label: "三年级", count: 16, base: "数学三年级/",
+        items: [
+          ["bigAddSub",  "万以内加减法",   "🧮"],
+          ["mulOne",     "多位数×一位数",  "✖️"],
+          ["divOne",     "除数是一位数",   "➗"],
+          ["multiple",   "倍的认识",       "🔁"],
+          ["perimeter",  "周长",           "🔲"],
+          ["areaG3",     "面积",           "🟦"],
+          ["fraction",   "分数初步",       "🍕"],
+          ["decimal",    "小数初步",       "💧"],
+          ["timeUnit",   "时分秒",         "⏱️"],
+          ["kmTon",      "千米与吨",       "🚛"],
+          ["measure",    "毫米与分米",     "📏"],
+          ["ymd",        "年月日",         "📅"],
+          ["clock24",    "24 时计时法",    "🕓"],
+          ["direction",  "位置与方向",     "🧭"],
+          ["chance",     "可能性",         "🎲"],
+          ["venn",       "集合",           "⭕"],
+        ],
+      },
+      g4: {
+        label: "四年级", count: 16, base: "数学四年级/",
+        items: [
+          ["bigNumber",     "大数的认识",       "🔢"],
+          ["mul2x3",        "三位数×两位数",    "✖️"],
+          ["div2",          "除数是两位数",     "➗"],
+          ["areaBig",       "公顷与平方千米",   "🌾"],
+          ["angle4",        "角的度量",         "📐"],
+          ["parallel",      "平行四边形和梯形", "🔷"],
+          ["ops4",          "四则运算顺序",     "🧠"],
+          ["lawAdd",        "加法运算定律",     "🔁"],
+          ["lawMul",        "乘法运算定律",     "🪄"],
+          ["decimalMean",   "小数的意义",       "💠"],
+          ["decimalAddSub", "小数加减法",       "➕"],
+          ["triangle",      "三角形",           "🔺"],
+          ["view",          "观察物体",         "👀"],
+          ["lineChart",     "折线统计图",       "📈"],
+          ["chicken",       "鸡兔同笼",         "🐔"],
+          ["average",       "平均数",           "📊"],
+        ],
+      },
+      g5: {
+        label: "五年级", count: 16, base: "数学五年级/",
+        items: [
+          ["decMul",       "小数乘法",       "✖️"],
+          ["decDiv",       "小数除法",       "➗"],
+          ["position",     "位置（数对）",   "📍"],
+          ["equation",     "简易方程",       "📐"],
+          ["polyArea",     "多边形面积",     "🔷"],
+          ["tree",         "植树问题",       "🌳"],
+          ["chance5",      "可能性",         "🎲"],
+          ["factor",       "因数与倍数",     "🔢"],
+          ["divFeat",      "倍数的特征",     "🧪"],
+          ["prime",        "质数与合数",     "🧱"],
+          ["volume",       "长方体与正方体", "🧊"],
+          ["fracMean",     "分数的意义",     "🍰"],
+          ["reduceCommon", "约分与通分",     "🧮"],
+          ["fracAddSub",   "分数加减法",     "➕"],
+          ["lineChart5",   "折线统计图",     "📈"],
+          ["defective",    "找次品",         "🔍"],
+        ],
+      },
+      g6: {
+        label: "六年级", count: 16, base: "数学六年级/",
+        items: [
+          ["fracMul",      "分数乘法",       "✖️"],
+          ["fracDiv",      "分数除法",       "➗"],
+          ["ratio",        "比",             "🔗"],
+          ["circlePeri",   "圆的周长",       "⭕"],
+          ["circleArea",   "圆的面积",       "🟠"],
+          ["percentConv",  "百分数互化",     "💯"],
+          ["discount",     "折扣与成数",     "🏷️"],
+          ["interest",     "利率（利息）",   "🏦"],
+          ["negative",     "负数",           "🌡️"],
+          ["cylinderSurf", "圆柱表面积",     "🥫"],
+          ["cylinderVol",  "圆柱体积",       "🧊"],
+          ["coneVol",      "圆锥体积",       "🍦"],
+          ["proportion",   "正比例与反比例", "⚖️"],
+          ["solveProp",    "解比例",         "🧮"],
+          ["pieChart",     "扇形统计图",     "📊"],
+          ["pigeon",       "鸽巢问题",       "🐦"],
+        ],
+      },
+      gf: {
+        label: "🐉 端午节", count: 2, base: "端午节/",
+        items: [
+          ["zongzi", "包粽子工坊", "🍙", "端午节/index.html#zongzi"],
+          ["race",   "龙舟竞渡",   "🐉", "端午节/index.html#race"],
+        ],
+      },
+      ga: {
+        label: "📐 面积专题", count: 2, base: "数学一年级/",
+        items: [
+          ["learn",  "密铺探究", "🟦", "数学一年级/area.html#panel-learn"],
+          ["compare","面积比较", "⚖️", "数学一年级/area.html#panel-compare"],
+        ],
+      },
+    };
 
-      const STORAGE_KEY = "math-active-grade";
+    const root = document.getElementById("root");
+    let totalCount = 0;
 
-      function activate(btn) {
-        tabs.forEach((t) => t.classList.remove("active"));
-        btn.classList.add("active");
-        loading.classList.add("show");
-        stage.src = btn.dataset.src;
-        try { localStorage.setItem(STORAGE_KEY, btn.dataset.grade); } catch (_) {}
-      }
-
-      tabs.forEach((btn) => {
-        btn.addEventListener("click", () => activate(btn));
+    for (const [key, g] of Object.entries(GAMES)) {
+      const sec = document.createElement("section");
+      sec.className = `grade-section ${key}`;
+      sec.innerHTML = `
+        <div class="grade-head">
+          <span class="dot"></span>
+          <h2>${g.label}</h2>
+          <span class="count">共 ${g.items.length} 个游戏</span>
+        </div>
+        <div class="grid"></div>
+      `;
+      sec.querySelector(".dot").style.background = `var(--accent)`;
+      const grid = sec.querySelector(".grid");
+      g.items.forEach((it, i) => {
+        const [id, title, emoji, customHref] = it;
+        const href = customHref || `${g.base}#${id}`;
+        const a = document.createElement("a");
+        a.className = "game";
+        a.href = href;
+        a.innerHTML = `
+          <span class="emoji">${emoji}</span>
+          <span class="name">${title}</span>
+          <span class="idx">${i + 1}</span>
+        `;
+        grid.appendChild(a);
+        totalCount++;
       });
+      root.appendChild(sec);
+    }
 
-      stage.addEventListener("load", () => {
-        loading.classList.remove("show");
-      });
-
-      // 恢复上次选中的 tab
-      try {
-        const last = localStorage.getItem(STORAGE_KEY);
-        if (last) {
-          const target = Array.from(tabs).find((t) => t.dataset.grade === last);
-          if (target) activate(target);
-        }
-      } catch (_) {}
-    })();
+    document.querySelector(".topbar p").textContent =
+      `1-6 年级 · 共 ${totalCount} 个游戏 · 点哪个玩哪个，无需验证码`;
   </script>
 
 </body>
