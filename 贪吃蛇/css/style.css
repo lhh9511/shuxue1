@@ -287,7 +287,7 @@ canvas#board {
   background:
     linear-gradient(135deg, #fafbff 0%, #f0f4ff 100%);
   touch-action: none;
-  image-rendering: pixelated;
+  /* image-rendering: pixelated 故意不开启：在高分屏上反而会让 GPU 渲染路径变慢 */
 }
 
 /* ============== 浮层 ============== */

@@ -361,16 +361,17 @@
   }
 
   function loop(ts) {
-    if (state !== 'playing') {
-      rafId = requestAnimationFrame(loop);
-      return;
-    }
+    // 每一帧都先把 rafId 置空：表示"当前没有挂起的帧"
+    rafId = null;
+    if (state !== 'playing') return;     // 非 playing 直接停掉循环
+
     if (!lastTick) lastTick = ts;
     const elapsed = ts - lastTick;
     if (elapsed >= tickMs) {
       lastTick = ts;
       step();
       if (state !== 'playing') {
+        // step() 里发生了 gameOver / pause
         render();
         return;
       }
@@ -379,20 +380,38 @@
     rafId = requestAnimationFrame(loop);
   }
 
+  // 显式启停 rAF 循环，避免多帧叠加
+  function startLoop() {
+    if (rafId !== null) return;
+    lastTick = 0;
+    rafId = requestAnimationFrame(loop);
+  }
+  function stopLoop() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
   // ============ 状态切换 ============
   function startGame() {
+    // 安全：先停掉可能挂着的旧循环
+    stopLoop();
     reset();
     state = 'playing';
-    lastTick = 0;
     hideOverlay();
     setStartLabel('重新开始');
     btnPause.disabled = false;
     btnPause.innerHTML = '<span class="btn-emoji">⏸</span>暂停';
+    // 立即画一帧（不等下一次 tick），让画面马上更新
+    render();
+    startLoop();
   }
 
   function pauseGame() {
     if (state !== 'playing') return;
     state = 'paused';
+    stopLoop();
     setOverlay(
       '⏸ <strong>游戏已暂停</strong><br>按 <kbd>空格</kbd> 或点击"继续"恢复',
       '继续游戏'
@@ -404,13 +423,15 @@
   function resumeGame() {
     if (state !== 'paused') return;
     state = 'playing';
-    lastTick = 0;
     hideOverlay();
     btnPause.innerHTML = '<span class="btn-emoji">⏸</span>暂停';
+    // 必须重置 lastTick，否则暂停期间累积的 elapsed 会让蛇瞬间暴走好几格
+    startLoop();
   }
 
   function gameOver(reason) {
     state = 'gameover';
+    stopLoop();
     setOverlay(
       `💥 <strong>${reason}</strong><br>` +
       `本次得分：<strong style="color:#ff5a5a">${score}</strong> · ` +
@@ -594,8 +615,16 @@
   loadCharPool();
   reset();
   render();
-  rafId = requestAnimationFrame(loop);
+  // 初始不启动 loop，等用户点"开始游戏"再 startLoop()。
+  // 状态机：idle（浮层显示）→ playing（startGame）→ paused/gameover
+  rafId = null;
 
   // 暴露一个调试入口（方便排查）
-  window.__snake = { snake, foods, score, state };
+  window.__snake = {
+    get state() { return state; },
+    get score() { return score; },
+    get rafId() { return rafId; },
+    snake, foods,
+    start: startGame, pause: pauseGame, resume: resumeGame,
+  };
 })();
