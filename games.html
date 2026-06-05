@@ -202,9 +202,17 @@
       }
 
       tabs.forEach(t => {
-        t.addEventListener("click", () => {
+        t.addEventListener("click", e => {
+          e.preventDefault();
+          const src = t.getAttribute("href");
+          // 双保险：原生 target 跳转 + JS 直接赋 src，Chrome 必然有一个会生效
           setActive(t.dataset.grade);
           loading.classList.remove("hide");
+          try { stage.contentWindow.location.replace(src); } catch (_) {}
+          // 用 location.replace 不行就 fallback 到 src 赋值
+          if (stage.src !== src) {
+            stage.src = src;
+          }
         });
       });
 
