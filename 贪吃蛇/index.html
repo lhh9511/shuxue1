@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>萌萌汉字贪吃蛇</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部：标题 + 按钮 + 得分 -->
+    <header class="topbar">
+      <h1 class="title">
+        <span class="title-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="44" height="44">
+            <defs>
+              <linearGradient id="snake-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#7ed957"/>
+                <stop offset="1" stop-color="#3b9b1f"/>
+              </linearGradient>
+            </defs>
+            <path d="M14 50 Q4 38 14 26 Q24 14 38 14 Q56 14 56 32 Q56 50 38 50 Q24 50 22 42"
+                  fill="none" stroke="url(#snake-grad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="46" cy="28" r="3.5" fill="#fff" stroke="#2d6e10" stroke-width="1.5"/>
+            <circle cx="46" cy="28" r="1.5" fill="#2d6e10"/>
+            <path d="M38 14 L42 6 M44 14 L48 6" stroke="#ff7a7a" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>萌萌汉字贪吃蛇</span>
+        <span class="title-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="40" height="40">
+            <circle cx="32" cy="32" r="24" fill="#fff" stroke="#e74c3c" stroke-width="4"/>
+            <circle cx="32" cy="32" r="14" fill="#e74c3c"/>
+            <circle cx="32" cy="32" r="5" fill="#fff"/>
+          </svg>
+        </span>
+      </h1>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-pink" id="btnUpload">
+          <span class="btn-emoji">📤</span>上传汉字
+        </button>
+        <button type="button" class="btn btn-pink" id="btnStart">
+          <span class="btn-emoji">🎮</span><span id="btnStartLabel">开始游戏</span>
+        </button>
+        <button type="button" class="btn btn-pink" id="btnPause" disabled>
+          <span class="btn-emoji">⏸</span>暂停
+        </button>
+      </div>
+
+      <div class="score-pill">
+        <span class="apple-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="22" height="22">
+            <path d="M16 8 Q9 8 7 14 Q5 22 11 27 Q14 29 16 28 Q18 29 21 27 Q27 22 25 14 Q23 8 16 8 Z"
+                  fill="#ff5a5a" stroke="#a8252a" stroke-width="1.2"/>
+            <path d="M16 8 Q16 5 18 4" fill="none" stroke="#5b3a14" stroke-width="1.5" stroke-linecap="round"/>
+            <ellipse cx="19" cy="5" rx="3" ry="1.6" fill="#7ec850" stroke="#3a6e1c" stroke-width="0.8" transform="rotate(-25 19 5)"/>
+            <ellipse cx="12" cy="14" rx="2" ry="1.4" fill="#ffb3b3" opacity="0.7"/>
+          </svg>
+        </span>
+        得分：<strong id="score">0</strong>
+        <span class="best" title="最高分">· 最高 <strong id="best">0</strong></span>
+      </div>
+    </header>
+
+    <!-- 主体：左侧卡通插画 + 中间游戏区 + 右侧装饰 -->
+    <main class="stage">
+      <aside class="left-art" aria-hidden="true">
+        <svg viewBox="0 0 220 320" width="220" height="320">
+          <!-- 窗 -->
+          <rect x="20" y="20" width="180" height="120" rx="8" fill="#fff7d6" stroke="#caa458" stroke-width="3"/>
+          <line x1="110" y1="20" x2="110" y2="140" stroke="#caa458" stroke-width="3"/>
+          <line x1="20" y1="80" x2="200" y2="80" stroke="#caa458" stroke-width="3"/>
+          <!-- 窗帘 -->
+          <path d="M0 30 Q10 80 6 140 L20 140 L20 20 Z" fill="#ffd66b"/>
+          <path d="M220 30 Q210 80 214 140 L200 140 L200 20 Z" fill="#ffd66b"/>
+          <!-- 植物 -->
+          <rect x="28" y="110" width="34" height="28" rx="3" fill="#b06a3a"/>
+          <path d="M40 110 Q30 90 38 78 Q50 80 50 100 Q56 90 50 78 Q60 80 56 100" fill="#7ec850" stroke="#3a6e1c" stroke-width="1.2"/>
+          <!-- 桌子 -->
+          <rect x="0" y="220" width="220" height="14" fill="#caa458"/>
+          <rect x="10" y="234" width="14" height="86" fill="#9c7a3a"/>
+          <rect x="196" y="234" width="14" height="86" fill="#9c7a3a"/>
+          <!-- 显示器 -->
+          <rect x="40" y="150" width="120" height="74" rx="6" fill="#2d3a4a" stroke="#1a232f" stroke-width="2"/>
+          <rect x="46" y="156" width="108" height="58" rx="2" fill="#74b9ff"/>
+          <text x="100" y="192" text-anchor="middle" font-size="18" fill="#fff" font-family="sans-serif" font-weight="700">学习</text>
+          <rect x="92" y="224" width="16" height="10" fill="#2d3a4a"/>
+          <rect x="74" y="232" width="52" height="4" rx="2" fill="#2d3a4a"/>
+          <!-- 键盘 -->
+          <rect x="56" y="244" width="88" height="20" rx="3" fill="#e8eaf0" stroke="#9aa1ab" stroke-width="1.5"/>
+          <line x1="64" y1="244" x2="64" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="72" y1="244" x2="72" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="80" y1="244" x2="80" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="88" y1="244" x2="88" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="96" y1="244" x2="96" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="104" y1="244" x2="104" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="112" y1="244" x2="112" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="120" y1="244" x2="120" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="128" y1="244" x2="128" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <line x1="136" y1="244" x2="136" y2="264" stroke="#9aa1ab" stroke-width="1"/>
+          <!-- 鼠标 -->
+          <ellipse cx="172" cy="252" rx="10" ry="14" fill="#fff" stroke="#9aa1ab" stroke-width="1.5"/>
+          <line x1="172" y1="244" x2="172" y2="252" stroke="#9aa1ab" stroke-width="1"/>
+          <!-- 小女孩 -->
+          <!-- 头发后 -->
+          <ellipse cx="100" cy="178" rx="30" ry="34" fill="#2a1a0d"/>
+          <!-- 脸 -->
+          <ellipse cx="100" cy="178" rx="22" ry="24" fill="#fde0c8"/>
+          <!-- 刘海 -->
+          <path d="M78 168 Q100 148 122 168 Q120 162 100 158 Q80 162 78 168 Z" fill="#2a1a0d"/>
+          <!-- 眼睛 -->
+          <circle cx="92" cy="178" r="1.8" fill="#2a1a0d"/>
+          <circle cx="108" cy="178" r="1.8" fill="#2a1a0d"/>
+          <!-- 腮红 -->
+          <ellipse cx="86" cy="186" rx="3" ry="2" fill="#ffb3b3" opacity="0.7"/>
+          <ellipse cx="114" cy="186" rx="3" ry="2" fill="#ffb3b3" opacity="0.7"/>
+          <!-- 嘴 -->
+          <path d="M96 188 Q100 191 104 188" fill="none" stroke="#a8252a" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- 衣领 -->
+          <path d="M70 200 L100 210 L130 200 L130 224 L70 224 Z" fill="#fff" stroke="#9aa1ab" stroke-width="1.5"/>
+          <!-- 衣服 -->
+          <path d="M62 220 L138 220 L130 270 L70 270 Z" fill="#ff8a8a" stroke="#a8252a" stroke-width="1.5"/>
+          <!-- 手 -->
+          <ellipse cx="64" cy="240" rx="6" ry="8" fill="#fde0c8" stroke="#caa458" stroke-width="1"/>
+          <ellipse cx="136" cy="240" rx="6" ry="8" fill="#fde0c8" stroke="#caa458" stroke-width="1"/>
+          <!-- 杯子 -->
+          <rect x="22" y="234" width="22" height="26" rx="2" fill="#74b9ff" stroke="#3b6ea8" stroke-width="1.5"/>
+          <ellipse cx="33" cy="234" rx="11" ry="3" fill="#a0c8f0" stroke="#3b6ea8" stroke-width="1.2"/>
+        </svg>
+      </aside>
+
+      <section class="board-wrap">
+        <canvas id="board" width="640" height="480" aria-label="贪吃蛇游戏区"></canvas>
+
+        <!-- 起始/暂停/结束浮层 -->
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <div class="overlay-title">🐍 萌萌汉字贪吃蛇 🎯</div>
+            <div class="overlay-sub" id="overlaySub">
+              用 <kbd>← ↑ → ↓</kbd> 或 <kbd>WASD</kbd> 控制方向<br>
+              吃到汉字小圆球，蛇身就会长出这个字！<br>
+              撞墙或撞到自己就游戏结束。
+            </div>
+            <button type="button" class="btn btn-pink btn-big" id="overlayBtn">开始游戏</button>
+            <div class="overlay-tip">小贴士：可以先点"上传汉字"放入你想练的字词</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right-deco" aria-hidden="true">
+        <div class="deco-tip">获取源文件或提示词</div>
+        <div class="deco-cta">
+          <span>👍 点赞</span>
+          <span>👀 关注</span>
+          <span>💬 评论</span>
+        </div>
+        <div class="deco-bubbles">
+          <span>汉</span><span>字</span><span>真</span><span>好</span><span>玩</span>
+          <span>📚</span><span>✏️</span><span>🐍</span>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer-tip">
+      移动端：滑动屏幕控制方向 · 电脑端：方向键 / WASD
+    </footer>
+  </div>
+
+  <!-- 上传汉字弹窗 -->
+  <div class="modal" id="uploadModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <span>📤 上传汉字</span>
+        <button type="button" class="modal-close" id="uploadClose" aria-label="关闭">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-hint">把你想练习的汉字/词语粘贴到下面（每段会随机出现），也可以上传 <code>.txt</code> 文件。</p>
+        <textarea id="charInput" rows="6" placeholder="例如：&#10;一二三四五六七八九十&#10;春夏秋冬&#10;天地人和"></textarea>
+        <div class="modal-actions">
+          <label class="btn btn-ghost">
+            <input type="file" id="charFile" accept=".txt,text/plain" hidden />
+            <span class="btn-emoji">📂</span>选择 .txt 文件
+          </label>
+          <button type="button" class="btn btn-pink" id="charSave">✅ 应用到游戏</button>
+        </div>
+        <div class="modal-presets">
+          <span>常用词包：</span>
+          <button type="button" class="chip" data-preset="数字">数字</button>
+          <button type="button" class="chip" data-preset="天气">天气</button>
+          <button type="button" class="chip" data-preset="水果">水果</button>
+          <button type="button" class="chip" data-preset="动物">动物</button>
+          <button type="button" class="chip" data-preset="古诗">古诗</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/game.js" defer></script>
+</body>
+</html>
