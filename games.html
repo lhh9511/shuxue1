@@ -28,7 +28,6 @@
       overflow: hidden;
     }
 
-    /* 顶部标题 + 年级 tab */
     .topbar {
       flex: 0 0 auto;
       background: linear-gradient(135deg, #6c5ce7 0%, #5f3dc4 50%, #00cec9 100%);
@@ -111,7 +110,6 @@
     .tab[data-grade="festival"].active { color: #c0392b; border-bottom-color: #c0392b; }
     .tab[data-grade="area"].active { color: #fd79a8; border-bottom-color: #fd79a8; }
 
-    /* iframe 容器 */
     .frame-wrap {
       flex: 1 1 auto;
       background: #fff;
@@ -136,6 +134,7 @@
       pointer-events: none;
       opacity: 1;
       transition: opacity 0.2s;
+      z-index: 1;
     }
     .loading.hide { opacity: 0; }
 
@@ -156,85 +155,68 @@
         </h1>
         <a class="home-link" href="index.html" target="_top">🏠 简洁版首页</a>
       </div>
+      <!-- 用原生 target 跳转到名为 stage 的 iframe，最稳最通用 -->
       <nav class="tabs" id="tabs">
-        <button class="tab" type="button" data-grade="1" data-src="数学一年级/index.html">
+        <a class="tab" target="stage" href="数学一年级/index.html" data-grade="1">
           <span class="emoji">🐻</span> 一年级 <small style="opacity:.75;font-weight:500">10 关</small>
-        </button>
-        <button class="tab" type="button" data-grade="2" data-src="数学二年级/index.html">
+        </a>
+        <a class="tab" target="stage" href="数学二年级/index.html" data-grade="2">
           <span class="emoji">🦊</span> 二年级 <small style="opacity:.75;font-weight:500">17 关</small>
-        </button>
-        <button class="tab" type="button" data-grade="3" data-src="数学三年级/index.html">
+        </a>
+        <a class="tab" target="stage" href="数学三年级/index.html" data-grade="3">
           <span class="emoji">🐰</span> 三年级 <small style="opacity:.75;font-weight:500">16 关</small>
-        </button>
-        <button class="tab" type="button" data-grade="4" data-src="数学四年级/index.html">
+        </a>
+        <a class="tab" target="stage" href="数学四年级/index.html" data-grade="4">
           <span class="emoji">🦁</span> 四年级 <small style="opacity:.75;font-weight:500">16 关</small>
-        </button>
-        <button class="tab" type="button" data-grade="5" data-src="数学五年级/index.html">
+        </a>
+        <a class="tab" target="stage" href="数学五年级/index.html" data-grade="5">
           <span class="emoji">🐯</span> 五年级 <small style="opacity:.75;font-weight:500">16 关</small>
-        </button>
-        <button class="tab" type="button" data-grade="6" data-src="数学六年级/index.html">
+        </a>
+        <a class="tab" target="stage" href="数学六年级/index.html" data-grade="6">
           <span class="emoji">🐼</span> 六年级 <small style="opacity:.75;font-weight:500">16 关</small>
-        </button>
-        <button class="tab" type="button" data-grade="festival" data-src="端午节/index.html">
+        </a>
+        <a class="tab" target="stage" href="端午节/index.html" data-grade="festival">
           <span class="emoji">🐉</span> 端午节 <small style="opacity:.75;font-weight:500">2 关</small>
-        </button>
-        <button class="tab" type="button" data-grade="area" data-src="数学一年级/area.html">
+        </a>
+        <a class="tab" target="stage" href="数学一年级/area.html" data-grade="area">
           <span class="emoji">📐</span> 面积专题 <small style="opacity:.75;font-weight:500">2 关</small>
-        </button>
+        </a>
       </nav>
     </div>
   </header>
 
   <div class="frame-wrap">
     <div class="loading" id="loading">加载中…</div>
-    <iframe id="stage" title="课件" allow="fullscreen"></iframe>
+    <iframe id="stage" name="stage" title="课件" allow="fullscreen" src="数学一年级/index.html"></iframe>
   </div>
 
   <script>
+    // 最小化 JS：只负责"高亮当前 tab"和"iframe 加载完后隐藏 loading"
     (function () {
-      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const tabs = document.querySelectorAll(".tab");
       const stage = document.getElementById("stage");
       const loading = document.getElementById("loading");
 
-      // 记住上次选中的 tab
-      const KEY = "math.activeGrade";
-      const saved = localStorage.getItem(KEY);
-      const initial = tabs.find(t => t.dataset.grade === saved) || tabs[0];
-
-      // 当前已激活的 tab；用 tab 引用直接比较，避免 basename 撞车（所有年级都是 index.html）
-      let currentTab = null;
-      let loadTimer = null;
-
-      function activate(tab) {
-        if (!tab) return;
-        tabs.forEach(t => t.classList.toggle("active", t === tab));
-        // 只有真正切换年级时才重新加载 iframe
-        if (currentTab !== tab) {
-          loading.classList.remove("hide");
-          currentTab = tab;
-          // 兜底：3 秒后无论是否触发 load，都把 loading 隐藏（避免一直转圈）
-          clearTimeout(loadTimer);
-          loadTimer = setTimeout(() => loading.classList.add("hide"), 3000);
-          // 直接给 iframe 赋新 src，浏览器会自动加载
-          stage.src = tab.dataset.src;
-        }
-        localStorage.setItem(KEY, tab.dataset.grade);
-        try { window.scrollTo({ top: 0 }); } catch (e) { /* noop */ }
+      function setActive(grade) {
+        tabs.forEach(t => t.classList.toggle("active", t.dataset.grade === grade));
       }
 
       tabs.forEach(t => {
-        t.addEventListener("click", e => {
-          e.preventDefault();
-          activate(t);
+        t.addEventListener("click", () => {
+          setActive(t.dataset.grade);
+          loading.classList.remove("hide");
         });
       });
 
       stage.addEventListener("load", () => {
-        if (!stage.src) return;
         loading.classList.add("hide");
       });
 
-      activate(initial);
+      // 兜底：3 秒后无论是否触发 load，都把 loading 隐藏
+      setTimeout(() => loading.classList.add("hide"), 3000);
+
+      // 默认高亮一年级
+      setActive("1");
     })();
   </script>
 </body>
