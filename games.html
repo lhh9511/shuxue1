@@ -201,24 +201,36 @@
       const saved = localStorage.getItem(KEY);
       const initial = tabs.find(t => t.dataset.grade === saved) || tabs[0];
 
+      // 当前已激活的 tab；用 tab 引用直接比较，避免 basename 撞车（所有年级都是 index.html）
+      let currentTab = null;
+      let loadTimer = null;
+
       function activate(tab) {
         if (!tab) return;
         tabs.forEach(t => t.classList.toggle("active", t === tab));
-        const src = tab.dataset.src;
-        if (!stage.src.endsWith(src.replace(/^.*\//, "")) || !stage.src) {
+        // 只有真正切换年级时才重新加载 iframe
+        if (currentTab !== tab) {
           loading.classList.remove("hide");
-          stage.src = src;
+          currentTab = tab;
+          // 兜底：3 秒后无论是否触发 load，都把 loading 隐藏（避免一直转圈）
+          clearTimeout(loadTimer);
+          loadTimer = setTimeout(() => loading.classList.add("hide"), 3000);
+          // 直接给 iframe 赋新 src，浏览器会自动加载
+          stage.src = tab.dataset.src;
         }
         localStorage.setItem(KEY, tab.dataset.grade);
-        // 滚动到顶部（移动端切 tab 时体验更好）
-        window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+        try { window.scrollTo({ top: 0 }); } catch (e) { /* noop */ }
       }
 
       tabs.forEach(t => {
-        t.addEventListener("click", () => activate(t));
+        t.addEventListener("click", e => {
+          e.preventDefault();
+          activate(t);
+        });
       });
 
       stage.addEventListener("load", () => {
+        if (!stage.src) return;
         loading.classList.add("hide");
       });
 
