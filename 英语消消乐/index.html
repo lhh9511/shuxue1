@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>英语消消乐 · 人教版 PEP 单词大作战</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%AC%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- 背景漂浮 emoji -->
+  <div class="floaties" aria-hidden="true" id="floaties"></div>
+
+  <!-- ===== 验证码门禁 ===== -->
+  <div id="gate">
+    <div class="gate-card">
+      <div class="gate-mascot">🍬</div>
+      <div class="gate-title">英语消消乐</div>
+      <div class="gate-sub">请输入下方验证码进入单词大作战</div>
+      <div class="captcha-row">
+        <canvas id="captchaCanvas" width="160" height="64" title="看不清？点一下换一张"></canvas>
+        <input type="text" id="captchaInput" class="captcha-input" maxlength="4" autocomplete="off" inputmode="text" placeholder="验证码" />
+      </div>
+      <button type="button" class="btn btn-pink btn-big" id="gateBtn" style="width:100%; justify-content:center;">🚪 进入游戏</button>
+      <div class="gate-hint" id="gateHint">提示：验证码不区分大小写，点击图片可刷新</div>
+    </div>
+  </div>
+
+  <!-- ===== App 主体 ===== -->
+  <div class="app" id="app" hidden>
+
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <div class="topbar-row">
+        <h1 class="app-title">
+          <span>📚</span>
+          <input type="text" class="t-edit" id="titleInput" placeholder="点这里自定义标题…" value="英语消消乐" maxlength="20" />
+        </h1>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost btn-sm" id="btnHome" title="返回选关">🏠 选关</button>
+          <button class="btn btn-ghost btn-sm" id="btnErr" title="错题本">📕 错题</button>
+          <button class="btn btn-ghost btn-sm" id="btnStats" title="答题统计">📊 统计</button>
+          <button class="btn btn-ghost btn-sm" id="btnSound" title="音效开关">🔊 音效</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== 首页：选年级/单元 ===== -->
+    <section class="screen active" id="screenHome">
+      <div class="home-body">
+        <div class="home-hero">
+          <h2>🎈 选一个单元开始挑战吧！</h2>
+          <p>点英文配中文，配对消除全部即可通关 · 人教版 PEP 三年级起点</p>
+        </div>
+
+        <div style="text-align:center;">
+          <div class="book-switch" id="bookSwitch">
+            <button class="active" data-book="all">全部</button>
+            <button data-book="a">上册</button>
+            <button data-book="b">下册</button>
+          </div>
+        </div>
+
+        <div class="grade-grid" id="gradeGrid"></div>
+
+        <div class="settings-card">
+          <h3>⚙️ 游戏设置</h3>
+          <div class="setting-row">
+            <label>倒计时</label>
+            <select id="setTime">
+              <option value="0">不限时</option>
+              <option value="60">60 秒</option>
+              <option value="90" selected>90 秒</option>
+              <option value="120">120 秒</option>
+              <option value="180">180 秒</option>
+              <option value="300">300 秒</option>
+            </select>
+            <label style="min-width:auto; margin-left:8px;">配对提示</label>
+            <select id="setHint">
+              <option value="0">关闭</option>
+              <option value="2" selected>答错 2 次提示</option>
+              <option value="1">答错 1 次提示</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label class="toggle"><input type="checkbox" id="setSound" checked /> 音效</label>
+            <label class="toggle"><input type="checkbox" id="setSpeak" checked /> 朗读单词</label>
+            <label class="toggle"><input type="checkbox" id="setAutoSpeak" checked /> 配对成功自动朗读</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 游戏界面 ===== -->
+    <section class="screen" id="screenGame">
+      <div class="statusbar">
+        <div class="pill time" id="pillTime"><span class="icon">⏱️</span> <span id="timeText">90</span><small>s</small></div>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div><span class="progress-text" id="progressText">0 / 0</span></div>
+        <div class="pill score"><span class="icon">⭐</span> 得分 <span class="num" id="scoreText">0</span></div>
+        <div class="pill wrong"><span class="icon">💥</span> 错误 <span class="num" id="wrongText">0</span></div>
+      </div>
+      <div class="game-body">
+        <div class="game-body-inner">
+          <div class="unit-banner">
+            <div class="ub-title" id="ubTitle">Unit</div>
+            <div class="ub-tip" id="ubTip">点英文卡片和它对应的中文，配对消除全部即可通关</div>
+          </div>
+          <div class="board" id="board"></div>
+          <div class="game-foot">
+            <button class="btn btn-yellow btn-sm" id="btnHintNow">💡 提示一对</button>
+            <button class="btn btn-ghost btn-sm" id="btnPause">⏸ 暂停</button>
+            <button class="btn btn-ghost btn-sm" id="btnRestart">🔄 重玩本关</button>
+            <button class="btn btn-ghost btn-sm" id="btnBack">🏠 返回选关</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 开始/暂停/结算浮层 -->
+      <div class="overlay" id="overlay">
+        <div class="overlay-card" id="overlayCard"><!-- 由 JS 注入内容 --></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== 错题本模态 ===== -->
+  <div class="modal" id="errModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>📕 错题本</h3>
+        <button class="modal-close" data-close="errModal" aria-label="关闭">✕</button>
+      </div>
+      <div class="oc-sub" id="errModalSub">这里记录你在本关配错过的单词</div>
+      <div class="err-list" id="errList"></div>
+      <div class="oc-actions">
+        <button class="btn btn-blue btn-sm" id="btnExportErr">⬇️ 导出错题</button>
+        <button class="btn btn-ghost btn-sm" id="btnClearErr">🗑️ 清空错题</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 统计模态 ===== -->
+  <div class="modal" id="statsModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>📊 答题统计</h3>
+        <button class="modal-close" data-close="statsModal" aria-label="关闭">✕</button>
+      </div>
+      <div class="oc-sub" id="statsSub">本次会话的累计数据</div>
+      <div id="statsContent"></div>
+      <div class="oc-actions">
+        <button class="btn btn-mint btn-sm" id="btnExportStats">⬇️ 导出统计</button>
+        <button class="btn btn-ghost btn-sm" id="btnResetStats">🔄 重置统计</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
