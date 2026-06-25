@@ -72,8 +72,10 @@ jobs:
           cp -r 贪吃蛇/* _site/贪吃蛇/
           cp -r 贪吃蛇/* _site/snake/
           cp -r 英语消消乐/* _site/英语消消乐/
-          cp -r 互传/* _site/互传/
-          cp -r 感知情绪/* _site/感知情绪/
+          # 部分内容目录可能尚未纳入版本控制（本地未 git add），用容错拷贝：
+          # 目录不存在则跳过，避免中断整个部署
+          [ -d 互传 ] && cp -r 互传/* _site/互传/ || true
+          [ -d 感知情绪 ] && cp -r 感知情绪/* _site/感知情绪/ || true
           cat > _site/404.html <<'HTMLEOF'
           <!DOCTYPE html>
           <html lang="zh-CN">
