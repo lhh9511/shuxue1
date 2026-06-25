@@ -15,6 +15,8 @@ on:
       - "端午节/**"
       - "贪吃蛇/**"
       - "英语消消乐/**"
+      - "互传/**"
+      - "感知情绪/**"
       - "index.html"
       - "games.html"
       - "css/**"
@@ -44,7 +46,7 @@ jobs:
 
       - name: Prepare site
         run: |
-          mkdir -p _site/grade2 _site/grade3 _site/grade4 _site/grade5 _site/grade6 _site/duanwu _site/数学一年级 _site/数学二年级 _site/数学三年级 _site/数学四年级 _site/数学五年级 _site/数学六年级 _site/端午节 _site/贪吃蛇 _site/snake _site/area _site/英语消消乐
+          mkdir -p _site/grade2 _site/grade3 _site/grade4 _site/grade5 _site/grade6 _site/duanwu _site/数学一年级 _site/数学二年级 _site/数学三年级 _site/数学四年级 _site/数学五年级 _site/数学六年级 _site/端午节 _site/贪吃蛇 _site/snake _site/area _site/英语消消乐 _site/互传 _site/感知情绪
           cp index.html _site/index.html
           cp games.html _site/games.html
           cp -r css _site/css
@@ -70,6 +72,8 @@ jobs:
           cp -r 贪吃蛇/* _site/贪吃蛇/
           cp -r 贪吃蛇/* _site/snake/
           cp -r 英语消消乐/* _site/英语消消乐/
+          cp -r 互传/* _site/互传/
+          cp -r 感知情绪/* _site/感知情绪/
           cat > _site/404.html <<'HTMLEOF'
           <!DOCTYPE html>
           <html lang="zh-CN">

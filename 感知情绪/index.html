@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>情绪接梗流 · 高情商对战训练</title>
+  <meta name="description" content="一场让你学会「接住情绪」的高情商沟通训练。10 个真实场景，每题三选一，即时拆解潜台词与雷区。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --reason: #f59e0b;   /* 讲道理型 */
+      --attack: #ef4444;   /* 反击型 */
+      --perfect: #10b981;  /* 接住型 */
+      --ink: #2b2740;
+      --ink-soft: #6b6585;
+      --card: #ffffff;
+      --line: #ece8f5;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: #f3eefb;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    /* 动态暖色光晕背景 */
+    .bg-blobs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; animation: float 16s ease-in-out infinite; }
+    .blob.b1 { width: 460px; height: 460px; background: #ffd3a5; top: -120px; left: -100px; }
+    .blob.b2 { width: 420px; height: 420px; background: #fd9797; top: 30%; right: -140px; animation-delay: -4s; }
+    .blob.b3 { width: 500px; height: 500px; background: #b06ab3; bottom: -180px; left: 20%; animation-delay: -8s; }
+    @keyframes float {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(30px,-40px) scale(1.08); }
+    }
+
+    .wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 22px 16px 60px; }
+
+    /* 顶部 */
+    .top { text-align: center; margin-bottom: 18px; }
+    .top .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.7); color: #7c3aed;
+      border: 1px solid rgba(124,58,237,.18);
+      padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 700;
+      backdrop-filter: blur(6px);
+    }
+    .top h1 {
+      font-family: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
+      font-size: clamp(1.8rem, 6vw, 2.7rem);
+      margin: 12px 0 4px; letter-spacing: 1px;
+      background: linear-gradient(135deg, #7c3aed, #ec4899 60%, #f59e0b);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .top p { margin: 0; color: var(--ink-soft); font-size: 14px; }
+
+    /* 状态条 */
+    .statusbar {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,.75); backdrop-filter: blur(8px);
+      border: 1px solid var(--line); border-radius: 18px;
+      padding: 12px 16px; margin: 18px 0; box-shadow: 0 6px 24px rgba(124,58,237,.08);
+    }
+    .progress { flex: 1; height: 10px; background: #efe9fb; border-radius: 999px; overflow: hidden; }
+    .progress > i { display: block; height: 100%; width: 0; border-radius: 999px;
+      background: linear-gradient(90deg, #7c3aed, #ec4899); transition: width .5s cubic-bezier(.22,1,.36,1); }
+    .step-no { font-size: 13px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+    .step-no b { color: var(--ink); font-size: 15px; }
+    .score-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: linear-gradient(135deg,#fef3c7,#fde68a); color: #92400e;
+      font-weight: 800; padding: 6px 12px; border-radius: 999px; font-size: 13px; white-space: nowrap;
+    }
+
+    /* 卡片 */
+    .card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 24px; padding: 22px; margin-bottom: 16px;
+      box-shadow: 0 10px 36px rgba(124,58,237,.10);
+      animation: rise .45s cubic-bezier(.22,1,.36,1);
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    .cat-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+    .cat {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 800; padding: 4px 11px; border-radius: 999px;
+      background: #f3eeff; color: #7c3aed;
+    }
+
+    /* 对方说话气泡 */
+    .scene { display: flex; gap: 12px; align-items: flex-start; }
+    .avatar {
+      flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+      background: linear-gradient(135deg,#fff,#f3eeff); border: 2px solid #ece3ff;
+      box-shadow: 0 4px 12px rgba(124,58,237,.12);
+    }
+    .bubble-wrap { flex: 1; min-width: 0; }
+    .who-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+    .who { font-weight: 800; font-size: 15px; }
+    .mood { font-size: 12px; font-weight: 700; color: #e11d48; background: #ffe4ea; padding: 2px 9px; border-radius: 999px; }
+    .bubble {
+      position: relative; background: #f7f3ff; border: 1px solid #ece3ff;
+      border-radius: 4px 18px 18px 18px; padding: 14px 16px;
+      font-size: 16px; line-height: 1.7; color: var(--ink);
+    }
+    .bubble::before {
+      content: ""; position: absolute; left: -7px; top: 14px;
+      border: 7px solid transparent; border-right-color: #ece3ff;
+    }
+    .bubble::after {
+      content: ""; position: absolute; left: -5px; top: 15px;
+      border: 6px solid transparent; border-right-color: #f7f3ff;
+    }
+
+    .ask { margin: 18px 0 6px; font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+
+    /* 选项 */
+    .opts { display: flex; flex-direction: column; gap: 12px; }
+    .opt {
+      text-align: left; cursor: pointer; font: inherit; color: inherit;
+      width: 100%; border: 2px solid var(--line); background: #fff;
+      border-radius: 18px; padding: 14px 16px; transition: all .18s ease;
+      display: flex; gap: 12px; align-items: flex-start; position: relative;
+    }
+    .opt:hover:not(:disabled) { border-color: #c4b5fd; transform: translateY(-2px); box-shadow: 0 8px 22px rgba(124,58,237,.14); }
+    .opt:active:not(:disabled) { transform: translateY(0); }
+    .opt:disabled { cursor: default; }
+    .opt-letter {
+      flex: 0 0 auto; width: 30px; height: 30px; border-radius: 9px;
+      background: #f3eeff; color: #7c3aed; font-weight: 900;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      transition: all .18s;
+    }
+    .opt-text { flex: 1; font-size: 15px; line-height: 1.65; padding-top: 3px; }
+    .opt-kind {
+      display: none; margin-top: 8px; font-size: 12px; font-weight: 800;
+      padding: 2px 9px; border-radius: 999px; align-self: flex-start;
+    }
+    .opt-mark { position: absolute; top: 12px; right: 14px; font-size: 22px; opacity: 0; transition: opacity .2s; }
+
+    /* 选中/对错态 */
+    .opt.chosen { border-width: 2px; }
+    .opt[data-k="reason"].reveal { border-color: var(--reason); background: #fffbeb; }
+    .opt[data-k="reason"].reveal .opt-letter { background: var(--reason); color: #fff; }
+    .opt[data-k="reason"].reveal .opt-kind { display: inline-block; background: #fef3c7; color: #92400e; }
+    .opt[data-k="attack"].reveal { border-color: var(--attack); background: #fef2f2; }
+    .opt[data-k="attack"].reveal .opt-letter { background: var(--attack); color: #fff; }
+    .opt[data-k="attack"].reveal .opt-kind { display: inline-block; background: #fee2e2; color: #b91c1c; }
+    .opt[data-k="perfect"].reveal { border-color: var(--perfect); background: #ecfdf5; }
+    .opt[data-k="perfect"].reveal .opt-letter { background: var(--perfect); color: #fff; }
+    .opt[data-k="perfect"].reveal .opt-kind { display: inline-block; background: #d1fae5; color: #047857; }
+    .opt.chosen.correct .opt-mark { opacity: 1; }
+    .opt.chosen.wrong .opt-mark { opacity: 1; }
+    .opt.chosen.wrong { border-color: var(--attack) !important; background: #fef2f2 !important; }
+    .opt.chosen.wrong .opt-letter { background: var(--attack) !important; color: #fff !important; }
+    .opt[data-k="perfect"].reveal.chosen { background: #ecfdf5 !important; border-color: var(--perfect) !important; }
+
+    /* 判定横幅 */
+    .verdict {
+      display: none; align-items: center; gap: 10px;
+      border-radius: 16px; padding: 12px 16px; margin-bottom: 14px;
+      font-weight: 800; font-size: 15px;
+    }
+    .verdict.show { display: flex; animation: rise .3s; }
+    .verdict.ok { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .verdict.no { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .verdict .v-emoji { font-size: 22px; }
+
+    /* 拆解 */
+    .reveal-box { display: none; }
+    .reveal-box.show { display: block; animation: rise .4s; }
+    .reveal-box h3 {
+      font-size: 14px; margin: 18px 0 8px; display: flex; align-items: center; gap: 6px;
+      font-weight: 800;
+    }
+    .reveal-box h3:first-child { margin-top: 0; }
+    .reveal-box p { margin: 0; font-size: 14.5px; line-height: 1.85; color: #3a3553; }
+    .reveal-box .blk { background: #faf8ff; border-left: 4px solid #c4b5fd; border-radius: 0 12px 12px 0; padding: 13px 15px; }
+    .reveal-box .blk.warn { border-left-color: var(--attack); background: #fff6f6; }
+    .reveal-box .blk.good { border-left-color: var(--perfect); background: #f0fdf4; }
+
+    .next-btn {
+      width: 100%; margin-top: 18px; cursor: pointer; font: inherit;
+      border: none; border-radius: 16px; padding: 16px;
+      background: linear-gradient(135deg, #7c3aed, #ec4899); color: #fff;
+      font-size: 16px; font-weight: 800; letter-spacing: 1px;
+      box-shadow: 0 10px 26px rgba(124,58,237,.32); transition: transform .15s, box-shadow .15s;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(124,58,237,.4); }
+    .next-btn:active { transform: translateY(0); }
+
+    /* 结算 */
+    .result { text-align: center; }
+    .result .big-emoji { font-size: 64px; margin-bottom: 4px; }
+    .result h2 { font-family: "ZCOOL KuaiLe",sans-serif; font-size: 1.7rem; margin: 6px 0; }
+    .result .rank { display: inline-block; margin: 6px 0 14px; padding: 6px 18px; border-radius: 999px; font-weight: 800; font-size: 15px; }
+    .score-big { font-size: 52px; font-weight: 900; margin: 6px 0;
+      background: linear-gradient(135deg,#7c3aed,#ec4899); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .score-big small { font-size: 22px; color: var(--ink-soft); -webkit-text-fill-color: var(--ink-soft); }
+    .result .desc { color: var(--ink-soft); font-size: 15px; line-height: 1.8; max-width: 480px; margin: 0 auto 18px; }
+    .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-ghost {
+      cursor: pointer; font: inherit; border: 2px solid var(--line); background: #fff;
+      border-radius: 14px; padding: 13px 20px; font-weight: 700; color: var(--ink); transition: all .15s;
+    }
+    .btn-ghost:hover { border-color: #c4b5fd; transform: translateY(-2px); }
+
+    /* 五彩纸屑 */
+    .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
+    .confetti i { position: absolute; top: -20px; width: 10px; height: 14px; opacity: .9;
+      animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 1; } }
+
+    .foot { text-align: center; color: var(--ink-soft); font-size: 12.5px; margin-top: 26px; line-height: 1.8; }
+
+    @media (max-width: 540px) {
+      .wrap { padding: 16px 12px 50px; }
+      .card { padding: 18px 16px; border-radius: 20px; }
+      .statusbar { gap: 10px; padding: 10px 12px; }
+      .bubble { font-size: 15.5px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blobs"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
+  <div class="wrap">
+    <header class="top">
+      <span class="badge">💜 情商沟通 · 对战训练</span>
+      <h1>情绪接梗流</h1>
+      <p>10 个真实场景 · 每题三选一 · 即时拆解潜台词与雷区</p>
+    </header>
+
+    <div class="statusbar">
+      <div class="progress"><i id="bar"></i></div>
+      <span class="step-no">第 <b id="cur">1</b> / <span id="total">10</span> 题</span>
+      <span class="score-chip">⭐ <span id="score">0</span> 分</span>
+    </div>
+
+    <!-- 题目区 -->
+    <section id="quiz"></section>
+
+    <!-- 判定 -->
+    <div class="verdict" id="verdict"></div>
+
+    <!-- 拆解 + 下一题 -->
+    <div id="after"></div>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <script>
+    /* ====== 题库：每题三选项，一个是「讲道理」、一个是「反击」、一个是「接住」 ====== */
+    const QUESTIONS = [
+      {
+        cat: "情侣 · 吃什么", emoji: "💑",
+        who: "女朋友", mood: "生气 · 委屈", avatar: "👩",
+        line: "你总是说「随便」「都行」，我到底在你心里算什么？",
+        options: [
+          { kind: "reason", text: "我没有不在乎你啊。我说「随便」是真的觉得哪个都行，你想吃什么我们就吃什么，这有什么问题？" },
+          { kind: "attack", text: "你怎么又来了？我天天工作那么累，回家还要看你脸色，能不能别无理取闹？" },
+          { kind: "perfect", text: "是我不好，「随便」听着确实敷衍，换我也会不舒服。今晚别问我了，我订了你上次说想去的泰国菜，走，补偿你。" },
+        ],
+        subtext: "她根本不是在讨论吃什么。她在确认「你有没有把我的感受放在心上」。「随便」让她觉得自己被敷衍、不被重视——这句话的潜台词其实是：求你看见我。",
+        whyWrong: "<b>A 讲道理</b>：你证明了逻辑，却否定了她的感受。她越听越委屈，因为你连她「为什么生气」都没 get 到。<br><b>B 反击</b>：把她的情绪定义成「无理取闹」，等于火上浇油，直接升级成「你不懂我，还不让我说」的二次伤害。",
+        whyRight: "三步封神：① 先认 + 共情（「换我也会不舒服」，把对立变成「我们一边」）；② 全程不辩解，只接情绪；③ 用行动兜底（订好餐厅）。情绪被接住，又被行动兑现，圆满。"
+      },
+      {
+        cat: "职场 · 方案被否", emoji: "💼",
+        who: "直属领导", mood: "不满 · 施压", avatar: "🧑‍💼",
+        line: "这个方案你怎么想的？完全没动脑子吧，我看实习生都比你做得好。",
+        options: [
+          { kind: "reason", text: "领导，这个方案是按上周开会说的方向做的，第三页的数据我都核对过，您可以看看具体哪里需要调整。" },
+          { kind: "attack", text: "那您觉得实习生好就让实习生做啊。我做了这么久您一句认可都没有，动不动就否定，我也很委屈。" },
+          { kind: "perfect", text: "这版确实没达到您要的效果，是我的问题。您先指一下最不满意的是哪部分，我今晚就改，争取明天给您一版能用的。" },
+        ],
+        subtext: "领导不是在客观评价你，他在表达焦虑和急躁（很可能上面在压他）。他用否定来逼你「重视这件事」。他在意的从来不是「实习生」，而是「这事必须给我做好」。",
+        whyWrong: "<b>A 讲道理</b>：你用数据和流程为自己辩护，潜台词是「我是对的」。领导情绪上头时根本听不进，只会觉得你「嘴硬、不认账」。<br><b>B 反击</b>：正面刚 + 诉委屈，把上下级矛盾升级成对抗，你在他心里直接扣分，还可能被记一笔。",
+        whyRight: "先认（接住他的焦虑——「是我的问题」让他感到被重视、被响应），再把情绪导向行动（「指一下哪部分」，给他台阶和掌控感）。不卑不亢，事情往前推，这才是成熟的职场情商。"
+      },
+      {
+        cat: "朋友 · 倒苦水", emoji: "🫂",
+        who: "好朋友", mood: "低落 · 自我怀疑", avatar: "😔",
+        line: "我真的受够这份工作了，天天加班还被骂，我是不是真的很差劲啊……",
+        options: [
+          { kind: "reason", text: "你别老这么想，每份工作都辛苦。你看看行业平均薪资，你已经算不错了，坚持一下就好了。" },
+          { kind: "attack", text: "你要这么说我可不爱听了。你工资比我高多了还差劲，那我算什么？" },
+          { kind: "perfect", text: "被这么对待，谁都会怀疑自己，你不是差劲，你是太累了。走，今天我请客，你把那个奇葩老板从头骂到尾，骂舒服了再说。" },
+        ],
+        subtext: "朋友不是在征求「客观分析」，她在求一个情绪出口和被肯定。她说「我是不是差劲」，是在自我否定里扑腾，需要你伸手拉她一把。",
+        whyWrong: "<b>A 讲道理</b>：把她的痛苦归因为「想太多 / 行业常态」，等于无视她当下的难受，她反而更孤独。<br><b>B 反击</b>：把她当成攀比对象，把她的话题转成你自己的事，她瞬间觉得「不该开口」，关上了心门。",
+        whyRight: "① 共情（「谁都会怀疑自己」，正常化她的感受）；② 精准拆解自我否定（「你不是差劲，是太累了」）；③ 给出口（陪骂 + 请客）。三连击，情绪被彻底接住。"
+      },
+      {
+        cat: "家庭 · 催婚", emoji: "🏡",
+        who: "妈妈", mood: "焦虑 · 牵挂", avatar: "👩‍🦳",
+        line: "你看你表妹孩子都会打酱油了，你再不抓紧以后怎么办？妈是为你好。",
+        options: [
+          { kind: "reason", text: "妈，现在年轻人都晚婚。统计显示 30 岁前结婚离婚率更高，我现在事业上升期，结婚的事真不着急。" },
+          { kind: "attack", text: "又来了又来了，您能不能别老拿我跟别人比？您越催我越不想结，烦死了。" },
+          { kind: "perfect", text: "妈，我知道您是怕我一个人将来没人照应、心疼我。您放心，我没放弃，遇到合适的我会带回来给您看，您就别替我操这份心了。" },
+        ],
+        subtext: "妈妈的潜台词不是「你必须马上结婚」，而是「我老了，怕你以后孤单没人管」。「为你好」的背后，其实是「我舍不得你、放不下你」。",
+        whyWrong: "<b>A 讲道理</b>：用数据和道理对抗，把一场亲情对话变成辩论赛，妈妈只会觉得「孩子跟我不亲了，白疼你了」。<br><b>B 反击</b>：直接顶撞 + 伤人，把她的关心当负担，她会委屈寒心，下次反而催得更凶（因为更焦虑了）。",
+        whyRight: "先翻译她的潜台词（「怕我一个人、心疼我」），让她感到被理解——这是核心；再给一句温和的承诺。情绪被接住，唠叨自然就少了。"
+      },
+      {
+        cat: "情侣 · 冷战", emoji: "🚪",
+        who: "男朋友", mood: "疲惫 · 回避", avatar: "😪",
+        line: "你能不能别一回来就问东问西，我就想自己待会儿，行吗？（一脸疲惫把门带上）",
+        options: [
+          { kind: "reason", text: "我问你是关心你啊。你这样什么都不说我怎么知道你发生了什么？两个人在一起需要沟通你懂不懂？" },
+          { kind: "attack", text: "呦，了不起啊，我关心你还嫌烦？行，你爱待着待着，以后我什么都不问了，你别后悔。" },
+          { kind: "perfect", text: "好，我不问了。你先歇会儿，水我放门口了，饿了厨房有饭。你想说的时候，我都在。" },
+        ],
+        subtext: "他不是不爱了，他是「电量耗尽」。关门是想独自回血，「别问东问西」的潜台词是：我现在承载不了任何情绪，包括你的关心。",
+        whyWrong: "<b>A 讲道理</b>：把他要的「空间」当成「沟通缺失」，继续用关心之名索取回应——等于在他溺水时，还要他再背一个人。<br><b>B 反击</b>：受伤后赌气威胁，把他的回避升级成两个人的冷战，伤感情。",
+        whyRight: "尊重边界（「好，我不问了」）+ 默默兜底（放水、留饭）+ 留出口（「想说的时候我都在」）。既给了他要的空间，又让他知道你一直都在——这就是高质量陪伴的真功夫。"
+      },
+      {
+        cat: "职场 · 同事甩锅", emoji: "🤝",
+        who: "平级同事", mood: "紧张 · 推卸", avatar: "😬",
+        line: "诶那个项目延期的事，主管问我了，我就说主要是你负责的那部分没跟上，你别介意啊，我就实话实说。",
+        options: [
+          { kind: "reason", text: "等等，延期是因为你那边的需求文档晚了三天，我有聊天记录的，你怎么能这么说？" },
+          { kind: "attack", text: "你甩锅甩得挺溜啊，自己没做好往我头上扣。要不要我现在就把群记录甩主管脸上？" },
+          { kind: "perfect", text: "行，我知道了，谢谢你提前告诉我。这样，等会儿我俩一起去找主管，把整个时间线从头捋一遍，谁的责任都清楚，顺便再给个补救方案。" },
+        ],
+        subtext: "这句话表面是「告知」，实则是心虚 + 试探。他在打预防针、抢先把锅定给你——他在意的不是公平，是自保。",
+        whyWrong: "<b>A 讲道理</b>：当场对质、各执一词。他先告状你就被动，还容易演成「互相推诿」，主管对两个人都减分。<br><b>B 反击</b>：撕破脸，把你也变成情绪化的一方，主管眼里「这俩人都有问题」。",
+        whyRight: "不动声色稳住情绪（「行，我知道了」，不接他的情绪），再用「一起去捋时间线」把暗箱操作搬到台面上。你有理你不怕，而且显得顾全大局、解决问题导向——一招反客为主。"
+      },
+      {
+        cat: "朋友 · 借钱未还", emoji: "💸",
+        who: "朋友", mood: "防御 · 道德绑架", avatar: "😒",
+        line: "哎呀就那点钱你还专门来催，是不是觉得我会赖你账啊？咱俩这关系至于吗？",
+        options: [
+          { kind: "reason", text: "不是至于不至于的问题。那是我两个月的工资，借的时候你说下周还，现在都三个月了，我有我的安排。" },
+          { kind: "attack", text: "至于吗？你要讲信用早还了。现在倒打一耙说我小气，什么意思？" },
+          { kind: "perfect", text: "我当然信你，催你不是不信你，是我这边确实等着用、手头紧。你方便就先转我；实在周转不开，咱说个数分着还也行，别让这点钱隔在咱俩中间。" },
+        ],
+        subtext: "他用「至于吗」掩盖心虚，把「要钱」这件事道德绑架成「你不信任我 / 你小气」。他在用关系压你，让你不好意思开口。",
+        whyWrong: "<b>A 讲道理</b>：你在理，但纯讲理正中下怀——他可以继续用「你不懂人情」反击你，钱照样不好要。<br><b>B 反击</b>：硬刚会让他恼羞成怒，干脆「那我就不还了你咬我」，关系和钱两空。",
+        whyRight: "先把「信任」这个被绑架的点接住并退回（「我当然信你」），再把要钱的理由从「你不还」转向「我需要」（「我这边等着用」），最后给台阶（分期）。不撕脸，又把要钱的正当性稳稳立住。"
+      },
+      {
+        cat: "家庭 · 长辈挑刺", emoji: "👵",
+        who: "婆婆", mood: "不满 · 指责", avatar: "👵",
+        line: "孩子怎么又瘦了？你是不是光顾着上班，不给孩子好好做饭？我们那时候……",
+        options: [
+          { kind: "reason", text: "妈，孩子这是正常体重，儿保医生都说在标准范围内。您别老拿以前的标准衡量，现在营养学跟以前不一样了。" },
+          { kind: "attack", text: "那您来带啊，您行您上。站着说话不腰疼，又不出力又挑刺。" },
+          { kind: "perfect", text: "妈，您是心疼孩子、怕他营养跟不上，这我懂。他体检数据都达标，您看这是儿保的单子。周末我多给他炖点汤，您也教教我您当年那些拿手菜呗。" },
+        ],
+        subtext: "婆婆挑剔的本质是「想参与、想被需要」，外加对孩子的心疼。她用指责的方式表达关心，背后是那句没说出口的：我是长辈、我有经验，你重视我吗？",
+        whyWrong: "<b>A 讲道理</b>：用医学数据 + 「以前的标准」否定她，等于否定她的经验和地位，她会觉得「嫌我老了没用」，下次找更多茬。<br><b>B 反击</b>：直接顶撞、戳她「不出力」的痛处，关系破裂，老公夹在中间，家里鸡飞狗跳。",
+        whyRight: "① 先肯定动机（「您是心疼孩子」）；② 用事实轻描淡写化解（亮体检单，不争辩）；③ 给她「被需要」的台阶（请教拿手菜）。三步把指责变成合作，四两拨千斤。"
+      },
+      {
+        cat: "情侣 · 吃醋质问", emoji: "💘",
+        who: "女朋友", mood: "吃醋 · 不安", avatar: "😟",
+        line: "你今天为什么给她点赞？你是不是对她有意思？（举着手机，眼眶有点红）",
+        options: [
+          { kind: "reason", text: "就随手点了个赞，朋友圈点赞而已，你至于上纲上线吗？我连她认识都不认识，你想多了。" },
+          { kind: "attack", text: "你能不能别一天天查我手机？你这样疑神疑鬼我快被你逼疯了，到底是你有问题还是我有问题？" },
+          { kind: "perfect", text: "让你不舒服了，抱歉，这点我没想周到，以后会注意。你担心的不是点赞本身，你是怕我对别人上心——跟你说，我心里只有你，这个你随时可以验证。" },
+        ],
+        subtext: "她真的在乎一个「赞」吗？不。她的潜台词是「我害怕失去你 / 害怕你没那么爱我」。点赞只是导火索，她在索要安全感。",
+        whyWrong: "<b>A 讲道理</b>：用「随手」「至于吗」轻描淡写，等于无视她的不安，还隐含「你无理取闹」，她更没安全感。<br><b>B 反击</b>：攻击她查手机、疑神疑鬼，把她的不安变成「她的错」，她会更委屈、更歇斯底里。",
+        whyRight: "先接住她的不舒服（道歉 + 承认自己没想周到，而不是争辩对错），再精准点破她真正的担忧（「你怕我对别人上心」），最后给定心丸。安全感一补，醋意自然消散。"
+      },
+      {
+        cat: "朋友 · 失恋崩溃", emoji: "💔",
+        who: "好闺蜜 / 好兄弟", mood: "崩溃 · 自我攻击", avatar: "😭",
+        line: "他怎么能这么对我……我到底哪里不好，是不是我这辈子就这样了？",
+        options: [
+          { kind: "reason", text: "其实你们的问题早就有了，我之前就想说。你们性格本来就不合适，现在分了不一定是坏事。" },
+          { kind: "attack", text: "至于吗，天涯何处无芳草。我上次失恋不比你惨？你现在哭也没用，得赶紧走出来。" },
+          { kind: "perfect", text: "这么掏心掏肺被辜负，换谁都受不了，你现在的难受太正常了。你不需要去想「哪里不好」——今晚我就在，想哭想骂想喝酒都行，我陪你。" },
+        ],
+        subtext: "朋友在崩溃期，根本听不进任何「分析」。她说「我哪里不好」是痛苦中的自我攻击，此刻她需要的不是答案，而是被接住、被陪伴。",
+        whyWrong: "<b>A 讲道理</b>：在他伤口上做「理性复盘」，潜台词像「我早说过了」，站着说话不腰疼，他只会更堵。<br><b>B 反击</b>：否定他的痛苦（「至于吗」）+ 比惨，让他觉得自己的悲伤是多余的，瞬间孤立无援。",
+        whyRight: "① 共情 + 正常化他的痛苦（「换谁都受不了」）；② 精准打断自我攻击（「现在不需要想哪里不好」）；③ 无条件陪伴。朋友在至暗时刻最需要的，就是被这样稳稳接住一次。"
+      },
+    ];
+
+    /* ====== 渲染逻辑 ====== */
+    const KIND_LABEL = { reason: "讲道理型", attack: "反击型", perfect: "满分接梗型" };
+    const state = { idx: 0, score: 0, answered: false, order: [] };
+
+    const $ = (s) => document.querySelector(s);
+    const quizEl = $("#quiz"), verdictEl = $("#verdict"), afterEl = $("#after");
+    const barEl = $("#bar"), curEl = $("#cur"), totalEl = $("#total"), scoreEl = $("#score");
+
+    // 打乱数组
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    totalEl.textContent = QUESTIONS.length;
+
+    function render() {
+      const q = QUESTIONS[state.idx];
+      const options = shuffle(q.options);
+      state.order = options;
+      state.answered = false;
+
+      curEl.textContent = state.idx + 1;
+      barEl.style.width = (state.idx / QUESTIONS.length * 100) + "%";
+
+      const letters = ["A", "B", "C"];
+      quizEl.innerHTML = `
+        <div class="card">
+          <div class="cat-row"><span class="cat">${q.emoji} ${q.cat}</span></div>
+          <div class="scene">
+            <div class="avatar">${q.avatar}</div>
+            <div class="bubble-wrap">
+              <div class="who-row"><span class="who">${q.who}</span><span class="mood">${q.mood}</span></div>
+              <div class="bubble">${q.line}</div>
+            </div>
+          </div>
+          <div class="ask">🤔 这句话，你会怎么接？</div>
+          <div class="opts">
+            ${options.map((o, i) => `
+              <button class="opt" data-k="${o.kind}" data-i="${i}">
+                <span class="opt-letter">${letters[i]}</span>
+                <span class="opt-text">${o.text}<span class="opt-kind">${KIND_LABEL[o.kind]}</span></span>
+                <span class="opt-mark"></span>
+              </button>
+            `).join("")}
+          </div>
+        </div>`;
+
+      verdictEl.className = "verdict";
+      afterEl.innerHTML = "";
+
+      quizEl.querySelectorAll(".opt").forEach((btn) => {
+        btn.addEventListener("click", () => onChoose(btn));
+      });
+    }
+
+    function onChoose(btn) {
+      if (state.answered) return;
+      state.answered = true;
+      const i = +btn.dataset.i;
+      const chosen = state.order[i];
+      const isRight = chosen.kind === "perfect";
+
+      // 锁定 & 揭示所有选项类型
+      quizEl.querySelectorAll(".opt").forEach((b) => {
+        b.disabled = true;
+        b.classList.add("reveal");
+      });
+      btn.classList.add("chosen", isRight ? "correct" : "wrong");
+      btn.querySelector(".opt-mark").textContent = isRight ? "✅" : "❌";
+
+      // 进度 + 计分
+      barEl.style.width = ((state.idx + 1) / QUESTIONS.length * 100) + "%";
+      if (isRight) {
+        state.score++;
+        scoreEl.textContent = state.score;
+      }
+
+      // 判定横幅
+      verdictEl.className = "verdict show " + (isRight ? "ok" : "no");
+      verdictEl.innerHTML = isRight
+        ? `<span class="v-emoji">🎯</span> 满分接梗！你精准接住了 ta 的情绪。`
+        : `<span class="v-emoji">💥</span> 踩雷了～看看正确答案和拆解，下次稳赢。`;
+
+      // 拆解
+      const q = QUESTIONS[state.idx];
+      afterEl.innerHTML = `
+        <div class="card reveal-box show">
+          <h3>💔 这句话背后的真实情绪与潜台词</h3>
+          <div class="blk"><p>${q.subtext}</p></div>
+          <h3>⚠️ 错误选项为什么踩雷</h3>
+          <div class="blk warn"><p>${q.whyWrong}</p></div>
+          <h3>✨ 满分选项精妙在哪里</h3>
+          <div class="blk good"><p>${q.whyRight}</p></div>
+          <button class="next-btn" id="nextBtn">
+            ${state.idx + 1 < QUESTIONS.length ? "下一题 ➜" : "查看我的情商段位 🏆"}
+          </button>
+        </div>`;
+      $("#nextBtn").addEventListener("click", next);
+
+      if (isRight) burst();
+      afterEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function next() {
+      state.idx++;
+      if (state.idx >= QUESTIONS.length) { finish(); return; }
+      verdictEl.className = "verdict";
+      afterEl.innerHTML = "";
+      render();
+      quizEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function rank(s, n) {
+      if (s >= n - 1) return { e: "🏆", t: "情绪感知大师", c: "#10b981", bg: "#ecfdf5", d: "你几乎能看穿每一句话背后的情绪，接梗稳准狠。身边的人有你，是种福气。" };
+      if (s >= Math.ceil(n * 0.7)) return { e: "💫", t: "高情商接梗高手", c: "#7c3aed", bg: "#f3eeff", d: "绝大多数情绪你都能稳稳接住，只剩几道高阶题偶尔失手，已经很厉害了！" };
+      if (s >= Math.ceil(n * 0.5)) return { e: "🌱", t: "及格线战士", c: "#f59e0b", bg: "#fffbeb", d: "你能接住一部分情绪，但在「讲道理」和「接情绪」之间还容易站错边。多练几轮，进步会很快。" };
+      return { e: "📖", t: "直男 / 直女本直", c: "#ef4444", bg: "#fef2f2", d: "别灰心——「讲道理」是大多数人的本能。再刷一遍，留意每题的「潜台词」，你会发现自己肉眼可见地变温柔了。" };
+    }
+
+    function finish() {
+      const s = state.score, n = QUESTIONS.length;
+      const r = rank(s, n);
+      curEl.textContent = n;
+      barEl.style.width = "100%";
+      quizEl.innerHTML = "";
+      verdictEl.className = "verdict";
+      afterEl.innerHTML = `
+        <div class="card result">
+          <div class="big-emoji">${r.e}</div>
+          <h2>训练完成！</h2>
+          <span class="rank" style="color:${r.c};background:${r.bg};">段位：${r.t}</span>
+          <div class="score-big">${s}<small> / ${n}</small></div>
+          <p class="desc">${r.d}</p>
+          <div class="result-actions">
+            <button class="btn-ghost" id="restart">🔁 再来一局</button>
+            <button class="btn-ghost" id="review">📖 复盘错题</button>
+          </div>
+          <div id="reviewArea" style="text-align:left; margin-top:18px;"></div>
+        </div>`;
+      $("#restart").addEventListener("click", () => { state.idx = 0; state.score = 0; scoreEl.textContent = 0; render(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+      $("#review").addEventListener("click", review);
+      if (s >= Math.ceil(n * 0.7)) burst(60);
+    }
+
+    function review() {
+      const area = $("#reviewArea");
+      area.innerHTML = `<div style="font-weight:800;margin-bottom:10px;">📚 全部情景 · 满分接法 & 潜台词速查</div>` +
+        QUESTIONS.map((q, i) => {
+          const perfect = q.options.find(o => o.kind === "perfect");
+          return `
+          <div style="border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:#faf8ff;">
+            <div style="font-weight:800;font-size:14px;margin-bottom:6px;">${q.emoji} 第${i + 1}题 · ${q.who}（${q.mood}）</div>
+            <div style="font-size:13.5px;color:#6b6585;margin-bottom:8px;line-height:1.6;">"${q.line}"</div>
+            <div style="font-size:13px;color:#047857;background:#ecfdf5;border-radius:10px;padding:8px 10px;margin-bottom:8px;line-height:1.6;">✅ <b>接住：</b>${perfect.text}</div>
+            <div style="font-size:12.5px;color:#3a3553;line-height:1.6;"><b>潜台词：</b>${q.subtext}</div>
+          </div>`;
+        }).join("");
+      area.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // 五彩纸屑
+    function burst(count = 36) {
+      const box = $("#confetti");
+      const colors = ["#7c3aed", "#ec4899", "#f59e0b", "#10b981", "#3b82f6", "#fd9797"];
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement("i");
+        p.style.left = Math.random() * 100 + "%";
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDuration = (1.6 + Math.random() * 1.4) + "s";
+        p.style.animationDelay = (Math.random() * 0.3) + "s";
+        p.style.transform = `rotate(${Math.random() * 360}deg)`;
+        box.appendChild(p);
+        setTimeout(() => p.remove(), 3400);
+      }
+    }
+
+    render();
+  </script>
+
+  <footer class="foot">
+    情绪接梗流 · 高情商沟通对战训练<br>
+    记住：先接情绪，再谈事情 —— 这是接住一个人的全部秘密 💜
+  </footer>
+</body>
+</html>
